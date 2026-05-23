@@ -1,6 +1,7 @@
 package com.b2b.instantneed.admin.controller;
 
 import com.b2b.instantneed.admin.dto.AdminCustomerSummary;
+import com.b2b.instantneed.admin.dto.UpdateCustomerRoleRequest;
 import com.b2b.instantneed.admin.dto.UpdateCustomerStatusRequest;
 import com.b2b.instantneed.admin.service.AdminCustomerService;
 import com.b2b.instantneed.common.dto.PagedResponse;
@@ -43,5 +44,14 @@ public class AdminCustomerController {
             @PathVariable UUID customerId,
             @Valid @RequestBody UpdateCustomerStatusRequest request) {
         return ResponseEntity.ok(service.updateStatus(customerId, request));
+    }
+
+    @Operation(summary = "Promote or demote a customer between CUSTOMER and ADMIN roles",
+               description = "Allowed values: CUSTOMER, ADMIN. SUPER_ADMIN cannot be granted via API.")
+    @PatchMapping("/{customerId}/role")
+    public ResponseEntity<AdminCustomerSummary> updateRole(
+            @PathVariable UUID customerId,
+            @Valid @RequestBody UpdateCustomerRoleRequest request) {
+        return ResponseEntity.ok(service.updateRole(customerId, request));
     }
 }

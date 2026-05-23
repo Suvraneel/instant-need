@@ -2,6 +2,7 @@ package com.b2b.instantneed.auth.service;
 
 import com.b2b.instantneed.auth.dto.*;
 import com.b2b.instantneed.common.exception.ApiException;
+import com.b2b.instantneed.common.util.HtmlSanitizer;
 import com.b2b.instantneed.common.security.JwtUtil;
 import com.b2b.instantneed.customer.entity.Address;
 import com.b2b.instantneed.customer.entity.Customer;
@@ -59,10 +60,10 @@ public class AuthService {
 
         Customer customer = Customer.builder()
                 .user(user)
-                .fullName(request.fullName())
-                .businessName(request.businessName())
-                .gstVatNumber(request.gstVatNumber())
-                .notes(request.notes())
+                .fullName(HtmlSanitizer.strip(request.fullName()))
+                .businessName(HtmlSanitizer.strip(request.businessName()))
+                .gstVatNumber(HtmlSanitizer.strip(request.gstVatNumber()))
+                .notes(HtmlSanitizer.strip(request.notes()))
                 .build();
         customer = customerRepository.save(customer);
 
@@ -122,7 +123,7 @@ public class AuthService {
                 .or(() -> userRepository.findByPhoneNumber(username))
                 .orElseThrow(() -> ApiException.unauthorized("INVALID_TOKEN", "Invalid refresh token"));
 
-        if (!jwtUtil.isTokenValid(request.refreshToken(), user)) {
+        if (!jwtUtil.isRefreshTokenValid(request.refreshToken(), user)) {
             throw ApiException.unauthorized("INVALID_TOKEN", "Invalid or expired refresh token");
         }
 

@@ -2,6 +2,7 @@ package com.b2b.instantneed.customer.service;
 
 import com.b2b.instantneed.common.exception.ApiException;
 import com.b2b.instantneed.common.security.SecurityUtils;
+import com.b2b.instantneed.common.util.HtmlSanitizer;
 import com.b2b.instantneed.customer.dto.*;
 import com.b2b.instantneed.customer.entity.Address;
 import com.b2b.instantneed.customer.entity.Customer;
@@ -36,16 +37,16 @@ public class CustomerProfileService {
         Customer customer = securityUtils.currentCustomer();
 
         if (request.fullName() != null && !request.fullName().isBlank()) {
-            customer.setFullName(request.fullName());
+            customer.setFullName(HtmlSanitizer.strip(request.fullName()));
         }
         if (request.businessName() != null) {
-            customer.setBusinessName(request.businessName());
+            customer.setBusinessName(HtmlSanitizer.strip(request.businessName()));
         }
         if (request.gstVatNumber() != null) {
-            customer.setGstVatNumber(request.gstVatNumber());
+            customer.setGstVatNumber(HtmlSanitizer.strip(request.gstVatNumber()));
         }
         if (request.notes() != null) {
-            customer.setNotes(request.notes());
+            customer.setNotes(HtmlSanitizer.strip(request.notes()));
         }
 
         customerRepository.save(customer);

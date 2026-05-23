@@ -1,10 +1,12 @@
 package com.b2b.instantneed.admin.service;
 
 import com.b2b.instantneed.admin.dto.*;
+import com.b2b.instantneed.catalog.dto.PricingTierResponse;
 import com.b2b.instantneed.catalog.entity.*;
 import com.b2b.instantneed.catalog.repository.*;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.exception.ApiException;
+import com.b2b.instantneed.common.util.HtmlSanitizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +26,7 @@ public class AdminProductService {
     private final CategoryRepository categoryRepository;
     private final PricingTierRepository pricingTierRepository;
     private final ProductImageRepository productImageRepository;
+    private final AuditLogService auditLog;
     @Transactional(readOnly = true)
     public PagedResponse<AdminProductSummary> listProducts(
             String search, UUID categoryId, Boolean active, int page, int limit) {
@@ -71,11 +74,11 @@ public class AdminProductService {
                 : null;
 
         Product product = Product.builder()
-                .name(request.name())
+                .name(HtmlSanitizer.strip(request.name()))
                 .slug(slug)
                 .sku(request.sku())
                 .category(category)
-                .description(request.description())
+                .description(HtmlSanitizer.strip(request.description()))
                 .unitOfMeasurement(request.unitOfMeasurement())
                 .availabilityStatus(status)
                 .basePrice(request.basePrice())
@@ -87,12 +90,17 @@ public class AdminProductService {
         applyTiers(product, request.pricingTiers());
         applyImages(product, request.images());
 
-        return AdminProductResponse.from(productRepository.findWithCategoryById(product.getId()).orElseThrow());
+        AdminProductResponse created = AdminProductResponse.from(
+                productRepository.findWithCategoryById(product.getId()).orElseThrow());
+        auditLog.log(AuditLogService.CREATE, AuditLogService.PRODUCT, product.getId(),
+                "Created product: " + product.getName(), null, created);
+        return created;
     }
 
     @Transactional
     public AdminProductResponse updateProduct(UUID id, UpdateProductRequest request) {
         Product product = findProduct(id);
+        AdminProductResponse before = AdminProductResponse.from(product);
 
         if (request.sku() != null && !request.sku().equals(product.getSku())) {
             if (productRepository.existsBySkuAndIdNot(request.sku(), id)) {
@@ -101,7 +109,7 @@ public class AdminProductService {
             product.setSku(request.sku());
         }
         if (request.name() != null && !request.name().isBlank()) {
-            product.setName(request.name());
+            product.setName(HtmlSanitizer.strip(request.name()));
         }
         if (request.slug() != null && !request.slug().isBlank()) {
             String slug = resolveUniqueSlug(request.slug(), null, id);
@@ -113,7 +121,7 @@ public class AdminProductService {
                             "Category not found: " + request.categoryId()));
             product.setCategory(category);
         }
-        if (request.description() != null) product.setDescription(request.description());
+        if (request.description() != null) product.setDescription(HtmlSanitizer.strip(request.description()));
         if (request.unitOfMeasurement() != null) product.setUnitOfMeasurement(request.unitOfMeasurement());
         if (request.availabilityStatus() != null) {
             product.setAvailabilityStatus(parseAvailability(request.availabilityStatus(), product.getAvailabilityStatus()));
@@ -126,14 +134,50 @@ public class AdminProductService {
         if (request.pricingTiers() != null) applyTiers(product, request.pricingTiers());
         if (request.images() != null) applyImages(product, request.images());
 
-        return AdminProductResponse.from(productRepository.findWithCategoryById(id).orElseThrow());
+        AdminProductResponse after = AdminProductResponse.from(
+                productRepository.findWithCategoryById(id).orElseThrow());
+        auditLog.log(AuditLogService.UPDATE, AuditLogService.PRODUCT, id,
+                "Updated product: " + product.getName(), before, after);
+        return after;
+    }
+
+    // ── Pricing-tier sub-resource ────────────────────────────────────────────────
+
+    @Transactional(readOnly = true)
+    public List<PricingTierResponse> listPricingTiers(UUID productId) {
+        // Verify product exists — returns 404 if not
+        findProduct(productId);
+        return pricingTierRepository.findByProductIdOrderByMinQuantityAsc(productId)
+                .stream().map(PricingTierResponse::from).toList();
+    }
+
+    @Transactional
+    public List<PricingTierResponse> replacePricingTiers(UUID productId, List<PricingTierRequest> tierRequests) {
+        Product product = findProduct(productId);
+        AdminProductResponse before = AdminProductResponse.from(product);
+
+        applyTiers(product, tierRequests);
+
+        // Reload to return the freshly-saved state
+        Product refreshed = productRepository.findWithCategoryById(productId).orElseThrow();
+        List<PricingTierResponse> tiers = pricingTierRepository
+                .findByProductIdOrderByMinQuantityAsc(productId)
+                .stream().map(PricingTierResponse::from).toList();
+
+        auditLog.log(AuditLogService.UPDATE, AuditLogService.PRODUCT, productId,
+                "Pricing tiers replaced for product: " + product.getName(),
+                before, AdminProductResponse.from(refreshed));
+        return tiers;
     }
 
     @Transactional
     public void deleteProduct(UUID id) {
         Product product = findProduct(id);
+        AdminProductResponse before = AdminProductResponse.from(product);
         product.setActive(false);
         productRepository.save(product);
+        auditLog.log(AuditLogService.DELETE, AuditLogService.PRODUCT, id,
+                "Soft-deleted product: " + product.getName(), before, null);
     }
 
     // ── Helpers ─────────────────────────────────────────────────────────────────

@@ -13,6 +13,7 @@ public record AdminCustomerSummary(
         String phoneNumber,
         String fullName,
         String businessName,
+        String role,
         boolean active,
         Instant memberSince
 ) {
@@ -21,6 +22,7 @@ public record AdminCustomerSummary(
                 customer.getId(), user.getId(),
                 user.getEmail(), user.getPhoneNumber(),
                 customer.getFullName(), customer.getBusinessName(),
+                user.getRole().name(),
                 user.isEnabled(), customer.getCreatedAt()
         );
     }

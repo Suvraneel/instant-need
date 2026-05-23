@@ -5,6 +5,7 @@ import com.b2b.instantneed.admin.dto.AdminCategoryResponse;
 import com.b2b.instantneed.catalog.entity.Category;
 import com.b2b.instantneed.catalog.repository.CategoryRepository;
 import com.b2b.instantneed.common.exception.ApiException;
+import com.b2b.instantneed.common.util.HtmlSanitizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.UUID;
 public class AdminCategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final AuditLogService auditLog;
 
     @Transactional(readOnly = true)
     public List<AdminCategoryResponse> listCategories() {
@@ -40,14 +42,17 @@ public class AdminCategoryService {
         }
 
         Category category = Category.builder()
-                .name(request.name())
+                .name(HtmlSanitizer.strip(request.name()))
                 .slug(slug)
                 .parent(parent)
                 .sortOrder(request.sortOrder() != null ? request.sortOrder() : 0)
                 .active(request.active() == null || request.active())
                 .build();
 
-        return AdminCategoryResponse.from(categoryRepository.save(category));
+        AdminCategoryResponse created = AdminCategoryResponse.from(categoryRepository.save(category));
+        auditLog.log(AuditLogService.CREATE, AuditLogService.CATEGORY, created.id(),
+                "Created category: " + created.name(), null, created);
+        return created;
     }
 
     @Transactional
@@ -55,7 +60,10 @@ public class AdminCategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> ApiException.notFound("CATEGORY_NOT_FOUND", "Category not found: " + id));
 
-        if (request.name() != null && !request.name().isBlank()) category.setName(request.name());
+        AdminCategoryResponse before = AdminCategoryResponse.from(category);
+
+        if (request.name() != null && !request.name().isBlank())
+            category.setName(HtmlSanitizer.strip(request.name()));
         if (request.slug() != null && !request.slug().isBlank()) {
             category.setSlug(resolveUniqueSlug(request.slug(), null, id));
         }
@@ -71,15 +79,21 @@ public class AdminCategoryService {
             category.setParent(parent);
         }
 
-        return AdminCategoryResponse.from(categoryRepository.save(category));
+        AdminCategoryResponse after = AdminCategoryResponse.from(categoryRepository.save(category));
+        auditLog.log(AuditLogService.UPDATE, AuditLogService.CATEGORY, id,
+                "Updated category: " + after.name(), before, after);
+        return after;
     }
 
     @Transactional
     public void deleteCategory(UUID id) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> ApiException.notFound("CATEGORY_NOT_FOUND", "Category not found: " + id));
+        AdminCategoryResponse before = AdminCategoryResponse.from(category);
         category.setActive(false);
         categoryRepository.save(category);
+        auditLog.log(AuditLogService.DELETE, AuditLogService.CATEGORY, id,
+                "Soft-deleted category: " + category.getName(), before, null);
     }
 
     private String resolveUniqueSlug(String requested, String name, UUID excludeId) {

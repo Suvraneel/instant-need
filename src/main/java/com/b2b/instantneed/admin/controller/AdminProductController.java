@@ -2,6 +2,7 @@ package com.b2b.instantneed.admin.controller;
 
 import com.b2b.instantneed.admin.dto.*;
 import com.b2b.instantneed.admin.service.AdminProductService;
+import com.b2b.instantneed.catalog.dto.PricingTierResponse;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Tag(name = "Admin — Products", description = "Product catalog management (ROLE_ADMIN)")
@@ -58,5 +60,24 @@ public class AdminProductController {
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
         service.deleteProduct(id);
         return ResponseEntity.noContent().build();
+    }
+
+    // ── Pricing-tier sub-resource ────────────────────────────────────────────────
+
+    @Operation(summary = "List pricing tiers for a product")
+    @GetMapping("/{id}/pricing-tiers")
+    public ResponseEntity<List<PricingTierResponse>> listPricingTiers(@PathVariable UUID id) {
+        return ResponseEntity.ok(service.listPricingTiers(id));
+    }
+
+    @Operation(
+            summary = "Replace all pricing tiers for a product",
+            description = "Full replacement — existing tiers are deleted and the supplied list is inserted. "
+                        + "Send an empty array [] to clear all tiers.")
+    @PutMapping("/{id}/pricing-tiers")
+    public ResponseEntity<List<PricingTierResponse>> replacePricingTiers(
+            @PathVariable UUID id,
+            @Valid @RequestBody List<PricingTierRequest> tiers) {
+        return ResponseEntity.ok(service.replacePricingTiers(id, tiers));
     }
 }

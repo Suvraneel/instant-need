@@ -27,6 +27,7 @@ import java.util.UUID;
 public class AdminOrderService {
 
     private final OrderRepository orderRepository;
+    private final AuditLogService auditLog;
 
     @Transactional(readOnly = true)
     public PagedResponse<AdminOrderSummary> listOrders(
@@ -73,9 +74,15 @@ public class AdminOrderService {
                     "Invalid status. Must be one of: PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED");
         }
 
+        OrderStatus oldStatus = order.getStatus();
         order.setStatus(newStatus);
         orderRepository.save(order);
-        return OrderResponse.from(order);
+        OrderResponse response = OrderResponse.from(order);
+        auditLog.log(AuditLogService.UPDATE, AuditLogService.ORDER, orderId,
+                "Status changed from " + oldStatus + " to " + newStatus + " on order " + order.getOrderNumber(),
+                java.util.Map.of("status", oldStatus.name()),
+                java.util.Map.of("status", newStatus.name()));
+        return response;
     }
 
     private OrderStatus parseStatus(String value) {

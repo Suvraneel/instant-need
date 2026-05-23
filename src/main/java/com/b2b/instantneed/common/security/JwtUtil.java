@@ -46,6 +46,22 @@ public class JwtUtil {
         }
     }
 
+    /**
+     * Returns true only if the token is a valid refresh token (type claim == "refresh")
+     * and belongs to the given user. Prevents access tokens from being used as refresh tokens.
+     */
+    public boolean isRefreshTokenValid(String token, UserDetails userDetails) {
+        try {
+            String username = extractUsername(token);
+            String type = extractClaim(token, claims -> claims.get("type", String.class));
+            return username.equals(userDetails.getUsername())
+                    && "refresh".equals(type)
+                    && !isTokenExpired(token);
+        } catch (JwtException e) {
+            return false;
+        }
+    }
+
     private String buildToken(UserDetails userDetails, long expiration, String type) {
         return Jwts.builder()
                 .subject(userDetails.getUsername())
