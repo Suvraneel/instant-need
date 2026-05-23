@@ -34,8 +34,8 @@ public class CartService {
     @Transactional(readOnly = true)
     public CartResponse getCart() {
         Customer customer = securityUtils.currentCustomer();
-        return cartRepository
-                .findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE)
+        return cartRepository.findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE)
+                .flatMap(c -> cartRepository.findWithItemsById(c.getId()))
                 .map(CartResponse::from)
                 .orElseGet(() -> CartResponse.empty(customer.getId()));
     }
@@ -80,9 +80,7 @@ public class CartService {
             cartItemRepository.save(item);
         }
 
-        Cart reloaded = cartRepository
-                .findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE)
-                .orElseThrow();
+        Cart reloaded = cartRepository.findWithItemsById(cart.getId()).orElseThrow();
         return CartResponse.from(reloaded);
     }
 
@@ -108,9 +106,7 @@ public class CartService {
         item.setCurrencyCode(price.currencyCode());
         cartItemRepository.save(item);
 
-        Cart reloaded = cartRepository
-                .findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE)
-                .orElseThrow();
+        Cart reloaded = cartRepository.findWithItemsById(cart.getId()).orElseThrow();
         return CartResponse.from(reloaded);
     }
 
@@ -130,9 +126,7 @@ public class CartService {
         cart.getItems().remove(item);
         cartItemRepository.delete(item);
 
-        Cart reloaded = cartRepository
-                .findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE)
-                .orElseThrow();
+        Cart reloaded = cartRepository.findWithItemsById(cart.getId()).orElseThrow();
         return CartResponse.from(reloaded);
     }
 
