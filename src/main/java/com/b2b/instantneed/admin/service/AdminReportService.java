@@ -1,21 +1,24 @@
 package com.b2b.instantneed.admin.service;
 
-import com.b2b.instantneed.admin.dto.CustomerActivityEntry;
-import com.b2b.instantneed.admin.dto.SalesReportResponse;
-import com.b2b.instantneed.admin.dto.TopProductEntry;
+import com.b2b.instantneed.admin.dto.*;
+import com.b2b.instantneed.catalog.repository.ProductRepository;
 import com.b2b.instantneed.common.exception.ApiException;
-import com.b2b.instantneed.customer.entity.Customer;
 import com.b2b.instantneed.customer.repository.CustomerRepository;
 import com.b2b.instantneed.order.entity.Order;
 import com.b2b.instantneed.order.entity.OrderStatus;
+import com.b2b.instantneed.order.repository.OrderItemRepository;
 import com.b2b.instantneed.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -28,13 +31,38 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AdminReportService {
 
-    private final OrderRepository orderRepository;
-    private final CustomerRepository customerRepository;
+    private final OrderRepository     orderRepository;
+    private final OrderItemRepository orderItemRepository;
+    private final CustomerRepository  customerRepository;
+    private final ProductRepository   productRepository;
+
+    // ── Dashboard summary ─────────────────────────────────────────────────────
+
+    @Transactional(readOnly = true)
+    public DashboardSummary summaryReport() {
+        Instant startOfMonth = LocalDate.now(ZoneOffset.UTC)
+                .withDayOfMonth(1).atStartOfDay().toInstant(ZoneOffset.UTC);
+
+        long totalOrders      = orderRepository.count();
+        long pendingOrders    = orderRepository.countByStatus(OrderStatus.PENDING);
+        long processingOrders = orderRepository.countByStatus(OrderStatus.PROCESSING);
+        long shippedOrders    = orderRepository.countByStatus(OrderStatus.SHIPPED);
+        BigDecimal revenueThisMonth = orderRepository.sumRevenueSince(OrderStatus.CANCELLED, startOfMonth);
+        long totalCustomers         = customerRepository.count();
+        long newCustomersThisMonth  = customerRepository.countByCreatedAtGreaterThanEqual(startOfMonth);
+        long activeProducts         = productRepository.countByActiveTrue();
+
+        return new DashboardSummary(
+                totalOrders, pendingOrders, processingOrders, shippedOrders,
+                revenueThisMonth, totalCustomers, newCustomersThisMonth, activeProducts);
+    }
+
+    // ── Sales report ──────────────────────────────────────────────────────────
 
     @Transactional(readOnly = true)
     public SalesReportResponse salesReport(String dateFrom, String dateTo) {
         Instant from = parseDate(dateFrom, false);
-        Instant to = parseDate(dateTo, true);
+        Instant to   = parseDate(dateTo, true);
 
         Specification<Order> spec = Specification
                 .<Order>where((r, q, cb) -> cb.notEqual(r.get("status"), OrderStatus.CANCELLED))
@@ -60,7 +88,8 @@ public class AdminReportService {
                 .map(e -> new SalesReportResponse.DailyEntry(
                         e.getKey(),
                         e.getValue().size(),
-                        e.getValue().stream().map(Order::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add)))
+                        e.getValue().stream().map(Order::getTotalAmount)
+                                .reduce(BigDecimal.ZERO, BigDecimal::add)))
                 .toList();
 
         return new SalesReportResponse(
@@ -68,111 +97,153 @@ public class AdminReportService {
                 orders.size(),
                 totalRevenue,
                 SalesReportResponse.avg(totalRevenue, orders.size()),
-                breakdown
-        );
+                breakdown);
     }
+
+    // ── Top products (DB-level aggregation — no N+1) ──────────────────────────
 
     @Transactional(readOnly = true)
     public List<TopProductEntry> topProducts(int limit, String dateFrom, String dateTo) {
-        int safeLimit = Math.min(Math.max(1, limit), 50);
-        Instant from = parseDate(dateFrom, false);
-        Instant to = parseDate(dateTo, true);
+        int safeLimit = Math.clamp(limit, 1, 50);
+        Instant from  = parseDate(dateFrom, false);
+        Instant to    = parseDate(dateTo, true);
 
-        Specification<Order> spec = Specification
-                .<Order>where((r, q, cb) -> cb.notEqual(r.get("status"), OrderStatus.CANCELLED))
-                .and(from != null ? (r, q, cb) -> cb.greaterThanOrEqualTo(r.get("placedAt"), from) :
-                        (r, q, cb) -> cb.conjunction())
-                .and(to != null ? (r, q, cb) -> cb.lessThanOrEqualTo(r.get("placedAt"), to) :
-                        (r, q, cb) -> cb.conjunction());
+        List<Object[]> rows = orderItemRepository.aggregateByProduct(
+                OrderStatus.CANCELLED, from, to,
+                PageRequest.of(0, safeLimit));
 
-        List<Order> orders = orderRepository.findAll(spec);
-
-        // Aggregate order items by product
-        record Key(UUID id, String name, String sku, String currency) {}
-
-        Map<Key, long[]> agg = new LinkedHashMap<>();
-        orders.forEach(o -> o.getItems().forEach(item -> {
-            UUID pid = item.getProduct() != null ? item.getProduct().getId() : null;
-            Key key = new Key(pid, item.getProductNameSnapshot(), item.getSkuSnapshot(), item.getCurrencyCode());
-            agg.computeIfAbsent(key, k -> new long[]{0, 0});
-            agg.get(key)[0] += item.getQuantity();
-        }));
-
-        // Second pass for revenue (using BigDecimal) with a proper map
-        Map<Key, BigDecimal> revenue = new LinkedHashMap<>();
-        orders.forEach(o -> o.getItems().forEach(item -> {
-            UUID pid = item.getProduct() != null ? item.getProduct().getId() : null;
-            Key key = new Key(pid, item.getProductNameSnapshot(), item.getSkuSnapshot(), item.getCurrencyCode());
-            revenue.merge(key, item.getLineTotal(), BigDecimal::add);
-        }));
-
-        return revenue.entrySet().stream()
-                .sorted(Map.Entry.<Key, BigDecimal>comparingByValue().reversed())
-                .limit(safeLimit)
-                .map(e -> new TopProductEntry(
-                        e.getKey().id(),
-                        e.getKey().name(),
-                        e.getKey().sku(),
-                        agg.get(e.getKey())[0],
-                        e.getValue(),
-                        e.getKey().currency()))
+        return rows.stream()
+                .map(r -> new TopProductEntry(
+                        (UUID)       r[3],   // product.id (may be null for deleted products)
+                        (String)     r[0],   // productNameSnapshot
+                        (String)     r[1],   // skuSnapshot
+                        ((Long)      r[4]),  // SUM(quantity)
+                        (BigDecimal) r[5],   // SUM(lineTotal)
+                        (String)     r[2]))  // currencyCode
                 .toList();
     }
+
+    // ── Customer activity (DB-level aggregation — no N+1) ────────────────────
 
     @Transactional(readOnly = true)
     public List<CustomerActivityEntry> customerActivity(int limit) {
-        int safeLimit = Math.min(Math.max(1, limit), 50);
+        int safeLimit = Math.clamp(limit, 1, 50);
 
-        List<Order> allOrders = orderRepository.findAll(Sort.by("placedAt").descending());
+        List<Object[]> rows = orderRepository.aggregateByCustomer(
+                OrderStatus.CANCELLED,
+                PageRequest.of(0, safeLimit));
 
-        Map<UUID, List<Order>> byCustomer = allOrders.stream()
-                .collect(Collectors.groupingBy(o -> o.getCustomer().getId()));
-
-        return byCustomer.entrySet().stream()
-                .map(e -> {
-                    List<Order> orders = e.getValue();
-                    BigDecimal total = orders.stream()
-                            .filter(o -> o.getStatus() != OrderStatus.CANCELLED)
-                            .map(Order::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
-                    Instant last = orders.get(0).getPlacedAt();
-                    Customer customer = orders.get(0).getCustomer();
-                    String email = customer.getUser() != null ? customer.getUser().getEmail() : null;
-                    return new CustomerActivityEntry(
-                            customer.getId(), customer.getFullName(), customer.getBusinessName(),
-                            email, orders.size(), total, last);
-                })
-                .sorted(Comparator.comparing(CustomerActivityEntry::totalRevenue).reversed())
-                .limit(safeLimit)
+        return rows.stream()
+                .map(r -> new CustomerActivityEntry(
+                        (UUID)       r[0],  // customer.id
+                        (String)     r[1],  // fullName
+                        (String)     r[2],  // businessName
+                        (String)     r[3],  // user.email
+                        ((Long)      r[4]), // COUNT(orders) — non-cancelled
+                        (BigDecimal) r[5],  // SUM(totalAmount)
+                        (Instant)    r[6])) // MAX(placedAt)
                 .toList();
     }
 
+    // ── CSV export ────────────────────────────────────────────────────────────
+
+    @Transactional(readOnly = true)
     public byte[] exportOrdersCsv(String dateFrom, String dateTo, String status) {
-        Instant from = parseDate(dateFrom, false);
-        Instant to = parseDate(dateTo, true);
-        OrderStatus parsedStatus = status != null && !status.isBlank() ? parseStatus(status) : null;
-
-        Specification<Order> spec = Specification
-                .<Order>where(from != null ? (r, q, cb) -> cb.greaterThanOrEqualTo(r.get("placedAt"), from) :
-                        (r, q, cb) -> cb.conjunction())
-                .and(to != null ? (r, q, cb) -> cb.lessThanOrEqualTo(r.get("placedAt"), to) :
-                        (r, q, cb) -> cb.conjunction())
-                .and(parsedStatus != null ? (r, q, cb) -> cb.equal(r.get("status"), parsedStatus) :
-                        (r, q, cb) -> cb.conjunction());
-
-        List<Order> orders = orderRepository.findAll(spec, Sort.by("placedAt").descending());
+        List<Order> orders = fetchFilteredOrders(dateFrom, dateTo, status);
 
         StringBuilder csv = new StringBuilder();
-        csv.append("Order Number,Status,Customer Name,Payment Method,Total Amount,Currency,Placed At\n");
-        orders.forEach(o -> csv.append(String.format("%s,%s,%s,%s,%s,%s,%s\n",
+        csv.append("Order Number,Status,Customer Name,Business Name,Payment Method," +
+                   "Subtotal,Total Amount,Currency,Placed At\n");
+        orders.forEach(o -> csv.append(String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
                 o.getOrderNumber(),
                 o.getStatus().name(),
                 csvEscape((String) o.getCustomerSnapshot().getOrDefault("fullName", "")),
+                csvEscape((String) o.getCustomerSnapshot().getOrDefault("businessName", "")),
                 o.getPaymentMethod(),
+                o.getSubtotalAmount(),
                 o.getTotalAmount(),
                 o.getCurrencyCode(),
                 o.getPlacedAt().toString())));
 
         return csv.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
+    }
+
+    // ── XLSX export ───────────────────────────────────────────────────────────
+
+    @Transactional(readOnly = true)
+    public byte[] exportOrdersXlsx(String dateFrom, String dateTo, String status) {
+        List<Order> orders = fetchFilteredOrders(dateFrom, dateTo, status);
+
+        try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+            Sheet sheet = workbook.createSheet("Orders");
+
+            // Bold header style
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font font = workbook.createFont();
+            font.setBold(true);
+            headerStyle.setFont(font);
+
+            String[] headers = {
+                "Order Number", "Status", "Customer Name", "Business Name",
+                "Payment Method", "Subtotal", "Total Amount", "Currency", "Placed At"
+            };
+
+            Row headerRow = sheet.createRow(0);
+            for (int i = 0; i < headers.length; i++) {
+                Cell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+            }
+
+            // Data rows
+            int rowIdx = 1;
+            for (Order o : orders) {
+                Row row = sheet.createRow(rowIdx++);
+                row.createCell(0).setCellValue(o.getOrderNumber());
+                row.createCell(1).setCellValue(o.getStatus().name());
+                row.createCell(2).setCellValue(
+                        (String) o.getCustomerSnapshot().getOrDefault("fullName", ""));
+                row.createCell(3).setCellValue(
+                        (String) o.getCustomerSnapshot().getOrDefault("businessName", ""));
+                row.createCell(4).setCellValue(o.getPaymentMethod());
+                row.createCell(5).setCellValue(o.getSubtotalAmount().doubleValue());
+                row.createCell(6).setCellValue(o.getTotalAmount().doubleValue());
+                row.createCell(7).setCellValue(o.getCurrencyCode());
+                row.createCell(8).setCellValue(o.getPlacedAt().toString());
+            }
+
+            // Auto-size all columns
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            workbook.write(out);
+            return out.toByteArray();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to generate XLSX export", e);
+        }
+    }
+
+    // ── Shared helpers ────────────────────────────────────────────────────────
+
+    private List<Order> fetchFilteredOrders(String dateFrom, String dateTo, String status) {
+        Instant from           = parseDate(dateFrom, false);
+        Instant to             = parseDate(dateTo, true);
+        OrderStatus parsedStatus = status != null && !status.isBlank() ? parseStatus(status) : null;
+
+        Specification<Order> spec = Specification
+                .<Order>where(from != null
+                        ? (r, q, cb) -> cb.greaterThanOrEqualTo(r.get("placedAt"), from)
+                        : (r, q, cb) -> cb.conjunction())
+                .and(to != null
+                        ? (r, q, cb) -> cb.lessThanOrEqualTo(r.get("placedAt"), to)
+                        : (r, q, cb) -> cb.conjunction())
+                .and(parsedStatus != null
+                        ? (r, q, cb) -> cb.equal(r.get("status"), parsedStatus)
+                        : (r, q, cb) -> cb.conjunction());
+
+        return orderRepository.findAll(spec, Sort.by("placedAt").descending());
     }
 
     private static String csvEscape(String value) {
