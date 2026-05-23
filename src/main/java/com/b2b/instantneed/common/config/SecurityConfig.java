@@ -38,6 +38,7 @@ public class SecurityConfig {
                         // Public catalog (PRD: browsing without login)
                         .requestMatchers("/api/v1/categories/**").permitAll()
                         .requestMatchers("/api/v1/products/**").permitAll()
+                        .requestMatchers("/api/v1/pricing/**").permitAll()
                         // Infrastructure
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
