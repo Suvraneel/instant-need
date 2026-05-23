@@ -12,9 +12,13 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
     List<Category> findAllByActiveTrueOrderBySortOrderAsc();
 
+    List<Category> findAllByOrderBySortOrderAsc();
+
     Optional<Category> findBySlug(String slug);
 
     boolean existsBySlug(String slug);
+
+    boolean existsBySlugAndIdNot(String slug, UUID id);
 
     @Query("SELECT c FROM Category c LEFT JOIN FETCH c.children WHERE c.parent IS NULL AND c.active = true ORDER BY c.sortOrder")
     List<Category> findRootCategoriesWithChildren();

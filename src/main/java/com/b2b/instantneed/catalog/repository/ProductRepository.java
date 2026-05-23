@@ -16,6 +16,10 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
 
     boolean existsBySlug(String slug);
 
+    boolean existsBySkuAndIdNot(String sku, UUID id);
+
+    boolean existsBySlugAndIdNot(String slug, UUID id);
+
     @EntityGraph(attributePaths = {"category"})
     @Query("SELECT p FROM Product p WHERE p.id = :id")
     Optional<Product> findWithCategoryById(@Param("id") UUID id);

@@ -2,6 +2,7 @@ package com.b2b.instantneed.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,6 +33,12 @@ public class GlobalExceptionHandler {
         String message = "Validation failed for " + details.size() + " field(s)";
         return ResponseEntity.badRequest()
                 .body(ErrorResponse.of("VALIDATION_ERROR", message, details));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleAccessDenied(AccessDeniedException ex) {
+        return ResponseEntity.status(403)
+                .body(ErrorResponse.of("FORBIDDEN", "You do not have permission to access this resource"));
     }
 
     @ExceptionHandler(BadCredentialsException.class)
