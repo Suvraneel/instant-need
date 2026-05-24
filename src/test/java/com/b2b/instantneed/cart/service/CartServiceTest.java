@@ -236,6 +236,61 @@ class CartServiceTest {
         verify(cartRepository, never()).save(any());
     }
 
+    // ── null-pointer / deleted-product guards ─────────────────────────────────
+
+    @Test
+    void updateItem_productIsNull_throwsBadRequest() {
+        // CartItem whose product was hard-deleted from DB (getProduct() == null)
+        Cart cart = activeCart();
+        CartItem item = CartItem.builder()
+                .id(UUID.randomUUID()).cart(cart)
+                .product(null)                       // deleted product
+                .quantity(3)
+                .appliedUnitPrice(new BigDecimal("250.00"))
+                .lineTotal(new BigDecimal("750.00"))
+                .currencyCode("INR")
+                .build();
+
+        given(cartRepository.findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE))
+                .willReturn(Optional.of(cart));
+        given(cartItemRepository.findById(item.getId())).willReturn(Optional.of(item));
+
+        assertThatThrownBy(() -> cartService.updateItem(item.getId(), new UpdateCartItemRequest(5)))
+                .isInstanceOf(ApiException.class)
+                .extracting(e -> ((ApiException) e).getHttpStatus())
+                .isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void updateItem_itemNotFound_throws404() {
+        Cart cart = activeCart();
+        UUID missingId = UUID.randomUUID();
+
+        given(cartRepository.findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE))
+                .willReturn(Optional.of(cart));
+        given(cartItemRepository.findById(missingId)).willReturn(Optional.empty());
+
+        assertThatThrownBy(() -> cartService.updateItem(missingId, new UpdateCartItemRequest(5)))
+                .isInstanceOf(ApiException.class)
+                .extracting(e -> ((ApiException) e).getHttpStatus())
+                .isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void removeItem_itemNotFound_throws404() {
+        Cart cart = activeCart();
+        UUID missingId = UUID.randomUUID();
+
+        given(cartRepository.findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE))
+                .willReturn(Optional.of(cart));
+        given(cartItemRepository.findById(missingId)).willReturn(Optional.empty());
+
+        assertThatThrownBy(() -> cartService.removeItem(missingId))
+                .isInstanceOf(ApiException.class)
+                .extracting(e -> ((ApiException) e).getHttpStatus())
+                .isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
     // ── Helpers ────────────────────────────────────────────────────────────────
 
     private Cart activeCart() {

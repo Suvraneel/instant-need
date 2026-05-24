@@ -80,7 +80,8 @@ public class CartService {
             cartItemRepository.save(item);
         }
 
-        Cart reloaded = cartRepository.findWithItemsById(cart.getId()).orElseThrow();
+        Cart reloaded = cartRepository.findWithItemsById(cart.getId())
+                .orElseThrow(() -> ApiException.notFound("CART_NOT_FOUND", "Cart not found after save"));
         return CartResponse.from(reloaded);
     }
 
@@ -97,6 +98,10 @@ public class CartService {
             throw ApiException.notFound("CART_ITEM_NOT_FOUND", "Cart item not found: " + itemId);
         }
 
+        if (item.getProduct() == null) {
+            throw ApiException.badRequest("PRODUCT_DELETED",
+                    "The product in this cart item no longer exists");
+        }
         PriceCalculateResponse price = pricingService.calculate(
                 item.getProduct().getId(), request.quantity());
 
@@ -106,7 +111,8 @@ public class CartService {
         item.setCurrencyCode(price.currencyCode());
         cartItemRepository.save(item);
 
-        Cart reloaded = cartRepository.findWithItemsById(cart.getId()).orElseThrow();
+        Cart reloaded = cartRepository.findWithItemsById(cart.getId())
+                .orElseThrow(() -> ApiException.notFound("CART_NOT_FOUND", "Cart not found after update"));
         return CartResponse.from(reloaded);
     }
 
@@ -126,7 +132,8 @@ public class CartService {
         cart.getItems().remove(item);
         cartItemRepository.delete(item);
 
-        Cart reloaded = cartRepository.findWithItemsById(cart.getId()).orElseThrow();
+        Cart reloaded = cartRepository.findWithItemsById(cart.getId())
+                .orElseThrow(() -> ApiException.notFound("CART_NOT_FOUND", "Cart not found after remove"));
         return CartResponse.from(reloaded);
     }
 

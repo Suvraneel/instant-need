@@ -6,7 +6,9 @@ import com.b2b.instantneed.cart.entity.CartStatus;
 import com.b2b.instantneed.cart.repository.CartRepository;
 import com.b2b.instantneed.catalog.entity.AvailabilityStatus;
 import com.b2b.instantneed.catalog.entity.Product;
+import com.b2b.instantneed.catalog.repository.ProductRepository;
 import com.b2b.instantneed.common.dto.PagedResponse;
+import com.b2b.instantneed.pricing.service.PricingService;
 import com.b2b.instantneed.common.exception.ApiException;
 import com.b2b.instantneed.common.security.SecurityUtils;
 import com.b2b.instantneed.customer.entity.Address;
@@ -48,6 +50,8 @@ class OrderServiceTest {
     @Mock CartRepository    cartRepository;
     @Mock AddressRepository addressRepository;
     @Mock SecurityUtils     securityUtils;
+    @Mock ProductRepository productRepository;
+    @Mock PricingService    pricingService;
 
     @InjectMocks OrderService orderService;
 
@@ -150,6 +154,30 @@ class OrderServiceTest {
                 .isInstanceOf(ApiException.class)
                 .extracting(e -> ((ApiException) e).getHttpStatus())
                 .isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void placeOrder_allCartProductsDeleted_throwsBadRequest() {
+        // Cart has one item but the product was hard-deleted (product == null)
+        Cart cart = Cart.builder()
+                .id(UUID.randomUUID()).customer(customer).status(CartStatus.ACTIVE).build();
+        CartItem deletedItem = CartItem.builder()
+                .id(UUID.randomUUID()).cart(cart)
+                .product(null) // deleted product
+                .quantity(2).appliedUnitPrice(new BigDecimal("100.00"))
+                .lineTotal(new BigDecimal("200.00")).currencyCode("INR").build();
+        cart.getItems().add(deletedItem);
+
+        given(cartRepository.findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE))
+                .willReturn(Optional.of(cart));
+        given(addressRepository.findById(address.getId())).willReturn(Optional.of(address));
+        given(orderRepository.findMaxSequenceForPrefix(anyString())).willReturn(0);
+
+        assertThatThrownBy(() -> orderService.placeOrder(
+                new PlaceOrderRequest(null, address.getId(), null, null, null)))
+                .isInstanceOf(ApiException.class)
+                .extracting(e -> ((ApiException) e).getHttpStatus())
+                .isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test

@@ -138,6 +138,30 @@ class AdminOrderServiceTest {
                 .isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
+    @Test
+    void updateStatus_nullStatus_throwsBadRequest() {
+        Order o = order(OrderStatus.PENDING);
+        given(orderRepository.findWithItemsById(o.getId())).willReturn(Optional.of(o));
+
+        assertThatThrownBy(() -> service.updateStatus(o.getId(),
+                new UpdateOrderStatusRequest(null)))
+                .isInstanceOf(ApiException.class)
+                .extracting(e -> ((ApiException) e).getHttpStatus())
+                .isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void updateStatus_blankStatus_throwsBadRequest() {
+        Order o = order(OrderStatus.PENDING);
+        given(orderRepository.findWithItemsById(o.getId())).willReturn(Optional.of(o));
+
+        assertThatThrownBy(() -> service.updateStatus(o.getId(),
+                new UpdateOrderStatusRequest("  ")))
+                .isInstanceOf(ApiException.class)
+                .extracting(e -> ((ApiException) e).getHttpStatus())
+                .isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
     // ── Helpers ────────────────────────────────────────────────────────────────
 
     private Order order(OrderStatus status) {

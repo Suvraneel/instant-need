@@ -206,6 +206,36 @@ class AdminProductServiceTest {
 
     // ── slug deduplication ────────────────────────────────────────────────────
 
+    // ── slugify / null-safety ─────────────────────────────────────────────────
+
+    @Test
+    void createProduct_nullSlugAndNullName_usesProductFallback() {
+        // When both requested slug and name are blank/null, slugify returns "product"
+        given(productRepository.existsBySku("SKU")).willReturn(false);
+        given(productRepository.existsBySlug("product")).willReturn(false);
+
+        Product saved = product("Unnamed", "SKU");
+        given(productRepository.save(any())).willReturn(saved);
+        given(pricingTierRepository.findByProductIdOrderByMinQuantityAsc(saved.getId()))
+                .willReturn(List.of());
+        given(productImageRepository.findByProductIdInOrderBySortOrderAsc(any()))
+                .willReturn(List.of());
+        given(productRepository.findWithCategoryById(saved.getId()))
+                .willReturn(Optional.of(saved));
+
+        // CreateProductRequest where name is blank triggers the fallback slug
+        CreateProductRequest req = new CreateProductRequest(
+                "  ", null, "SKU", null, null, "ream", "IN_STOCK",
+                new BigDecimal("250.00"), null, null);
+
+        service.createProduct(req);
+
+        var captor = org.mockito.ArgumentCaptor.forClass(Product.class);
+        verify(productRepository).save(captor.capture());
+        // Slug derived from blank name → "product"
+        assertThat(captor.getValue().getSlug()).isEqualTo("product");
+    }
+
     @Test
     void createProduct_slugCollision_appendsCounter() {
         given(productRepository.existsBySku("SKU")).willReturn(false);

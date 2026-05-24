@@ -137,6 +137,10 @@ public class OrderService {
             }
         } else {
             for (CartItem ci : cartItemsToUse) {
+                if (ci.getProduct() == null) {
+                    // Product was deleted after being added to cart — skip it
+                    continue;
+                }
                 OrderItem item = OrderItem.builder()
                         .order(order)
                         .product(ci.getProduct())
@@ -151,6 +155,10 @@ public class OrderService {
                 order.getItems().add(item);
                 subtotal = subtotal.add(ci.getLineTotal());
                 currencyCode = ci.getCurrencyCode();
+            }
+            if (order.getItems().isEmpty()) {
+                throw ApiException.badRequest("CART_EMPTY",
+                        "All products in the cart have been removed and can no longer be ordered");
             }
             // Mark cart as checked out
             cartRepository.findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE)

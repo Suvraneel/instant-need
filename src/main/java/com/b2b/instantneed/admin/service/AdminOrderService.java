@@ -66,6 +66,9 @@ public class AdminOrderService {
         Order order = orderRepository.findWithItemsById(orderId)
                 .orElseThrow(() -> ApiException.notFound("ORDER_NOT_FOUND", "Order not found: " + orderId));
 
+        if (request.status() == null || request.status().isBlank()) {
+            throw ApiException.badRequest("MISSING_STATUS", "Status field is required");
+        }
         OrderStatus newStatus;
         try {
             newStatus = OrderStatus.valueOf(request.status().toUpperCase());

@@ -17,8 +17,11 @@ public class SecurityUtils {
     private final CustomerRepository customerRepository;
 
     public User currentUser() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof User user) return user;
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            throw ApiException.unauthorized("NOT_AUTHENTICATED", "No authenticated user in context");
+        }
+        if (auth.getPrincipal() instanceof User user) return user;
         throw ApiException.unauthorized("NOT_AUTHENTICATED", "No authenticated user in context");
     }
 

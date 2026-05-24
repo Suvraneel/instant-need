@@ -233,6 +233,7 @@ public class AdminProductService {
     }
 
     private static String slugify(String text) {
+        if (text == null || text.isBlank()) return "product";
         return text.toLowerCase()
                 .replaceAll("[^a-z0-9\\s-]", "")
                 .replaceAll("\\s+", "-")

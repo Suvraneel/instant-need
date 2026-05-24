@@ -1299,3 +1299,261 @@ Hints:
 2026-05-24 17:51:33.719  INFO 30451 --- [ionShutdownHook] o.s.b.t.GracefulShutdown                 : Commencing graceful shutdown. Waiting for active requests to complete
 2026-05-24 17:51:33.727  INFO 30451 --- [tomcat-shutdown] o.s.b.t.GracefulShutdown                 : Graceful shutdown complete
 2026-05-24 17:51:33.739  INFO 30451 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 18:47:23.993  INFO ${sys:PID} --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.InstantNeedApplicationTests]: InstantNeedApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:47:24.057  INFO ${sys:PID} --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.InstantNeedApplicationTests
+2026-05-24 18:47:24.097  INFO ${sys:PID} --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.InstantNeedApplicationTests]: InstantNeedApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:47:24.098  INFO ${sys:PID} --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.InstantNeedApplicationTests
+2026-05-24 18:47:24.137  INFO ${sys:PID} --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 18:47:24.273  INFO 37253 --- [           main] c.b.i.InstantNeedApplicationTests        : Starting InstantNeedApplicationTests using Java 25.0.3 with PID 37253 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 18:47:24.274 DEBUG 37253 --- [           main] c.b.i.InstantNeedApplicationTests        : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 18:47:24.275  INFO 37253 --- [           main] c.b.i.InstantNeedApplicationTests        : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 18:47:24.421  INFO 37253 --- [kground-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 9.0.1.Final
+2026-05-24 18:47:24.803  INFO 37253 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24 18:47:24.848  INFO 37253 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 41 ms. Found 12 JPA repository interfaces.
+2026-05-24 18:47:25.144  INFO 37253 --- [           main] o.h.o.jpa                                : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24 18:47:25.173  INFO 37253 --- [           main] o.h.o.core                               : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24 18:47:25.363  INFO 37253 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24 18:47:25.480  INFO 37253 --- [           main] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/instant_need]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.10
+	Default catalog/schema: instant_need/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24 18:47:25.995  INFO 37253 --- [           main] o.h.o.core                               : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24 18:47:25.997  INFO 37253 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 18:47:26.038  INFO 37253 --- [           main] o.s.d.j.r.q.QueryEnhancerFactories       : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24 18:47:26.692  INFO 37253 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-05-24 18:47:26.692  WARN 37253 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-05-24 18:47:26.734  INFO 37253 --- [           main] c.b.i.c.c.FlywayConfig                   : Running Flyway migrations...
+2026-05-24 18:47:26.808  INFO 37253 --- [           main] o.f.c.FlywayExecutor                     : Database: jdbc:postgresql://localhost:5432/instant_need (PostgreSQL 17.10)
+2026-05-24 18:47:26.842  INFO 37253 --- [           main] o.f.c.i.c.DbValidate                     : Successfully validated 7 migrations (execution time 00:00.016s)
+2026-05-24 18:47:26.852  INFO 37253 --- [           main] o.f.c.i.c.DbMigrate                      : Current version of schema "public": 7
+2026-05-24 18:47:26.855  INFO 37253 --- [           main] o.f.c.i.c.DbMigrate                      : Schema "public" is up to date. No migration necessary.
+2026-05-24 18:47:26.857  INFO 37253 --- [           main] c.b.i.c.c.FlywayConfig                   : Flyway migrations completed.
+2026-05-24 18:47:27.314  INFO 37253 --- [           main] o.s.b.a.e.w.EndpointLinksResolver        : Exposing 2 endpoints beneath base path '/actuator'
+2026-05-24 18:47:27.348  INFO 37253 --- [           main] c.b.i.InstantNeedApplicationTests        : Started InstantNeedApplicationTests in 3.216 seconds (process running for 6.268)
+2026-05-24 18:47:27.398 DEBUG 37253 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 18:47:28.060  INFO 37253 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:47:28.086  INFO 37253 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.auth.controller.AuthControllerTest
+2026-05-24 18:47:28.087  INFO 37253 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:47:28.090  INFO 37253 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.auth.controller.AuthControllerTest
+2026-05-24 18:47:28.095  INFO 37253 --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 18:47:28.123  INFO 37253 --- [           main] c.b.i.a.c.AuthControllerTest             : Starting AuthControllerTest using Java 25.0.3 with PID 37253 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 18:47:28.123 DEBUG 37253 --- [           main] c.b.i.a.c.AuthControllerTest             : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 18:47:28.124  INFO 37253 --- [           main] c.b.i.a.c.AuthControllerTest             : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 18:47:28.851  INFO 37253 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-24 18:47:28.851  INFO 37253 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Initializing Servlet ''
+2026-05-24 18:47:28.853  INFO 37253 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Completed initialization in 2 ms
+2026-05-24 18:47:28.867  INFO 37253 --- [           main] c.b.i.a.c.AuthControllerTest             : Started AuthControllerTest in 0.772 seconds (process running for 7.786)
+2026-05-24 18:47:29.239  INFO 37253 --- [           main] c.b.i.a.s.AuthService                    : Password reset token generated for userId=7bdf3b3d-75bf-41f8-885f-22bdaf67f081
+2026-05-24 18:47:29.246  INFO 37253 --- [           main] c.b.i.a.s.AuthService                    : Password reset completed for userId=0ea8b7ab-39d1-4438-8cff-732093154abf
+2026-05-24 18:47:29.277  INFO 37253 --- [           main] c.b.i.a.s.AuthService                    : Registered new customer: userId=399df61c-612a-40f4-a663-d0f88d931f87, customerId=37ecc210-5975-481d-ab9e-04664202357f
+2026-05-24 18:47:29.286  INFO 37253 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.admin.controller.AdminProductControllerTest]: AdminProductControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:47:29.298  INFO 37253 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.admin.controller.AdminProductControllerTest
+2026-05-24 18:47:29.299  INFO 37253 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.admin.controller.AdminProductControllerTest]: AdminProductControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:47:29.300  INFO 37253 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.admin.controller.AdminProductControllerTest
+2026-05-24 18:47:29.302  INFO 37253 --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 18:47:30.335  INFO 37253 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Starting AdminProductControllerTest using Java 25.0.3 with PID 37253 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 18:47:30.336 DEBUG 37253 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 18:47:30.336  INFO 37253 --- [           main] c.b.i.a.c.AdminProductControllerTest     : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 18:47:30.477  INFO 37253 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-24 18:47:30.477  INFO 37253 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Initializing Servlet ''
+2026-05-24 18:47:30.477  INFO 37253 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Completed initialization in 0 ms
+2026-05-24 18:47:30.479  INFO 37253 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Started AdminProductControllerTest in 1.177 seconds (process running for 9.398)
+2026-05-24 18:47:31.748  INFO 37253 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder starting — seeding reference objects for every domain type...
+2026-05-24 18:47:31.748  INFO 37253 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Admin created: admin@instantneed.com / Admin@123
+2026-05-24 18:47:31.749  INFO 37253 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Customer created: buyer@test.com / Buyer@123  (customerId=5b20c211-790e-406b-acc4-5a886ffc571d)
+2026-05-24 18:47:31.749  INFO 37253 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Parent category created: office-supplies (id=78a5cdf3-98a0-41b6-9d7a-16273d07b567)
+2026-05-24 18:47:31.749  INFO 37253 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Child category created: paper-notebooks (id=3bbbe93d-4075-4ca7-a80a-bfb75fe8e4de)
+2026-05-24 18:47:31.749  INFO 37253 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Product created: A4 Paper (id=fc4e136f-558e-462d-a22e-4af77a36262b)
+2026-05-24 18:47:31.749  INFO 37253 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Product created: A4 Paper (id=fc4e136f-558e-462d-a22e-4af77a36262b)
+2026-05-24 18:47:31.749  INFO 37253 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder complete.
+2026-05-24 18:47:31.751  INFO 37253 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder starting — seeding reference objects for every domain type...
+2026-05-24 18:47:31.751  INFO 37253 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Admin user already exists: admin@instantneed.com
+2026-05-24 18:47:31.751  INFO 37253 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Customer user already exists: buyer@test.com
+2026-05-24 18:47:31.752  INFO 37253 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Product already exists: PAPER-A4-500
+2026-05-24 18:47:31.752  INFO 37253 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Product already exists: CLEAN-APC-5L
+2026-05-24 18:47:31.752  INFO 37253 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder complete.
+2026-05-24 18:47:31.752 DEBUG 37253 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 18:47:31.838  WARN 37253 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_REGISTER ip=10.0.0.2 path=/api/v1/auth/register
+2026-05-24 18:47:31.840  WARN 37253 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=10.0.0.1 path=/api/v1/auth/login
+2026-05-24 18:47:31.842  WARN 37253 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=203.0.113.5 path=/api/v1/auth/login
+2026-05-24 18:47:31.906  INFO 37253 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 18:47:48.278  INFO ${sys:PID} --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.InstantNeedApplicationTests]: InstantNeedApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:47:48.334  INFO ${sys:PID} --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.InstantNeedApplicationTests
+2026-05-24 18:47:48.369  INFO ${sys:PID} --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.InstantNeedApplicationTests]: InstantNeedApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:47:48.371  INFO ${sys:PID} --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.InstantNeedApplicationTests
+2026-05-24 18:47:48.405  INFO ${sys:PID} --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 18:47:48.511  INFO 37440 --- [           main] c.b.i.InstantNeedApplicationTests        : Starting InstantNeedApplicationTests using Java 25.0.3 with PID 37440 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 18:47:48.513 DEBUG 37440 --- [           main] c.b.i.InstantNeedApplicationTests        : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 18:47:48.513  INFO 37440 --- [           main] c.b.i.InstantNeedApplicationTests        : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 18:47:48.641  INFO 37440 --- [kground-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 9.0.1.Final
+2026-05-24 18:47:49.034  INFO 37440 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24 18:47:49.074  INFO 37440 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 35 ms. Found 12 JPA repository interfaces.
+2026-05-24 18:47:49.356  INFO 37440 --- [           main] o.h.o.jpa                                : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24 18:47:49.380  INFO 37440 --- [           main] o.h.o.core                               : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24 18:47:49.552  INFO 37440 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24 18:47:49.636  INFO 37440 --- [           main] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/instant_need]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.10
+	Default catalog/schema: instant_need/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24 18:47:50.148  INFO 37440 --- [           main] o.h.o.core                               : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24 18:47:50.151  INFO 37440 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 18:47:50.191  INFO 37440 --- [           main] o.s.d.j.r.q.QueryEnhancerFactories       : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24 18:47:50.828  INFO 37440 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-05-24 18:47:50.828  WARN 37440 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-05-24 18:47:50.869  INFO 37440 --- [           main] c.b.i.c.c.FlywayConfig                   : Running Flyway migrations...
+2026-05-24 18:47:50.938  INFO 37440 --- [           main] o.f.c.FlywayExecutor                     : Database: jdbc:postgresql://localhost:5432/instant_need (PostgreSQL 17.10)
+2026-05-24 18:47:50.964  INFO 37440 --- [           main] o.f.c.i.c.DbValidate                     : Successfully validated 7 migrations (execution time 00:00.013s)
+2026-05-24 18:47:50.972  INFO 37440 --- [           main] o.f.c.i.c.DbMigrate                      : Current version of schema "public": 7
+2026-05-24 18:47:50.973  INFO 37440 --- [           main] o.f.c.i.c.DbMigrate                      : Schema "public" is up to date. No migration necessary.
+2026-05-24 18:47:50.975  INFO 37440 --- [           main] c.b.i.c.c.FlywayConfig                   : Flyway migrations completed.
+2026-05-24 18:47:51.434  INFO 37440 --- [           main] o.s.b.a.e.w.EndpointLinksResolver        : Exposing 2 endpoints beneath base path '/actuator'
+2026-05-24 18:47:51.466  INFO 37440 --- [           main] c.b.i.InstantNeedApplicationTests        : Started InstantNeedApplicationTests in 3.066 seconds (process running for 5.67)
+2026-05-24 18:47:51.504 DEBUG 37440 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 18:47:52.202  INFO 37440 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:47:52.225  INFO 37440 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.auth.controller.AuthControllerTest
+2026-05-24 18:47:52.225  INFO 37440 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:47:52.229  INFO 37440 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.auth.controller.AuthControllerTest
+2026-05-24 18:47:52.234  INFO 37440 --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 18:47:52.263  INFO 37440 --- [           main] c.b.i.a.c.AuthControllerTest             : Starting AuthControllerTest using Java 25.0.3 with PID 37440 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 18:47:52.264 DEBUG 37440 --- [           main] c.b.i.a.c.AuthControllerTest             : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 18:47:52.264  INFO 37440 --- [           main] c.b.i.a.c.AuthControllerTest             : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 18:47:52.490  INFO 37440 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-24 18:47:52.490  INFO 37440 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Initializing Servlet ''
+2026-05-24 18:47:52.491  INFO 37440 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Completed initialization in 1 ms
+2026-05-24 18:47:52.500  INFO 37440 --- [           main] c.b.i.a.c.AuthControllerTest             : Started AuthControllerTest in 0.266 seconds (process running for 6.704)
+2026-05-24 18:47:52.857  INFO 37440 --- [           main] c.b.i.a.s.AuthService                    : Password reset token generated for userId=82f4caa3-905b-4803-8890-1400c1c0a664
+2026-05-24 18:47:52.862  INFO 37440 --- [           main] c.b.i.a.s.AuthService                    : Password reset completed for userId=064e9274-cf88-4480-89de-00e04dbb6720
+2026-05-24 18:47:52.893  INFO 37440 --- [           main] c.b.i.a.s.AuthService                    : Registered new customer: userId=5ce2d41c-6218-4541-aa85-490df64625fe, customerId=76822960-0418-4531-84ff-b3ef61ff2257
+2026-05-24 18:47:52.903  INFO 37440 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.admin.controller.AdminProductControllerTest]: AdminProductControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:47:52.913  INFO 37440 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.admin.controller.AdminProductControllerTest
+2026-05-24 18:47:52.913  INFO 37440 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.admin.controller.AdminProductControllerTest]: AdminProductControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:47:52.915  INFO 37440 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.admin.controller.AdminProductControllerTest
+2026-05-24 18:47:52.917  INFO 37440 --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 18:47:52.933  INFO 37440 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Starting AdminProductControllerTest using Java 25.0.3 with PID 37440 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 18:47:52.934 DEBUG 37440 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 18:47:52.934  INFO 37440 --- [           main] c.b.i.a.c.AdminProductControllerTest     : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 18:47:53.099  INFO 37440 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-24 18:47:53.099  INFO 37440 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Initializing Servlet ''
+2026-05-24 18:47:53.099  INFO 37440 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Completed initialization in 0 ms
+2026-05-24 18:47:53.102  INFO 37440 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Started AdminProductControllerTest in 0.185 seconds (process running for 7.305)
+2026-05-24 18:47:54.272  INFO 37440 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder starting — seeding reference objects for every domain type...
+2026-05-24 18:47:54.273  INFO 37440 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Admin created: admin@instantneed.com / Admin@123
+2026-05-24 18:47:54.273  INFO 37440 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Customer created: buyer@test.com / Buyer@123  (customerId=56e2b91f-bba3-4c01-84a2-5b58b42cb9c0)
+2026-05-24 18:47:54.273  INFO 37440 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Parent category created: office-supplies (id=c2658a2e-5915-409c-bf8b-9a6a538d5efe)
+2026-05-24 18:47:54.273  INFO 37440 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Child category created: paper-notebooks (id=f45cbdb9-1f86-4d5c-b601-c48d895df361)
+2026-05-24 18:47:54.273  INFO 37440 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Product created: A4 Paper (id=aec691aa-d22a-417c-bec2-88e735a58ccd)
+2026-05-24 18:47:54.273  INFO 37440 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Product created: A4 Paper (id=aec691aa-d22a-417c-bec2-88e735a58ccd)
+2026-05-24 18:47:54.274  INFO 37440 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder complete.
+2026-05-24 18:47:54.275  INFO 37440 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder starting — seeding reference objects for every domain type...
+2026-05-24 18:47:54.275  INFO 37440 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Admin user already exists: admin@instantneed.com
+2026-05-24 18:47:54.276  INFO 37440 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Customer user already exists: buyer@test.com
+2026-05-24 18:47:54.276  INFO 37440 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Product already exists: PAPER-A4-500
+2026-05-24 18:47:54.276  INFO 37440 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Product already exists: CLEAN-APC-5L
+2026-05-24 18:47:54.276  INFO 37440 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder complete.
+2026-05-24 18:47:54.277 DEBUG 37440 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 18:47:54.387  WARN 37440 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_REGISTER ip=10.0.0.2 path=/api/v1/auth/register
+2026-05-24 18:47:54.389  WARN 37440 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=10.0.0.1 path=/api/v1/auth/login
+2026-05-24 18:47:54.392  WARN 37440 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=203.0.113.5 path=/api/v1/auth/login
+2026-05-24 18:47:54.486  INFO 37440 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 18:48:04.459  INFO ${sys:PID} --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.InstantNeedApplicationTests]: InstantNeedApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:48:04.502  INFO ${sys:PID} --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.InstantNeedApplicationTests
+2026-05-24 18:48:04.530  INFO ${sys:PID} --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.InstantNeedApplicationTests]: InstantNeedApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:48:04.531  INFO ${sys:PID} --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.InstantNeedApplicationTests
+2026-05-24 18:48:04.558  INFO ${sys:PID} --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 18:48:04.657  INFO 37609 --- [           main] c.b.i.InstantNeedApplicationTests        : Starting InstantNeedApplicationTests using Java 25.0.3 with PID 37609 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 18:48:04.658 DEBUG 37609 --- [           main] c.b.i.InstantNeedApplicationTests        : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 18:48:04.659  INFO 37609 --- [           main] c.b.i.InstantNeedApplicationTests        : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 18:48:04.779  INFO 37609 --- [kground-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 9.0.1.Final
+2026-05-24 18:48:05.138  INFO 37609 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24 18:48:05.178  INFO 37609 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 35 ms. Found 12 JPA repository interfaces.
+2026-05-24 18:48:05.447  INFO 37609 --- [           main] o.h.o.jpa                                : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24 18:48:05.468  INFO 37609 --- [           main] o.h.o.core                               : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24 18:48:05.622  INFO 37609 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24 18:48:05.700  INFO 37609 --- [           main] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/instant_need]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.10
+	Default catalog/schema: instant_need/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24 18:48:06.189  INFO 37609 --- [           main] o.h.o.core                               : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24 18:48:06.192  INFO 37609 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 18:48:06.235  INFO 37609 --- [           main] o.s.d.j.r.q.QueryEnhancerFactories       : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24 18:48:06.883  INFO 37609 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-05-24 18:48:06.883  WARN 37609 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-05-24 18:48:06.926  INFO 37609 --- [           main] c.b.i.c.c.FlywayConfig                   : Running Flyway migrations...
+2026-05-24 18:48:06.997  INFO 37609 --- [           main] o.f.c.FlywayExecutor                     : Database: jdbc:postgresql://localhost:5432/instant_need (PostgreSQL 17.10)
+2026-05-24 18:48:07.028  INFO 37609 --- [           main] o.f.c.i.c.DbValidate                     : Successfully validated 7 migrations (execution time 00:00.016s)
+2026-05-24 18:48:07.038  INFO 37609 --- [           main] o.f.c.i.c.DbMigrate                      : Current version of schema "public": 7
+2026-05-24 18:48:07.040  INFO 37609 --- [           main] o.f.c.i.c.DbMigrate                      : Schema "public" is up to date. No migration necessary.
+2026-05-24 18:48:07.043  INFO 37609 --- [           main] c.b.i.c.c.FlywayConfig                   : Flyway migrations completed.
+2026-05-24 18:48:07.483  INFO 37609 --- [           main] o.s.b.a.e.w.EndpointLinksResolver        : Exposing 2 endpoints beneath base path '/actuator'
+2026-05-24 18:48:07.514  INFO 37609 --- [           main] c.b.i.InstantNeedApplicationTests        : Started InstantNeedApplicationTests in 2.959 seconds (process running for 3.62)
+2026-05-24 18:48:07.552 DEBUG 37609 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 18:48:08.184  INFO 37609 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:48:08.207  INFO 37609 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.auth.controller.AuthControllerTest
+2026-05-24 18:48:08.208  INFO 37609 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:48:08.211  INFO 37609 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.auth.controller.AuthControllerTest
+2026-05-24 18:48:08.217  INFO 37609 --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 18:48:08.244  INFO 37609 --- [           main] c.b.i.a.c.AuthControllerTest             : Starting AuthControllerTest using Java 25.0.3 with PID 37609 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 18:48:08.245 DEBUG 37609 --- [           main] c.b.i.a.c.AuthControllerTest             : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 18:48:08.245  INFO 37609 --- [           main] c.b.i.a.c.AuthControllerTest             : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 18:48:08.454  INFO 37609 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-24 18:48:08.455  INFO 37609 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Initializing Servlet ''
+2026-05-24 18:48:08.455  INFO 37609 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Completed initialization in 0 ms
+2026-05-24 18:48:08.463  INFO 37609 --- [           main] c.b.i.a.c.AuthControllerTest             : Started AuthControllerTest in 0.246 seconds (process running for 4.569)
+2026-05-24 18:48:08.818  INFO 37609 --- [           main] c.b.i.a.s.AuthService                    : Password reset token generated for userId=d7f2be48-e1bf-4e53-b10f-3a7965a20981
+2026-05-24 18:48:08.824  INFO 37609 --- [           main] c.b.i.a.s.AuthService                    : Password reset completed for userId=5c7a4c1f-90ff-4ac5-a6fc-8a64c11fb19c
+2026-05-24 18:48:08.852  INFO 37609 --- [           main] c.b.i.a.s.AuthService                    : Registered new customer: userId=87af4ca9-785e-408d-813e-2e3450ccc27f, customerId=90281f07-e5ce-4ec7-8c7a-171b76a6fd64
+2026-05-24 18:48:08.862  INFO 37609 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.admin.controller.AdminProductControllerTest]: AdminProductControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:48:08.871  INFO 37609 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.admin.controller.AdminProductControllerTest
+2026-05-24 18:48:08.872  INFO 37609 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.admin.controller.AdminProductControllerTest]: AdminProductControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 18:48:08.874  INFO 37609 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.admin.controller.AdminProductControllerTest
+2026-05-24 18:48:08.877  INFO 37609 --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 18:48:08.900  INFO 37609 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Starting AdminProductControllerTest using Java 25.0.3 with PID 37609 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 18:48:08.900 DEBUG 37609 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 18:48:08.900  INFO 37609 --- [           main] c.b.i.a.c.AdminProductControllerTest     : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 18:48:09.121  INFO 37609 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-24 18:48:09.121  INFO 37609 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Initializing Servlet ''
+2026-05-24 18:48:09.122  INFO 37609 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Completed initialization in 1 ms
+2026-05-24 18:48:09.125  INFO 37609 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Started AdminProductControllerTest in 0.248 seconds (process running for 5.231)
+2026-05-24 18:48:10.335  INFO 37609 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder starting — seeding reference objects for every domain type...
+2026-05-24 18:48:10.335  INFO 37609 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Admin created: admin@instantneed.com / Admin@123
+2026-05-24 18:48:10.336  INFO 37609 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Customer created: buyer@test.com / Buyer@123  (customerId=34ce23d1-5cbe-40bf-a967-b76a0132a982)
+2026-05-24 18:48:10.336  INFO 37609 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Parent category created: office-supplies (id=e893aaac-a7a8-41b3-aec2-bcf2ca988cde)
+2026-05-24 18:48:10.336  INFO 37609 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Child category created: paper-notebooks (id=e0803939-c4f4-48e1-b3ef-2cae5029e059)
+2026-05-24 18:48:10.336  INFO 37609 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Product created: A4 Paper (id=bb3eb8c7-7a6c-4d8e-9061-38e233f699df)
+2026-05-24 18:48:10.336  INFO 37609 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Product created: A4 Paper (id=bb3eb8c7-7a6c-4d8e-9061-38e233f699df)
+2026-05-24 18:48:10.336  INFO 37609 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder complete.
+2026-05-24 18:48:10.339  INFO 37609 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder starting — seeding reference objects for every domain type...
+2026-05-24 18:48:10.340  INFO 37609 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Admin user already exists: admin@instantneed.com
+2026-05-24 18:48:10.340  INFO 37609 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Customer user already exists: buyer@test.com
+2026-05-24 18:48:10.340  INFO 37609 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Product already exists: PAPER-A4-500
+2026-05-24 18:48:10.340  INFO 37609 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Product already exists: CLEAN-APC-5L
+2026-05-24 18:48:10.340  INFO 37609 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder complete.
+2026-05-24 18:48:10.341 DEBUG 37609 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 18:48:10.454  WARN 37609 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_REGISTER ip=10.0.0.2 path=/api/v1/auth/register
+2026-05-24 18:48:10.457  WARN 37609 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=10.0.0.1 path=/api/v1/auth/login
+2026-05-24 18:48:10.460  WARN 37609 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=203.0.113.5 path=/api/v1/auth/login
+2026-05-24 18:48:10.546  INFO 37609 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
