@@ -109,7 +109,7 @@ class OrderServiceTest {
         });
 
         PlaceOrderResponse res = orderService.placeOrder(
-                new PlaceOrderRequest(address.getId(), "Please deliver by noon"));
+                new PlaceOrderRequest(null, address.getId(), null, null, "Please deliver by noon"));
 
         assertThat(res.orderNumber()).startsWith("WB-");
         assertThat(res.status()).isEqualTo("PENDING");
@@ -121,7 +121,7 @@ class OrderServiceTest {
         given(cartRepository.findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE))
                 .willReturn(Optional.empty());
 
-        assertThatThrownBy(() -> orderService.placeOrder(new PlaceOrderRequest(address.getId(), null)))
+        assertThatThrownBy(() -> orderService.placeOrder(new PlaceOrderRequest(null, address.getId(), null, null, null)))
                 .isInstanceOf(ApiException.class)
                 .extracting(e -> ((ApiException) e).getHttpStatus())
                 .isEqualTo(HttpStatus.BAD_REQUEST);
@@ -134,7 +134,7 @@ class OrderServiceTest {
         given(cartRepository.findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE))
                 .willReturn(Optional.of(emptyCart));
 
-        assertThatThrownBy(() -> orderService.placeOrder(new PlaceOrderRequest(address.getId(), null)))
+        assertThatThrownBy(() -> orderService.placeOrder(new PlaceOrderRequest(null, address.getId(), null, null, null)))
                 .isInstanceOf(ApiException.class)
                 .hasMessageContaining("empty");
     }
@@ -146,7 +146,7 @@ class OrderServiceTest {
                 .willReturn(Optional.of(cart));
         given(addressRepository.findById(address.getId())).willReturn(Optional.empty());
 
-        assertThatThrownBy(() -> orderService.placeOrder(new PlaceOrderRequest(address.getId(), null)))
+        assertThatThrownBy(() -> orderService.placeOrder(new PlaceOrderRequest(null, address.getId(), null, null, null)))
                 .isInstanceOf(ApiException.class)
                 .extracting(e -> ((ApiException) e).getHttpStatus())
                 .isEqualTo(HttpStatus.NOT_FOUND);
@@ -166,7 +166,7 @@ class OrderServiceTest {
         given(addressRepository.findById(foreignAddress.getId()))
                 .willReturn(Optional.of(foreignAddress));
 
-        assertThatThrownBy(() -> orderService.placeOrder(new PlaceOrderRequest(foreignAddress.getId(), null)))
+        assertThatThrownBy(() -> orderService.placeOrder(new PlaceOrderRequest(null, foreignAddress.getId(), null, null, null)))
                 .isInstanceOf(ApiException.class)
                 .extracting(e -> ((ApiException) e).getHttpStatus())
                 .isEqualTo(HttpStatus.NOT_FOUND); // never reveals existence

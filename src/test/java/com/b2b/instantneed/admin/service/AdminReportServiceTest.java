@@ -123,9 +123,9 @@ class AdminReportServiceTest {
     @Test
     void topProducts_delegatesToRepositoryAndMapsRows() {
         UUID pid = UUID.randomUUID();
-        Object[] row = {"A4 Paper", "PAPER-A4", "INR", pid, 100L, new BigDecimal("25000.00")};
+        Object[] row = {"A4 Paper", "PAPER-A4", "INR", pid.toString(), 100L, new BigDecimal("25000.00")};
         given(orderItemRepository.aggregateByProduct(
-                eq(OrderStatus.CANCELLED), isNull(), isNull(), any()))
+                eq(OrderStatus.CANCELLED.name()), isNull(), isNull(), any()))
                 .willReturn(List.<Object[]>of(row));
 
         List<TopProductEntry> result = service.topProducts(10, null, null);

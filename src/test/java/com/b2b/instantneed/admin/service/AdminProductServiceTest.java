@@ -200,8 +200,8 @@ class AdminProductServiceTest {
         var tiers = service.listPricingTiers(p.getId());
 
         assertThat(tiers).hasSize(2);
-        assertThat(tiers.get(0).minQuantity()).isEqualTo(1);
-        assertThat(tiers.get(1).minQuantity()).isEqualTo(50);
+        assertThat(tiers.get(0).minQty()).isEqualTo(1);
+        assertThat(tiers.get(1).minQty()).isEqualTo(50);
     }
 
     // ── slug deduplication ────────────────────────────────────────────────────

@@ -163,15 +163,15 @@ class AdminProductControllerTest {
     void listPricingTiers_returns200WithTiers() throws Exception {
         UUID id = UUID.randomUUID();
         given(service.listPricingTiers(id)).willReturn(List.of(
-                new PricingTierResponse(1, 49,   new BigDecimal("250.00"), "INR"),
-                new PricingTierResponse(50, null, new BigDecimal("230.00"), "INR")
+                new PricingTierResponse(null, 1, 49,   new BigDecimal("250.00"), "INR"),
+                new PricingTierResponse(null, 50, null, new BigDecimal("230.00"), "INR")
         ));
 
         mockMvc.perform(get("/api/v1/admin/products/{id}/pricing-tiers", id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].minQuantity").value(1))
-                .andExpect(jsonPath("$[1].minQuantity").value(50));
+                .andExpect(jsonPath("$[0].minQty").value(1))
+                .andExpect(jsonPath("$[1].minQty").value(50));
     }
 
     // ── PUT /admin/products/{id}/pricing-tiers ────────────────────────────────
@@ -180,7 +180,7 @@ class AdminProductControllerTest {
     void replacePricingTiers_returns200() throws Exception {
         UUID id = UUID.randomUUID();
         given(service.replacePricingTiers(eq(id), any())).willReturn(List.of(
-                new PricingTierResponse(1, null, new BigDecimal("200.00"), "INR")
+                new PricingTierResponse(null, 1, null, new BigDecimal("200.00"), "INR")
         ));
 
         mockMvc.perform(put("/api/v1/admin/products/{id}/pricing-tiers", id)
@@ -198,7 +198,7 @@ class AdminProductControllerTest {
         return new AdminProductSummary(
                 UUID.randomUUID(), "A4 Paper", "PAPER-A4", "a4-paper",
                 null, null, "IN_STOCK", true, new BigDecimal("250.00"),
-                Instant.now(), Instant.now());
+                0, 0, Instant.now(), Instant.now());
     }
 
     private AdminProductResponse productDetail(UUID id) {
@@ -207,8 +207,8 @@ class AdminProductControllerTest {
                 null, null, "80 GSM A4 paper", "ream",
                 "IN_STOCK", true, new BigDecimal("250.00"),
                 List.of(
-                        new PricingTierResponse(1, 49, new BigDecimal("250.00"), "INR"),
-                        new PricingTierResponse(50, null, new BigDecimal("230.00"), "INR")
+                        new PricingTierResponse(null, 1, 49, new BigDecimal("250.00"), "INR"),
+                        new PricingTierResponse(null, 50, null, new BigDecimal("230.00"), "INR")
                 ),
                 List.of("https://example.com/img.jpg"),
                 Instant.now(), Instant.now());

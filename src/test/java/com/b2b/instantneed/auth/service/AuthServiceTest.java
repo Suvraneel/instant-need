@@ -62,10 +62,13 @@ class AuthServiceTest {
         Address savedAddress = address(savedCustomer);
         given(addressRepository.save(any())).willReturn(savedAddress);
 
-        RegisterResponse res = authService.register(validRegisterRequest());
+        given(jwtUtil.generateAccessToken(any())).willReturn("access-token");
+        given(jwtUtil.generateRefreshToken(any())).willReturn("refresh-token");
 
-        assertThat(res.message()).isEqualTo("Registration successful");
-        assertThat(res.userId()).isEqualTo(savedUser.getId());
+        AuthResponse res = authService.register(validRegisterRequest());
+
+        assertThat(res.accessToken()).isEqualTo("access-token");
+        assertThat(res.user().email()).isEqualTo(savedUser.getEmail());
         verify(customerRepository, times(2)).save(any()); // once for create, once for defaultAddressId
     }
 

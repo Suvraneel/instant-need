@@ -61,3 +61,1145 @@
 2026-05-24 17:26:58.458  INFO 24709 --- [ionShutdownHook] o.s.b.t.GracefulShutdown                 : Commencing graceful shutdown. Waiting for active requests to complete
 2026-05-24 17:26:58.463  INFO 24709 --- [tomcat-shutdown] o.s.b.t.GracefulShutdown                 : Graceful shutdown complete
 2026-05-24 17:26:58.473  INFO 24709 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:35:36.037  INFO 26852 --- [  restartedMain] c.b.i.InstantNeedApplication             : Starting InstantNeedApplication using Java 25.0.3 with PID 26852 (/Users/aayush/Desktop/Developer/Github-Projects/instant-need/target/classes started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:35:36.039 DEBUG 26852 --- [  restartedMain] c.b.i.InstantNeedApplication             : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:35:36.039  INFO 26852 --- [  restartedMain] c.b.i.InstantNeedApplication             : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:35:36.058  INFO 26852 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-24 17:35:36.058  INFO 26852 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-24 17:35:36.144  INFO 26852 --- [kground-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 9.0.1.Final
+2026-05-24 17:35:36.480  INFO 26852 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24 17:35:36.512  INFO 26852 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 29 ms. Found 12 JPA repository interfaces.
+2026-05-24 17:35:36.769  INFO 26852 --- [  restartedMain] o.s.b.t.TomcatWebServer                  : Tomcat initialized with port 8080 (http)
+2026-05-24 17:35:36.775  INFO 26852 --- [  restartedMain] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-24 17:35:36.789  INFO 26852 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 731 ms
+2026-05-24 17:35:36.890  INFO 26852 --- [  restartedMain] o.h.o.jpa                                : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24 17:35:36.916  INFO 26852 --- [  restartedMain] o.h.o.core                               : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24 17:35:37.074  INFO 26852 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24 17:35:37.159  INFO 26852 --- [  restartedMain] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/instant_need]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.10
+	Default catalog/schema: instant_need/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24 17:35:37.619  INFO 26852 --- [  restartedMain] o.h.o.core                               : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24 17:35:37.621  INFO 26852 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:35:37.654  INFO 26852 --- [  restartedMain] o.s.d.j.r.q.QueryEnhancerFactories       : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24 17:35:37.755 DEBUG 26852 --- [  restartedMain] c.b.i.c.s.RateLimitFilter                : Filter 'rateLimitFilter' configured for use
+2026-05-24 17:35:37.755 DEBUG 26852 --- [  restartedMain] o.s.w.f.CommonsRequestLoggingFilter      : Filter 'requestLoggingFilter' configured for use
+2026-05-24 17:35:37.755 DEBUG 26852 --- [  restartedMain] c.b.i.c.s.JwtAuthFilter                  : Filter 'jwtAuthFilter' configured for use
+2026-05-24 17:35:38.400  INFO 26852 --- [  restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-05-24 17:35:38.400  WARN 26852 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-05-24 17:35:38.446  INFO 26852 --- [  restartedMain] c.b.i.c.c.FlywayConfig                   : Running Flyway migrations...
+2026-05-24 17:35:38.520  INFO 26852 --- [  restartedMain] o.f.c.FlywayExecutor                     : Database: jdbc:postgresql://localhost:5432/instant_need (PostgreSQL 17.10)
+2026-05-24 17:35:38.548  INFO 26852 --- [  restartedMain] o.f.c.i.c.DbValidate                     : Successfully validated 7 migrations (execution time 00:00.014s)
+2026-05-24 17:35:38.557  INFO 26852 --- [  restartedMain] o.f.c.i.c.DbMigrate                      : Current version of schema "public": 7
+2026-05-24 17:35:38.558  INFO 26852 --- [  restartedMain] o.f.c.i.c.DbMigrate                      : Schema "public" is up to date. No migration necessary.
+2026-05-24 17:35:38.560  INFO 26852 --- [  restartedMain] c.b.i.c.c.FlywayConfig                   : Flyway migrations completed.
+2026-05-24 17:35:38.956  INFO 26852 --- [  restartedMain] o.s.b.a.e.w.EndpointLinksResolver        : Exposing 2 endpoints beneath base path '/actuator'
+2026-05-24 17:35:38.991  INFO 26852 --- [  restartedMain] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+2026-05-24 17:35:39.000  INFO 26852 --- [  restartedMain] o.s.b.t.TomcatWebServer                  : Tomcat started on port 8080 (http) with context path '/'
+2026-05-24 17:35:39.006  INFO 26852 --- [  restartedMain] c.b.i.InstantNeedApplication             : Started InstantNeedApplication in 3.093 seconds (process running for 3.413)
+2026-05-24 17:35:39.045 DEBUG 26852 --- [  restartedMain] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 17:36:47.626  INFO 26852 --- [ionShutdownHook] o.s.b.t.GracefulShutdown                 : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-24 17:36:47.635  INFO 26852 --- [tomcat-shutdown] o.s.b.t.GracefulShutdown                 : Graceful shutdown complete
+2026-05-24 17:36:47.647  INFO 26852 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:36:51.687  INFO 27135 --- [  restartedMain] c.b.i.InstantNeedApplication             : Starting InstantNeedApplication using Java 25.0.3 with PID 27135 (/Users/aayush/Desktop/Developer/Github-Projects/instant-need/target/classes started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:36:51.689 DEBUG 27135 --- [  restartedMain] c.b.i.InstantNeedApplication             : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:36:51.689  INFO 27135 --- [  restartedMain] c.b.i.InstantNeedApplication             : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:36:51.707  INFO 27135 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-24 17:36:51.707  INFO 27135 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-24 17:36:51.788  INFO 27135 --- [kground-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 9.0.1.Final
+2026-05-24 17:36:52.132  INFO 27135 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24 17:36:52.165  INFO 27135 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 29 ms. Found 12 JPA repository interfaces.
+2026-05-24 17:36:52.436  INFO 27135 --- [  restartedMain] o.s.b.t.TomcatWebServer                  : Tomcat initialized with port 8080 (http)
+2026-05-24 17:36:52.442  INFO 27135 --- [  restartedMain] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-24 17:36:52.456  INFO 27135 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 749 ms
+2026-05-24 17:36:52.589  INFO 27135 --- [  restartedMain] o.h.o.jpa                                : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24 17:36:52.612  INFO 27135 --- [  restartedMain] o.h.o.core                               : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24 17:36:52.781  INFO 27135 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24 17:36:52.876  INFO 27135 --- [  restartedMain] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/instant_need]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.10
+	Default catalog/schema: instant_need/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24 17:36:53.355  INFO 27135 --- [  restartedMain] o.h.o.core                               : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24 17:36:53.358  INFO 27135 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:36:53.393  INFO 27135 --- [  restartedMain] o.s.d.j.r.q.QueryEnhancerFactories       : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24 17:36:53.495 DEBUG 27135 --- [  restartedMain] c.b.i.c.s.RateLimitFilter                : Filter 'rateLimitFilter' configured for use
+2026-05-24 17:36:53.495 DEBUG 27135 --- [  restartedMain] o.s.w.f.CommonsRequestLoggingFilter      : Filter 'requestLoggingFilter' configured for use
+2026-05-24 17:36:53.495 DEBUG 27135 --- [  restartedMain] c.b.i.c.s.JwtAuthFilter                  : Filter 'jwtAuthFilter' configured for use
+2026-05-24 17:36:54.190  INFO 27135 --- [  restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-05-24 17:36:54.190  WARN 27135 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-05-24 17:36:54.231  INFO 27135 --- [  restartedMain] c.b.i.c.c.FlywayConfig                   : Running Flyway migrations...
+2026-05-24 17:36:54.293  INFO 27135 --- [  restartedMain] o.f.c.FlywayExecutor                     : Database: jdbc:postgresql://localhost:5432/instant_need (PostgreSQL 17.10)
+2026-05-24 17:36:54.326  INFO 27135 --- [  restartedMain] o.f.c.i.c.DbValidate                     : Successfully validated 7 migrations (execution time 00:00.012s)
+2026-05-24 17:36:54.336  INFO 27135 --- [  restartedMain] o.f.c.i.c.DbMigrate                      : Current version of schema "public": 7
+2026-05-24 17:36:54.337  INFO 27135 --- [  restartedMain] o.f.c.i.c.DbMigrate                      : Schema "public" is up to date. No migration necessary.
+2026-05-24 17:36:54.339  INFO 27135 --- [  restartedMain] c.b.i.c.c.FlywayConfig                   : Flyway migrations completed.
+2026-05-24 17:36:54.739  INFO 27135 --- [  restartedMain] o.s.b.a.e.w.EndpointLinksResolver        : Exposing 2 endpoints beneath base path '/actuator'
+2026-05-24 17:36:54.774  INFO 27135 --- [  restartedMain] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+2026-05-24 17:36:54.778  INFO 27135 --- [  restartedMain] o.s.b.t.TomcatWebServer                  : Tomcat started on port 8080 (http) with context path '/'
+2026-05-24 17:36:54.784  INFO 27135 --- [  restartedMain] c.b.i.InstantNeedApplication             : Started InstantNeedApplication in 3.208 seconds (process running for 3.5)
+2026-05-24 17:36:54.817 DEBUG 27135 --- [  restartedMain] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 17:39:36.343  INFO 27135 --- [ionShutdownHook] o.s.b.t.GracefulShutdown                 : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-24 17:39:36.354  INFO 27135 --- [tomcat-shutdown] o.s.b.t.GracefulShutdown                 : Graceful shutdown complete
+2026-05-24 17:39:36.366  INFO 27135 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:41:08.147  INFO ${sys:PID} --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.InstantNeedApplicationTests]: InstantNeedApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:41:08.196  INFO ${sys:PID} --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.InstantNeedApplicationTests
+2026-05-24 17:41:08.229  INFO ${sys:PID} --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.InstantNeedApplicationTests]: InstantNeedApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:41:08.230  INFO ${sys:PID} --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.InstantNeedApplicationTests
+2026-05-24 17:41:08.266  INFO ${sys:PID} --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 17:41:08.375  INFO 27729 --- [           main] c.b.i.InstantNeedApplicationTests        : Starting InstantNeedApplicationTests using Java 25.0.3 with PID 27729 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:41:08.376 DEBUG 27729 --- [           main] c.b.i.InstantNeedApplicationTests        : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:41:08.376  INFO 27729 --- [           main] c.b.i.InstantNeedApplicationTests        : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:41:08.530  INFO 27729 --- [kground-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 9.0.1.Final
+2026-05-24 17:41:08.944  INFO 27729 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24 17:41:08.986  INFO 27729 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 37 ms. Found 12 JPA repository interfaces.
+2026-05-24 17:41:09.283  INFO 27729 --- [           main] o.h.o.jpa                                : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24 17:41:09.310  INFO 27729 --- [           main] o.h.o.core                               : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24 17:41:09.511  INFO 27729 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24 17:41:09.600  INFO 27729 --- [           main] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/instant_need]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.10
+	Default catalog/schema: instant_need/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24 17:41:10.130  INFO 27729 --- [           main] o.h.o.core                               : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24 17:41:10.134  INFO 27729 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:41:10.177  INFO 27729 --- [           main] o.s.d.j.r.q.QueryEnhancerFactories       : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24 17:41:10.835  INFO 27729 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-05-24 17:41:10.835  WARN 27729 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-05-24 17:41:10.885  INFO 27729 --- [           main] c.b.i.c.c.FlywayConfig                   : Running Flyway migrations...
+2026-05-24 17:41:10.958  INFO 27729 --- [           main] o.f.c.FlywayExecutor                     : Database: jdbc:postgresql://localhost:5432/instant_need (PostgreSQL 17.10)
+2026-05-24 17:41:10.984  INFO 27729 --- [           main] o.f.c.i.c.DbValidate                     : Successfully validated 7 migrations (execution time 00:00.013s)
+2026-05-24 17:41:10.991  INFO 27729 --- [           main] o.f.c.i.c.DbMigrate                      : Current version of schema "public": 7
+2026-05-24 17:41:10.993  INFO 27729 --- [           main] o.f.c.i.c.DbMigrate                      : Schema "public" is up to date. No migration necessary.
+2026-05-24 17:41:10.996  INFO 27729 --- [           main] c.b.i.c.c.FlywayConfig                   : Flyway migrations completed.
+2026-05-24 17:41:11.489  INFO 27729 --- [           main] o.s.b.a.e.w.EndpointLinksResolver        : Exposing 2 endpoints beneath base path '/actuator'
+2026-05-24 17:41:11.523  INFO 27729 --- [           main] c.b.i.InstantNeedApplicationTests        : Started InstantNeedApplicationTests in 3.262 seconds (process running for 4.084)
+2026-05-24 17:41:11.568 DEBUG 27729 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 17:41:12.179  INFO 27729 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:41:12.202  INFO 27729 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.auth.controller.AuthControllerTest
+2026-05-24 17:41:12.204  INFO 27729 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:41:12.207  INFO 27729 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.auth.controller.AuthControllerTest
+2026-05-24 17:41:12.212  INFO 27729 --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 17:41:12.243  INFO 27729 --- [           main] c.b.i.a.c.AuthControllerTest             : Starting AuthControllerTest using Java 25.0.3 with PID 27729 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:41:12.243 DEBUG 27729 --- [           main] c.b.i.a.c.AuthControllerTest             : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:41:12.244  INFO 27729 --- [           main] c.b.i.a.c.AuthControllerTest             : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:41:12.484  INFO 27729 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-24 17:41:12.484  INFO 27729 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Initializing Servlet ''
+2026-05-24 17:41:12.485  INFO 27729 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Completed initialization in 1 ms
+2026-05-24 17:41:12.494  INFO 27729 --- [           main] c.b.i.a.c.AuthControllerTest             : Started AuthControllerTest in 0.283 seconds (process running for 5.055)
+2026-05-24 17:41:12.647  WARN 27729 --- [           main] o.s.t.c.TestContextManager               : Caught exception while invoking 'afterTestMethod' callback on TestExecutionListener [org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener] for test method [void com.b2b.instantneed.auth.controller.AuthControllerTest.register_validRequest_returns201() throws java.lang.Exception] and test instance [com.b2b.instantneed.auth.controller.AuthControllerTest@50eac4a5]
+
+org.mockito.exceptions.misusing.InvalidUseOfMatchersException: 
+Misplaced or misused argument matcher detected here:
+
+-> at com.b2b.instantneed.auth.controller.AuthControllerTest.register_validRequest_returns201(AuthControllerTest.java:53)
+
+You cannot use argument matchers outside of verification or stubbing.
+Examples of correct usage of argument matchers:
+    when(mock.get(anyInt())).thenReturn(null);
+    doThrow(new RuntimeException()).when(mock).someVoidMethod(any());
+    verify(mock).someMethod(contains("foo"))
+
+This message may appear after an NullPointerException if the last matcher is returning an object 
+like any() but the stubbed method signature expect a primitive argument, in this case,
+use primitive alternatives.
+    when(mock.get(any())); // bad use, will raise NPE
+    when(mock.get(anyInt())); // correct usage use
+
+Also, this error might show up because you use argument matchers with methods that cannot be mocked.
+Following methods *cannot* be stubbed/verified: final/private/equals()/hashCode().
+Mocking methods declared on non-public parent classes is not supported.
+
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:123) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:110) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.afterTestMethod(MockitoResetTestExecutionListener.java:103) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.TestContextManager.afterTestMethod(TestContextManager.java:488) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.junit.jupiter.SpringExtension.afterEach(SpringExtension.java:357) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$1(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$0(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder(CollectionUtils.java:209) ~[junit-platform-commons-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.invokeAfterCallbacks(CallbackSupport.java:48) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeAfterEachCallbacks(TestMethodTestDescriptor.java:260) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:163) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:70) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:176) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:36) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:52) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:58) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.executeEngine(EngineExecutionOrchestrator.java:246) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.failOrExecuteEngine(EngineExecutionOrchestrator.java:218) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:179) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:66) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:157) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:65) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:125) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$2(InterceptingLauncher.java:57) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:56) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?]
+	at org.apache.maven.surefire.api.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:125) ~[surefire-api-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithCancellationToken(LauncherAdapter.java:68) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:54) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) [surefire-booter-3.5.5.jar:3.5.5]
+
+2026-05-24 17:41:12.657  WARN 27729 --- [           main] o.s.t.c.TestContextManager               : Caught exception while invoking 'afterTestMethod' callback on TestExecutionListener [org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener] for test method [void com.b2b.instantneed.auth.controller.AuthControllerTest.login_validCredentials_returns200WithTokens() throws java.lang.Exception] and test instance [com.b2b.instantneed.auth.controller.AuthControllerTest@2399575a]
+
+org.mockito.exceptions.misusing.UnfinishedStubbingException: 
+Unfinished stubbing detected here:
+-> at com.b2b.instantneed.auth.controller.AuthControllerTest.login_validCredentials_returns200WithTokens(AuthControllerTest.java:99)
+
+E.g. thenReturn() may be missing.
+Examples of correct stubbing:
+    when(mock.isOk()).thenReturn(true);
+    when(mock.isOk()).thenThrow(exception);
+    doThrow(exception).when(mock).someVoidMethod();
+Hints:
+ 1. missing thenReturn()
+ 2. you are trying to stub a final method, which is not supported
+ 3. you are stubbing the behaviour of another mock inside before 'thenReturn' instruction is completed, possibly on another thread
+
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:123) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:110) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.afterTestMethod(MockitoResetTestExecutionListener.java:103) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.TestContextManager.afterTestMethod(TestContextManager.java:488) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.junit.jupiter.SpringExtension.afterEach(SpringExtension.java:357) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$1(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$0(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder(CollectionUtils.java:209) ~[junit-platform-commons-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.invokeAfterCallbacks(CallbackSupport.java:48) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeAfterEachCallbacks(TestMethodTestDescriptor.java:260) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:163) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:70) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:176) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:36) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:52) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:58) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.executeEngine(EngineExecutionOrchestrator.java:246) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.failOrExecuteEngine(EngineExecutionOrchestrator.java:218) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:179) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:66) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:157) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:65) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:125) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$2(InterceptingLauncher.java:57) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:56) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?]
+	at org.apache.maven.surefire.api.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:125) ~[surefire-api-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithCancellationToken(LauncherAdapter.java:68) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:54) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) [surefire-booter-3.5.5.jar:3.5.5]
+
+2026-05-24 17:41:12.677  WARN 27729 --- [           main] o.s.t.c.TestContextManager               : Caught exception while invoking 'afterTestMethod' callback on TestExecutionListener [org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener] for test method [void com.b2b.instantneed.auth.controller.AuthControllerTest.refresh_validToken_returns200() throws java.lang.Exception] and test instance [com.b2b.instantneed.auth.controller.AuthControllerTest@57323a37]
+
+org.mockito.exceptions.misusing.UnfinishedStubbingException: 
+Unfinished stubbing detected here:
+-> at com.b2b.instantneed.auth.controller.AuthControllerTest.refresh_validToken_returns200(AuthControllerTest.java:129)
+
+E.g. thenReturn() may be missing.
+Examples of correct stubbing:
+    when(mock.isOk()).thenReturn(true);
+    when(mock.isOk()).thenThrow(exception);
+    doThrow(exception).when(mock).someVoidMethod();
+Hints:
+ 1. missing thenReturn()
+ 2. you are trying to stub a final method, which is not supported
+ 3. you are stubbing the behaviour of another mock inside before 'thenReturn' instruction is completed, possibly on another thread
+
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:123) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:110) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.afterTestMethod(MockitoResetTestExecutionListener.java:103) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.TestContextManager.afterTestMethod(TestContextManager.java:488) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.junit.jupiter.SpringExtension.afterEach(SpringExtension.java:357) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$1(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$0(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder(CollectionUtils.java:209) ~[junit-platform-commons-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.invokeAfterCallbacks(CallbackSupport.java:48) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeAfterEachCallbacks(TestMethodTestDescriptor.java:260) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:163) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:70) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:176) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:36) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:52) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:58) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.executeEngine(EngineExecutionOrchestrator.java:246) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.failOrExecuteEngine(EngineExecutionOrchestrator.java:218) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:179) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:66) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:157) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:65) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:125) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$2(InterceptingLauncher.java:57) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:56) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?]
+	at org.apache.maven.surefire.api.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:125) ~[surefire-api-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithCancellationToken(LauncherAdapter.java:68) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:54) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) [surefire-booter-3.5.5.jar:3.5.5]
+
+2026-05-24 17:41:12.867  INFO 27729 --- [           main] c.b.i.a.s.AuthService                    : Password reset token generated for userId=a2d0d839-a69b-4799-a262-081d74a6c316
+2026-05-24 17:41:12.873  INFO 27729 --- [           main] c.b.i.a.s.AuthService                    : Password reset completed for userId=d369e1a3-7ce9-4a52-b1ce-2f61042a6020
+2026-05-24 17:41:12.890  INFO 27729 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.admin.controller.AdminProductControllerTest]: AdminProductControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:41:12.900  INFO 27729 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.admin.controller.AdminProductControllerTest
+2026-05-24 17:41:12.901  INFO 27729 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.admin.controller.AdminProductControllerTest]: AdminProductControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:41:12.903  INFO 27729 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.admin.controller.AdminProductControllerTest
+2026-05-24 17:41:12.905  INFO 27729 --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 17:41:12.921  INFO 27729 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Starting AdminProductControllerTest using Java 25.0.3 with PID 27729 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:41:12.921 DEBUG 27729 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:41:12.921  INFO 27729 --- [           main] c.b.i.a.c.AdminProductControllerTest     : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:41:13.093  INFO 27729 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-24 17:41:13.093  INFO 27729 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Initializing Servlet ''
+2026-05-24 17:41:13.094  INFO 27729 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Completed initialization in 1 ms
+2026-05-24 17:41:13.097  INFO 27729 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Started AdminProductControllerTest in 0.192 seconds (process running for 5.658)
+2026-05-24 17:41:13.101  WARN 27729 --- [           main] o.s.t.c.TestContextManager               : Caught exception while invoking 'afterTestMethod' callback on TestExecutionListener [org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener] for test method [void com.b2b.instantneed.admin.controller.AdminProductControllerTest.createProduct_validRequest_returns201() throws java.lang.Exception] and test instance [com.b2b.instantneed.admin.controller.AdminProductControllerTest@3a1b07d]
+
+org.mockito.exceptions.misusing.UnfinishedStubbingException: 
+Unfinished stubbing detected here:
+-> at com.b2b.instantneed.admin.controller.AdminProductControllerTest.createProduct_validRequest_returns201(AdminProductControllerTest.java:97)
+
+E.g. thenReturn() may be missing.
+Examples of correct stubbing:
+    when(mock.isOk()).thenReturn(true);
+    when(mock.isOk()).thenThrow(exception);
+    doThrow(exception).when(mock).someVoidMethod();
+Hints:
+ 1. missing thenReturn()
+ 2. you are trying to stub a final method, which is not supported
+ 3. you are stubbing the behaviour of another mock inside before 'thenReturn' instruction is completed, possibly on another thread
+
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:123) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:110) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.afterTestMethod(MockitoResetTestExecutionListener.java:103) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.TestContextManager.afterTestMethod(TestContextManager.java:488) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.junit.jupiter.SpringExtension.afterEach(SpringExtension.java:357) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$1(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$0(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder(CollectionUtils.java:209) ~[junit-platform-commons-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.invokeAfterCallbacks(CallbackSupport.java:48) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeAfterEachCallbacks(TestMethodTestDescriptor.java:260) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:163) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:70) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:176) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:36) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:52) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:58) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.executeEngine(EngineExecutionOrchestrator.java:246) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.failOrExecuteEngine(EngineExecutionOrchestrator.java:218) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:179) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:66) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:157) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:65) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:125) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$2(InterceptingLauncher.java:57) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:56) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?]
+	at org.apache.maven.surefire.api.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:125) ~[surefire-api-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithCancellationToken(LauncherAdapter.java:68) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:54) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) [surefire-booter-3.5.5.jar:3.5.5]
+
+2026-05-24 17:41:13.138  WARN 27729 --- [           main] o.s.t.c.TestContextManager               : Caught exception while invoking 'afterTestMethod' callback on TestExecutionListener [org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener] for test method [void com.b2b.instantneed.admin.controller.AdminProductControllerTest.replacePricingTiers_returns200() throws java.lang.Exception] and test instance [com.b2b.instantneed.admin.controller.AdminProductControllerTest@5f2d61cd]
+
+org.mockito.exceptions.misusing.UnfinishedStubbingException: 
+Unfinished stubbing detected here:
+-> at com.b2b.instantneed.admin.controller.AdminProductControllerTest.replacePricingTiers_returns200(AdminProductControllerTest.java:182)
+
+E.g. thenReturn() may be missing.
+Examples of correct stubbing:
+    when(mock.isOk()).thenReturn(true);
+    when(mock.isOk()).thenThrow(exception);
+    doThrow(exception).when(mock).someVoidMethod();
+Hints:
+ 1. missing thenReturn()
+ 2. you are trying to stub a final method, which is not supported
+ 3. you are stubbing the behaviour of another mock inside before 'thenReturn' instruction is completed, possibly on another thread
+
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:123) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:110) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.afterTestMethod(MockitoResetTestExecutionListener.java:103) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.TestContextManager.afterTestMethod(TestContextManager.java:488) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.junit.jupiter.SpringExtension.afterEach(SpringExtension.java:357) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$1(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$0(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder(CollectionUtils.java:209) ~[junit-platform-commons-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.invokeAfterCallbacks(CallbackSupport.java:48) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeAfterEachCallbacks(TestMethodTestDescriptor.java:260) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:163) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:70) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:176) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:36) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:52) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:58) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.executeEngine(EngineExecutionOrchestrator.java:246) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.failOrExecuteEngine(EngineExecutionOrchestrator.java:218) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:179) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:66) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:157) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:65) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:125) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$2(InterceptingLauncher.java:57) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:56) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?]
+	at org.apache.maven.surefire.api.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:125) ~[surefire-api-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithCancellationToken(LauncherAdapter.java:68) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:54) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) [surefire-booter-3.5.5.jar:3.5.5]
+
+2026-05-24 17:41:13.141  WARN 27729 --- [           main] o.s.t.c.TestContextManager               : Caught exception while invoking 'afterTestMethod' callback on TestExecutionListener [org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener] for test method [void com.b2b.instantneed.admin.controller.AdminProductControllerTest.updateProduct_returns200() throws java.lang.Exception] and test instance [com.b2b.instantneed.admin.controller.AdminProductControllerTest@473b82c3]
+
+org.mockito.exceptions.misusing.UnfinishedStubbingException: 
+Unfinished stubbing detected here:
+-> at com.b2b.instantneed.admin.controller.AdminProductControllerTest.updateProduct_returns200(AdminProductControllerTest.java:139)
+
+E.g. thenReturn() may be missing.
+Examples of correct stubbing:
+    when(mock.isOk()).thenReturn(true);
+    when(mock.isOk()).thenThrow(exception);
+    doThrow(exception).when(mock).someVoidMethod();
+Hints:
+ 1. missing thenReturn()
+ 2. you are trying to stub a final method, which is not supported
+ 3. you are stubbing the behaviour of another mock inside before 'thenReturn' instruction is completed, possibly on another thread
+
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:123) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:110) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.afterTestMethod(MockitoResetTestExecutionListener.java:103) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.TestContextManager.afterTestMethod(TestContextManager.java:488) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.junit.jupiter.SpringExtension.afterEach(SpringExtension.java:357) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$1(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$0(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder(CollectionUtils.java:209) ~[junit-platform-commons-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.invokeAfterCallbacks(CallbackSupport.java:48) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeAfterEachCallbacks(TestMethodTestDescriptor.java:260) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:163) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:70) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:176) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:36) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:52) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:58) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.executeEngine(EngineExecutionOrchestrator.java:246) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.failOrExecuteEngine(EngineExecutionOrchestrator.java:218) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:179) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:66) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:157) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:65) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:125) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$2(InterceptingLauncher.java:57) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:56) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?]
+	at org.apache.maven.surefire.api.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:125) ~[surefire-api-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithCancellationToken(LauncherAdapter.java:68) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:54) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) [surefire-booter-3.5.5.jar:3.5.5]
+
+2026-05-24 17:41:13.148  WARN 27729 --- [           main] o.s.t.c.TestContextManager               : Caught exception while invoking 'afterTestMethod' callback on TestExecutionListener [org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener] for test method [void com.b2b.instantneed.admin.controller.AdminProductControllerTest.getProduct_found_returns200() throws java.lang.Exception] and test instance [com.b2b.instantneed.admin.controller.AdminProductControllerTest@4d8e293]
+
+org.mockito.exceptions.misusing.UnfinishedStubbingException: 
+Unfinished stubbing detected here:
+-> at com.b2b.instantneed.admin.controller.AdminProductControllerTest.getProduct_found_returns200(AdminProductControllerTest.java:84)
+
+E.g. thenReturn() may be missing.
+Examples of correct stubbing:
+    when(mock.isOk()).thenReturn(true);
+    when(mock.isOk()).thenThrow(exception);
+    doThrow(exception).when(mock).someVoidMethod();
+Hints:
+ 1. missing thenReturn()
+ 2. you are trying to stub a final method, which is not supported
+ 3. you are stubbing the behaviour of another mock inside before 'thenReturn' instruction is completed, possibly on another thread
+
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:123) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:110) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.afterTestMethod(MockitoResetTestExecutionListener.java:103) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.TestContextManager.afterTestMethod(TestContextManager.java:488) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.junit.jupiter.SpringExtension.afterEach(SpringExtension.java:357) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$1(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$0(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder(CollectionUtils.java:209) ~[junit-platform-commons-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.invokeAfterCallbacks(CallbackSupport.java:48) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeAfterEachCallbacks(TestMethodTestDescriptor.java:260) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:163) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:70) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:176) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:36) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:52) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:58) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.executeEngine(EngineExecutionOrchestrator.java:246) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.failOrExecuteEngine(EngineExecutionOrchestrator.java:218) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:179) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:66) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:157) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:65) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:125) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$2(InterceptingLauncher.java:57) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:56) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?]
+	at org.apache.maven.surefire.api.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:125) ~[surefire-api-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithCancellationToken(LauncherAdapter.java:68) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:54) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) [surefire-booter-3.5.5.jar:3.5.5]
+
+2026-05-24 17:41:13.175  WARN 27729 --- [           main] o.s.t.c.TestContextManager               : Caught exception while invoking 'afterTestMethod' callback on TestExecutionListener [org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener] for test method [void com.b2b.instantneed.admin.controller.AdminProductControllerTest.listPricingTiers_returns200WithTiers() throws java.lang.Exception] and test instance [com.b2b.instantneed.admin.controller.AdminProductControllerTest@1c26d322]
+
+org.mockito.exceptions.misusing.UnfinishedStubbingException: 
+Unfinished stubbing detected here:
+-> at com.b2b.instantneed.admin.controller.AdminProductControllerTest.listPricingTiers_returns200WithTiers(AdminProductControllerTest.java:165)
+
+E.g. thenReturn() may be missing.
+Examples of correct stubbing:
+    when(mock.isOk()).thenReturn(true);
+    when(mock.isOk()).thenThrow(exception);
+    doThrow(exception).when(mock).someVoidMethod();
+Hints:
+ 1. missing thenReturn()
+ 2. you are trying to stub a final method, which is not supported
+ 3. you are stubbing the behaviour of another mock inside before 'thenReturn' instruction is completed, possibly on another thread
+
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:123) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.resetMocks(MockitoResetTestExecutionListener.java:110) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.bean.override.mockito.MockitoResetTestExecutionListener.afterTestMethod(MockitoResetTestExecutionListener.java:103) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.TestContextManager.afterTestMethod(TestContextManager.java:488) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.springframework.test.context.junit.jupiter.SpringExtension.afterEach(SpringExtension.java:357) ~[spring-test-7.0.7.jar:7.0.7]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$1(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.lambda$invokeAfterCallbacks$0(CallbackSupport.java:49) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder(CollectionUtils.java:209) ~[junit-platform-commons-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.CallbackSupport.invokeAfterCallbacks(CallbackSupport.java:48) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeAfterEachCallbacks(TestMethodTestDescriptor.java:260) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:163) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:70) ~[junit-jupiter-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:176) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:42) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$2(NodeTestTask.java:180) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$1(NodeTestTask.java:166) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:138) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$0(NodeTestTask.java:164) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:74) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:163) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:116) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:36) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:52) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:58) ~[junit-platform-engine-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.executeEngine(EngineExecutionOrchestrator.java:246) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.failOrExecuteEngine(EngineExecutionOrchestrator.java:218) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:179) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:108) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:66) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:157) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:65) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:125) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.lambda$execute$2(InterceptingLauncher.java:57) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.ClasspathAlignmentCheckingLauncherInterceptor.intercept(ClasspathAlignmentCheckingLauncherInterceptor.java:25) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.InterceptingLauncher.execute(InterceptingLauncher.java:56) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:58) ~[junit-platform-launcher-6.0.3.jar:6.0.3]
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104) ~[?:?]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565) ~[?:?]
+	at org.apache.maven.surefire.api.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:125) ~[surefire-api-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.executeWithCancellationToken(LauncherAdapter.java:68) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.LauncherAdapter.execute(LauncherAdapter.java:54) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:203) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:168) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:136) ~[surefire-junit-platform-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507) [surefire-booter-3.5.5.jar:3.5.5]
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495) [surefire-booter-3.5.5.jar:3.5.5]
+
+2026-05-24 17:41:14.758  INFO 27729 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder starting — seeding reference objects for every domain type...
+2026-05-24 17:41:14.758  INFO 27729 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Admin created: admin@instantneed.com / Admin@123
+2026-05-24 17:41:14.759  INFO 27729 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Customer created: buyer@test.com / Buyer@123  (customerId=d544048f-f3ac-4591-9912-78cc98bd3a61)
+2026-05-24 17:41:14.759  INFO 27729 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Parent category created: office-supplies (id=bee95612-c6bf-499f-a299-73ad0d277531)
+2026-05-24 17:41:14.759  INFO 27729 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Child category created: paper-notebooks (id=383ece10-b0f8-4006-8583-c01658b1ea14)
+2026-05-24 17:41:14.759  INFO 27729 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Product created: A4 Paper (id=8ad39fb4-7f90-45e6-8217-a4cc040c8913)
+2026-05-24 17:41:14.759  INFO 27729 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Product created: A4 Paper (id=8ad39fb4-7f90-45e6-8217-a4cc040c8913)
+2026-05-24 17:41:14.759  INFO 27729 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder complete.
+2026-05-24 17:41:14.762  INFO 27729 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder starting — seeding reference objects for every domain type...
+2026-05-24 17:41:14.762  INFO 27729 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Admin user already exists: admin@instantneed.com
+2026-05-24 17:41:14.762  INFO 27729 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Customer user already exists: buyer@test.com
+2026-05-24 17:41:14.762  INFO 27729 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Product already exists: PAPER-A4-500
+2026-05-24 17:41:14.762  INFO 27729 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Product already exists: CLEAN-APC-5L
+2026-05-24 17:41:14.763  INFO 27729 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder complete.
+2026-05-24 17:41:14.764 DEBUG 27729 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 17:41:14.912  WARN 27729 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_REGISTER ip=10.0.0.2 path=/api/v1/auth/register
+2026-05-24 17:41:14.915  WARN 27729 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=10.0.0.1 path=/api/v1/auth/login
+2026-05-24 17:41:14.918  WARN 27729 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=203.0.113.5 path=/api/v1/auth/login
+2026-05-24 17:41:15.047  INFO 27729 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:49:07.328  INFO ${sys:PID} --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.InstantNeedApplicationTests]: InstantNeedApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:07.388  INFO ${sys:PID} --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.InstantNeedApplicationTests
+2026-05-24 17:49:07.424  INFO ${sys:PID} --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.InstantNeedApplicationTests]: InstantNeedApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:07.425  INFO ${sys:PID} --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.InstantNeedApplicationTests
+2026-05-24 17:49:07.461  INFO ${sys:PID} --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 17:49:07.581  INFO 28614 --- [           main] c.b.i.InstantNeedApplicationTests        : Starting InstantNeedApplicationTests using Java 25.0.3 with PID 28614 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:49:07.582 DEBUG 28614 --- [           main] c.b.i.InstantNeedApplicationTests        : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:49:07.583  INFO 28614 --- [           main] c.b.i.InstantNeedApplicationTests        : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:49:07.755  INFO 28614 --- [kground-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 9.0.1.Final
+2026-05-24 17:49:08.253  INFO 28614 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24 17:49:08.314  INFO 28614 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 54 ms. Found 12 JPA repository interfaces.
+2026-05-24 17:49:08.649  INFO 28614 --- [           main] o.h.o.jpa                                : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24 17:49:08.682  INFO 28614 --- [           main] o.h.o.core                               : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24 17:49:08.888  INFO 28614 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24 17:49:08.991  INFO 28614 --- [           main] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/instant_need]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.10
+	Default catalog/schema: instant_need/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24 17:49:09.614  INFO 28614 --- [           main] o.h.o.core                               : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24 17:49:09.618  INFO 28614 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:49:09.668  INFO 28614 --- [           main] o.s.d.j.r.q.QueryEnhancerFactories       : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24 17:49:10.437  INFO 28614 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-05-24 17:49:10.437  WARN 28614 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-05-24 17:49:10.486  INFO 28614 --- [           main] c.b.i.c.c.FlywayConfig                   : Running Flyway migrations...
+2026-05-24 17:49:10.563  INFO 28614 --- [           main] o.f.c.FlywayExecutor                     : Database: jdbc:postgresql://localhost:5432/instant_need (PostgreSQL 17.10)
+2026-05-24 17:49:10.591  INFO 28614 --- [           main] o.f.c.i.c.DbValidate                     : Successfully validated 7 migrations (execution time 00:00.014s)
+2026-05-24 17:49:10.604  INFO 28614 --- [           main] o.f.c.i.c.DbMigrate                      : Current version of schema "public": 7
+2026-05-24 17:49:10.606  INFO 28614 --- [           main] o.f.c.i.c.DbMigrate                      : Schema "public" is up to date. No migration necessary.
+2026-05-24 17:49:10.608  INFO 28614 --- [           main] c.b.i.c.c.FlywayConfig                   : Flyway migrations completed.
+2026-05-24 17:49:11.153  INFO 28614 --- [           main] o.s.b.a.e.w.EndpointLinksResolver        : Exposing 2 endpoints beneath base path '/actuator'
+2026-05-24 17:49:11.191  INFO 28614 --- [           main] c.b.i.InstantNeedApplicationTests        : Started InstantNeedApplicationTests in 3.735 seconds (process running for 4.604)
+2026-05-24 17:49:11.240 DEBUG 28614 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 17:49:11.889  INFO 28614 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:11.921  INFO 28614 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.auth.controller.AuthControllerTest
+2026-05-24 17:49:11.922  INFO 28614 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:11.925  INFO 28614 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.auth.controller.AuthControllerTest
+2026-05-24 17:49:11.933  INFO 28614 --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 17:49:11.968  INFO 28614 --- [           main] c.b.i.a.c.AuthControllerTest             : Starting AuthControllerTest using Java 25.0.3 with PID 28614 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:49:11.970 DEBUG 28614 --- [           main] c.b.i.a.c.AuthControllerTest             : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:49:11.970  INFO 28614 --- [           main] c.b.i.a.c.AuthControllerTest             : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:49:12.245  INFO 28614 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-24 17:49:12.245  INFO 28614 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Initializing Servlet ''
+2026-05-24 17:49:12.246  INFO 28614 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Completed initialization in 1 ms
+2026-05-24 17:49:12.255  INFO 28614 --- [           main] c.b.i.a.c.AuthControllerTest             : Started AuthControllerTest in 0.323 seconds (process running for 5.668)
+2026-05-24 17:49:12.670  INFO 28614 --- [           main] c.b.i.a.s.AuthService                    : Password reset token generated for userId=23653fff-dc90-4507-9f34-8c6e44494711
+2026-05-24 17:49:12.675  INFO 28614 --- [           main] c.b.i.a.s.AuthService                    : Password reset completed for userId=8e37948f-68a8-46b5-beba-8942ebfea200
+2026-05-24 17:49:12.710  INFO 28614 --- [           main] c.b.i.a.s.AuthService                    : Registered new customer: userId=82796466-7201-4287-8992-8b86645296d0, customerId=badd6210-aba0-460c-a89d-cb60c07ac686
+2026-05-24 17:49:12.725  INFO 28614 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.admin.controller.AdminProductControllerTest]: AdminProductControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:12.738  INFO 28614 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.admin.controller.AdminProductControllerTest
+2026-05-24 17:49:12.738  INFO 28614 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.admin.controller.AdminProductControllerTest]: AdminProductControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:12.740  INFO 28614 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.admin.controller.AdminProductControllerTest
+2026-05-24 17:49:12.743  INFO 28614 --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 17:49:12.767  INFO 28614 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Starting AdminProductControllerTest using Java 25.0.3 with PID 28614 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:49:12.767 DEBUG 28614 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:49:12.768  INFO 28614 --- [           main] c.b.i.a.c.AdminProductControllerTest     : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:49:12.981  INFO 28614 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-24 17:49:12.981  INFO 28614 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Initializing Servlet ''
+2026-05-24 17:49:12.981  INFO 28614 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Completed initialization in 0 ms
+2026-05-24 17:49:12.984  INFO 28614 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Started AdminProductControllerTest in 0.241 seconds (process running for 6.397)
+2026-05-24 17:49:14.507  INFO 28614 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder starting — seeding reference objects for every domain type...
+2026-05-24 17:49:14.507  INFO 28614 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Admin created: admin@instantneed.com / Admin@123
+2026-05-24 17:49:14.507  INFO 28614 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Customer created: buyer@test.com / Buyer@123  (customerId=235625ce-8fea-4970-963c-fa3e4a7eb79d)
+2026-05-24 17:49:14.508  INFO 28614 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Parent category created: office-supplies (id=ddce6cab-86c2-4dcb-8dee-f54580f0bdba)
+2026-05-24 17:49:14.508  INFO 28614 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Child category created: paper-notebooks (id=8db079b0-a07a-4f21-8b09-6e408726aaef)
+2026-05-24 17:49:14.508  INFO 28614 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Product created: A4 Paper (id=156bb3e1-2018-4698-a343-a762f7cc85fb)
+2026-05-24 17:49:14.508  INFO 28614 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Product created: A4 Paper (id=156bb3e1-2018-4698-a343-a762f7cc85fb)
+2026-05-24 17:49:14.508  INFO 28614 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder complete.
+2026-05-24 17:49:14.511  INFO 28614 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder starting — seeding reference objects for every domain type...
+2026-05-24 17:49:14.511  INFO 28614 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Admin user already exists: admin@instantneed.com
+2026-05-24 17:49:14.511  INFO 28614 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Customer user already exists: buyer@test.com
+2026-05-24 17:49:14.512  INFO 28614 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Product already exists: PAPER-A4-500
+2026-05-24 17:49:14.512  INFO 28614 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Product already exists: CLEAN-APC-5L
+2026-05-24 17:49:14.512  INFO 28614 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder complete.
+2026-05-24 17:49:14.513 DEBUG 28614 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 17:49:14.631  WARN 28614 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_REGISTER ip=10.0.0.2 path=/api/v1/auth/register
+2026-05-24 17:49:14.634  WARN 28614 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=10.0.0.1 path=/api/v1/auth/login
+2026-05-24 17:49:14.639  WARN 28614 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=203.0.113.5 path=/api/v1/auth/login
+2026-05-24 17:49:14.778  INFO 28614 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:49:23.225  INFO ${sys:PID} --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.InstantNeedApplicationTests]: InstantNeedApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:23.280  INFO ${sys:PID} --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.InstantNeedApplicationTests
+2026-05-24 17:49:23.315  INFO ${sys:PID} --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.InstantNeedApplicationTests]: InstantNeedApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:23.316  INFO ${sys:PID} --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.InstantNeedApplicationTests
+2026-05-24 17:49:23.351  INFO ${sys:PID} --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 17:49:23.487  INFO 28784 --- [           main] c.b.i.InstantNeedApplicationTests        : Starting InstantNeedApplicationTests using Java 25.0.3 with PID 28784 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:49:23.489 DEBUG 28784 --- [           main] c.b.i.InstantNeedApplicationTests        : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:49:23.490  INFO 28784 --- [           main] c.b.i.InstantNeedApplicationTests        : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:49:23.679  INFO 28784 --- [kground-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 9.0.1.Final
+2026-05-24 17:49:24.190  INFO 28784 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24 17:49:24.243  INFO 28784 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 47 ms. Found 12 JPA repository interfaces.
+2026-05-24 17:49:24.591  INFO 28784 --- [           main] o.h.o.jpa                                : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24 17:49:24.618  INFO 28784 --- [           main] o.h.o.core                               : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24 17:49:24.816  INFO 28784 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24 17:49:24.920  INFO 28784 --- [           main] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/instant_need]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.10
+	Default catalog/schema: instant_need/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24 17:49:25.593  INFO 28784 --- [           main] o.h.o.core                               : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24 17:49:25.599  INFO 28784 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:49:25.656  INFO 28784 --- [           main] o.s.d.j.r.q.QueryEnhancerFactories       : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24 17:49:26.515  INFO 28784 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-05-24 17:49:26.515  WARN 28784 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-05-24 17:49:26.568  INFO 28784 --- [           main] c.b.i.c.c.FlywayConfig                   : Running Flyway migrations...
+2026-05-24 17:49:26.654  INFO 28784 --- [           main] o.f.c.FlywayExecutor                     : Database: jdbc:postgresql://localhost:5432/instant_need (PostgreSQL 17.10)
+2026-05-24 17:49:26.687  INFO 28784 --- [           main] o.f.c.i.c.DbValidate                     : Successfully validated 7 migrations (execution time 00:00.018s)
+2026-05-24 17:49:26.697  INFO 28784 --- [           main] o.f.c.i.c.DbMigrate                      : Current version of schema "public": 7
+2026-05-24 17:49:26.699  INFO 28784 --- [           main] o.f.c.i.c.DbMigrate                      : Schema "public" is up to date. No migration necessary.
+2026-05-24 17:49:26.701  INFO 28784 --- [           main] c.b.i.c.c.FlywayConfig                   : Flyway migrations completed.
+2026-05-24 17:49:27.332  INFO 28784 --- [           main] o.s.b.a.e.w.EndpointLinksResolver        : Exposing 2 endpoints beneath base path '/actuator'
+2026-05-24 17:49:27.382  INFO 28784 --- [           main] c.b.i.InstantNeedApplicationTests        : Started InstantNeedApplicationTests in 4.035 seconds (process running for 4.862)
+2026-05-24 17:49:27.456 DEBUG 28784 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 17:49:28.153  INFO 28784 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:28.187  INFO 28784 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.auth.controller.AuthControllerTest
+2026-05-24 17:49:28.188  INFO 28784 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:28.196  INFO 28784 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.auth.controller.AuthControllerTest
+2026-05-24 17:49:28.201  INFO 28784 --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 17:49:28.241  INFO 28784 --- [           main] c.b.i.a.c.AuthControllerTest             : Starting AuthControllerTest using Java 25.0.3 with PID 28784 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:49:28.242 DEBUG 28784 --- [           main] c.b.i.a.c.AuthControllerTest             : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:49:28.242  INFO 28784 --- [           main] c.b.i.a.c.AuthControllerTest             : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:49:28.553  INFO 28784 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-24 17:49:28.554  INFO 28784 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Initializing Servlet ''
+2026-05-24 17:49:28.555  INFO 28784 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Completed initialization in 1 ms
+2026-05-24 17:49:28.565  INFO 28784 --- [           main] c.b.i.a.c.AuthControllerTest             : Started AuthControllerTest in 0.364 seconds (process running for 6.045)
+2026-05-24 17:49:28.991  INFO 28784 --- [           main] c.b.i.a.s.AuthService                    : Password reset token generated for userId=01639191-0097-450c-93d0-b176ad6eda86
+2026-05-24 17:49:28.998  INFO 28784 --- [           main] c.b.i.a.s.AuthService                    : Password reset completed for userId=71ad492b-8830-4dcf-921c-917a9295b0fd
+2026-05-24 17:49:29.034  INFO 28784 --- [           main] c.b.i.a.s.AuthService                    : Registered new customer: userId=aafe7c82-2fb0-4fd3-8917-d89fae18cce7, customerId=52e28b4a-c20a-4513-94e3-9d03c0c70d03
+2026-05-24 17:49:29.050  INFO 28784 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.admin.controller.AdminProductControllerTest]: AdminProductControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:29.061  INFO 28784 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.admin.controller.AdminProductControllerTest
+2026-05-24 17:49:29.062  INFO 28784 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.admin.controller.AdminProductControllerTest]: AdminProductControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:29.064  INFO 28784 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.admin.controller.AdminProductControllerTest
+2026-05-24 17:49:29.065  INFO 28784 --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 17:49:29.086  INFO 28784 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Starting AdminProductControllerTest using Java 25.0.3 with PID 28784 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:49:29.087 DEBUG 28784 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:49:29.087  INFO 28784 --- [           main] c.b.i.a.c.AdminProductControllerTest     : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:49:29.284  INFO 28784 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-24 17:49:29.284  INFO 28784 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Initializing Servlet ''
+2026-05-24 17:49:29.285  INFO 28784 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Completed initialization in 0 ms
+2026-05-24 17:49:29.288  INFO 28784 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Started AdminProductControllerTest in 0.223 seconds (process running for 6.768)
+2026-05-24 17:49:30.717  INFO 28784 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder starting — seeding reference objects for every domain type...
+2026-05-24 17:49:30.718  INFO 28784 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Admin created: admin@instantneed.com / Admin@123
+2026-05-24 17:49:30.718  INFO 28784 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Customer created: buyer@test.com / Buyer@123  (customerId=79d04bf6-3593-4ba7-af89-c90b02d438dc)
+2026-05-24 17:49:30.719  INFO 28784 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Parent category created: office-supplies (id=d2b3853d-f312-4fd9-8df6-a62945805a2c)
+2026-05-24 17:49:30.719  INFO 28784 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Child category created: paper-notebooks (id=f2a83acd-9f62-4816-9ac0-b04731ed8918)
+2026-05-24 17:49:30.719  INFO 28784 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Product created: A4 Paper (id=c0bd2198-3cc2-4fae-8949-5611e2f209fd)
+2026-05-24 17:49:30.719  INFO 28784 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Product created: A4 Paper (id=c0bd2198-3cc2-4fae-8949-5611e2f209fd)
+2026-05-24 17:49:30.720  INFO 28784 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder complete.
+2026-05-24 17:49:30.721  INFO 28784 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder starting — seeding reference objects for every domain type...
+2026-05-24 17:49:30.722  INFO 28784 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Admin user already exists: admin@instantneed.com
+2026-05-24 17:49:30.722  INFO 28784 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Customer user already exists: buyer@test.com
+2026-05-24 17:49:30.722  INFO 28784 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Product already exists: PAPER-A4-500
+2026-05-24 17:49:30.722  INFO 28784 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Product already exists: CLEAN-APC-5L
+2026-05-24 17:49:30.722  INFO 28784 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder complete.
+2026-05-24 17:49:30.723 DEBUG 28784 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 17:49:30.832  WARN 28784 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_REGISTER ip=10.0.0.2 path=/api/v1/auth/register
+2026-05-24 17:49:30.835  WARN 28784 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=10.0.0.1 path=/api/v1/auth/login
+2026-05-24 17:49:30.841  WARN 28784 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=203.0.113.5 path=/api/v1/auth/login
+2026-05-24 17:49:30.972  INFO 28784 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:49:38.785  INFO ${sys:PID} --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.InstantNeedApplicationTests]: InstantNeedApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:38.848  INFO ${sys:PID} --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.InstantNeedApplicationTests
+2026-05-24 17:49:38.887  INFO ${sys:PID} --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.InstantNeedApplicationTests]: InstantNeedApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:38.888  INFO ${sys:PID} --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.InstantNeedApplicationTests
+2026-05-24 17:49:38.925  INFO ${sys:PID} --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 17:49:39.057  INFO 28941 --- [           main] c.b.i.InstantNeedApplicationTests        : Starting InstantNeedApplicationTests using Java 25.0.3 with PID 28941 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:49:39.058 DEBUG 28941 --- [           main] c.b.i.InstantNeedApplicationTests        : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:49:39.059  INFO 28941 --- [           main] c.b.i.InstantNeedApplicationTests        : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:49:39.209  INFO 28941 --- [kground-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 9.0.1.Final
+2026-05-24 17:49:39.708  INFO 28941 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24 17:49:39.772  INFO 28941 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 57 ms. Found 12 JPA repository interfaces.
+2026-05-24 17:49:40.151  INFO 28941 --- [           main] o.h.o.jpa                                : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24 17:49:40.181  INFO 28941 --- [           main] o.h.o.core                               : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24 17:49:40.380  INFO 28941 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24 17:49:40.471  INFO 28941 --- [           main] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/instant_need]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.10
+	Default catalog/schema: instant_need/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24 17:49:41.061  INFO 28941 --- [           main] o.h.o.core                               : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24 17:49:41.065  INFO 28941 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:49:41.112  INFO 28941 --- [           main] o.s.d.j.r.q.QueryEnhancerFactories       : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24 17:49:41.891  INFO 28941 --- [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-05-24 17:49:41.891  WARN 28941 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-05-24 17:49:41.956  INFO 28941 --- [           main] c.b.i.c.c.FlywayConfig                   : Running Flyway migrations...
+2026-05-24 17:49:42.041  INFO 28941 --- [           main] o.f.c.FlywayExecutor                     : Database: jdbc:postgresql://localhost:5432/instant_need (PostgreSQL 17.10)
+2026-05-24 17:49:42.075  INFO 28941 --- [           main] o.f.c.i.c.DbValidate                     : Successfully validated 7 migrations (execution time 00:00.019s)
+2026-05-24 17:49:42.088  INFO 28941 --- [           main] o.f.c.i.c.DbMigrate                      : Current version of schema "public": 7
+2026-05-24 17:49:42.091  INFO 28941 --- [           main] o.f.c.i.c.DbMigrate                      : Schema "public" is up to date. No migration necessary.
+2026-05-24 17:49:42.094  INFO 28941 --- [           main] c.b.i.c.c.FlywayConfig                   : Flyway migrations completed.
+2026-05-24 17:49:42.755  INFO 28941 --- [           main] o.s.b.a.e.w.EndpointLinksResolver        : Exposing 2 endpoints beneath base path '/actuator'
+2026-05-24 17:49:42.798  INFO 28941 --- [           main] c.b.i.InstantNeedApplicationTests        : Started InstantNeedApplicationTests in 3.877 seconds (process running for 4.753)
+2026-05-24 17:49:42.855 DEBUG 28941 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 17:49:43.497  INFO 28941 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:43.525  INFO 28941 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.auth.controller.AuthControllerTest
+2026-05-24 17:49:43.526  INFO 28941 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.auth.controller.AuthControllerTest]: AuthControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:43.532  INFO 28941 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.auth.controller.AuthControllerTest
+2026-05-24 17:49:43.539  INFO 28941 --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 17:49:43.575  INFO 28941 --- [           main] c.b.i.a.c.AuthControllerTest             : Starting AuthControllerTest using Java 25.0.3 with PID 28941 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:49:43.575 DEBUG 28941 --- [           main] c.b.i.a.c.AuthControllerTest             : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:49:43.575  INFO 28941 --- [           main] c.b.i.a.c.AuthControllerTest             : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:49:43.858  INFO 28941 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-24 17:49:43.858  INFO 28941 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Initializing Servlet ''
+2026-05-24 17:49:43.860  INFO 28941 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Completed initialization in 1 ms
+2026-05-24 17:49:43.869  INFO 28941 --- [           main] c.b.i.a.c.AuthControllerTest             : Started AuthControllerTest in 0.33 seconds (process running for 5.824)
+2026-05-24 17:49:44.288  INFO 28941 --- [           main] c.b.i.a.s.AuthService                    : Password reset token generated for userId=6481f34e-93e5-4723-8d72-d8f17dee080e
+2026-05-24 17:49:44.295  INFO 28941 --- [           main] c.b.i.a.s.AuthService                    : Password reset completed for userId=536c59b6-589f-40c9-a5cc-692f38775539
+2026-05-24 17:49:44.330  INFO 28941 --- [           main] c.b.i.a.s.AuthService                    : Registered new customer: userId=d8ccb8aa-0095-44ca-be17-73d9b18cc1fb, customerId=5349b36c-56fb-4e54-b404-937db3fbc927
+2026-05-24 17:49:44.343  INFO 28941 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.admin.controller.AdminProductControllerTest]: AdminProductControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:44.356  INFO 28941 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.admin.controller.AdminProductControllerTest
+2026-05-24 17:49:44.357  INFO 28941 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.b2b.instantneed.admin.controller.AdminProductControllerTest]: AdminProductControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-05-24 17:49:44.359  INFO 28941 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.b2b.instantneed.InstantNeedApplication for test class com.b2b.instantneed.admin.controller.AdminProductControllerTest
+2026-05-24 17:49:44.362  INFO 28941 --- [           main] o.s.b.d.r.RestartApplicationListener     : Restart disabled due to context in which it is running
+2026-05-24 17:49:44.387  INFO 28941 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Starting AdminProductControllerTest using Java 25.0.3 with PID 28941 (started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:49:44.388 DEBUG 28941 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:49:44.388  INFO 28941 --- [           main] c.b.i.a.c.AdminProductControllerTest     : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:49:44.572  INFO 28941 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-05-24 17:49:44.572  INFO 28941 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Initializing Servlet ''
+2026-05-24 17:49:44.572  INFO 28941 --- [           main] o.s.t.w.s.TestDispatcherServlet          : Completed initialization in 0 ms
+2026-05-24 17:49:44.575  INFO 28941 --- [           main] c.b.i.a.c.AdminProductControllerTest     : Started AdminProductControllerTest in 0.214 seconds (process running for 6.53)
+2026-05-24 17:49:45.991  INFO 28941 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder starting — seeding reference objects for every domain type...
+2026-05-24 17:49:45.992  INFO 28941 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Admin created: admin@instantneed.com / Admin@123
+2026-05-24 17:49:45.992  INFO 28941 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Customer created: buyer@test.com / Buyer@123  (customerId=165d97e4-fcbd-4742-8c70-180230d1cb3e)
+2026-05-24 17:49:45.992  INFO 28941 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Parent category created: office-supplies (id=2cbf004f-3f76-4961-a477-9625548a3147)
+2026-05-24 17:49:45.993  INFO 28941 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Child category created: paper-notebooks (id=79bd4b16-ee61-4b82-b6b9-12af60ee726c)
+2026-05-24 17:49:45.994  INFO 28941 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Product created: A4 Paper (id=7772c90e-6f8f-4924-89bb-5de2cb45de3d)
+2026-05-24 17:49:45.994  INFO 28941 --- [           main] c.b.i.c.c.DataSeeder                     :   [OK] Product created: A4 Paper (id=7772c90e-6f8f-4924-89bb-5de2cb45de3d)
+2026-05-24 17:49:45.994  INFO 28941 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder complete.
+2026-05-24 17:49:45.997  INFO 28941 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder starting — seeding reference objects for every domain type...
+2026-05-24 17:49:45.997  INFO 28941 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Admin user already exists: admin@instantneed.com
+2026-05-24 17:49:45.997  INFO 28941 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Customer user already exists: buyer@test.com
+2026-05-24 17:49:45.997  INFO 28941 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Product already exists: PAPER-A4-500
+2026-05-24 17:49:45.997  INFO 28941 --- [           main] c.b.i.c.c.DataSeeder                     :   [SKIP] Product already exists: CLEAN-APC-5L
+2026-05-24 17:49:45.997  INFO 28941 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder complete.
+2026-05-24 17:49:45.999 DEBUG 28941 --- [           main] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 17:49:46.108  WARN 28941 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_REGISTER ip=10.0.0.2 path=/api/v1/auth/register
+2026-05-24 17:49:46.111  WARN 28941 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=10.0.0.1 path=/api/v1/auth/login
+2026-05-24 17:49:46.116  WARN 28941 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=203.0.113.5 path=/api/v1/auth/login
+2026-05-24 17:49:46.232  INFO 28941 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'

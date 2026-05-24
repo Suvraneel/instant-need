@@ -19,6 +19,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.b2b.instantneed.user.entity.Role;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -51,13 +52,15 @@ class AuthControllerTest {
     @Test
     void register_validRequest_returns201() throws Exception {
         given(authService.register(any()))
-                .willReturn(new RegisterResponse(UUID.randomUUID(), UUID.randomUUID(), "Registration successful"));
+                .willReturn(new AuthResponse(
+                        "access-token", "refresh-token",
+                        new AuthResponse.UserInfo(UUID.randomUUID(), "Raj Sharma", "buyer@test.com", Role.CUSTOMER)));
 
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(validRegisterBody()))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.message").value("Registration successful"));
+                .andExpect(jsonPath("$.accessToken").value("access-token"));
     }
 
     @Test
@@ -82,14 +85,20 @@ class AuthControllerTest {
     }
 
     @Test
-    void register_missingAddress_returns400() throws Exception {
+    void register_withoutAddress_stillReturns201() throws Exception {
+        // Address is optional — registration without one must succeed
+        given(authService.register(any()))
+                .willReturn(new AuthResponse(
+                        "access-token", "refresh-token",
+                        new AuthResponse.UserInfo(UUID.randomUUID(), "Test", "test@example.com", Role.CUSTOMER)));
+
         String body = """
                 { "fullName": "Test", "email": "test@example.com", "password": "Password1!" }
                 """;
         mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isCreated());
     }
 
     // ── POST /login ───────────────────────────────────────────────────────────
@@ -99,7 +108,7 @@ class AuthControllerTest {
         given(authService.login(any()))
                 .willReturn(new AuthResponse(
                         "access-token", "refresh-token",
-                        new AuthResponse.UserInfo(UUID.randomUUID(), "Raj Sharma", "buyer@test.com")));
+                        new AuthResponse.UserInfo(UUID.randomUUID(), "Raj Sharma", "buyer@test.com", Role.CUSTOMER)));
 
         mockMvc.perform(post("/api/v1/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -129,7 +138,7 @@ class AuthControllerTest {
         given(authService.refresh(any()))
                 .willReturn(new AuthResponse(
                         "new-access", "new-refresh",
-                        new AuthResponse.UserInfo(UUID.randomUUID(), "Raj", "buyer@test.com")));
+                        new AuthResponse.UserInfo(UUID.randomUUID(), "Raj", "buyer@test.com", Role.CUSTOMER)));
 
         mockMvc.perform(post("/api/v1/auth/refresh")
                         .contentType(MediaType.APPLICATION_JSON)

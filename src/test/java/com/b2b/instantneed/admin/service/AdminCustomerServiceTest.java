@@ -47,7 +47,7 @@ class AdminCustomerServiceTest {
         Page<Customer> page = new PageImpl<>(List.of(c));
         given(customerRepository.findAll(any(Pageable.class))).willReturn(page);
 
-        PagedResponse<AdminCustomerSummary> res = service.listCustomers(1, 20);
+        PagedResponse<AdminCustomerSummary> res = service.listCustomers(null, 1, 20);
 
         assertThat(res.items()).hasSize(1);
         assertThat(res.items().get(0).email()).isEqualTo("test@example.com");
