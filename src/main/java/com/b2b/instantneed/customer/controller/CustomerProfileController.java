@@ -59,4 +59,10 @@ public class CustomerProfileController {
         profileService.deleteAddress(addressId);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(summary = "Set an address as the default shipping address")
+    @PatchMapping("/addresses/{addressId}/default")
+    public ResponseEntity<AddressResponse> setDefaultAddress(@PathVariable UUID addressId) {
+        return ResponseEntity.ok(profileService.setDefaultAddress(addressId));
+    }
 }

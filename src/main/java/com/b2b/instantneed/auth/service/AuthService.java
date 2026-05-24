@@ -4,6 +4,7 @@ import com.b2b.instantneed.auth.dto.*;
 import com.b2b.instantneed.common.exception.ApiException;
 import com.b2b.instantneed.common.util.HtmlSanitizer;
 import com.b2b.instantneed.common.security.JwtUtil;
+import com.b2b.instantneed.common.security.SecurityUtils;
 import com.b2b.instantneed.customer.entity.Address;
 import com.b2b.instantneed.customer.entity.Customer;
 import com.b2b.instantneed.customer.repository.AddressRepository;
@@ -35,6 +36,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final SecurityUtils securityUtils;
 
     @Transactional
     public RegisterResponse register(RegisterRequest request) {
@@ -166,5 +168,16 @@ public class AuthService {
         userRepository.save(user);
 
         log.info("Password reset completed for userId={}", user.getId());
+    }
+
+    @Transactional
+    public void changePassword(ChangePasswordRequest request) {
+        User user = securityUtils.currentUser();
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
+            throw ApiException.badRequest("INVALID_CURRENT_PASSWORD", "Current password is incorrect");
+        }
+        user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+        log.info("Password changed for userId={}", user.getId());
     }
 }

@@ -78,37 +78,39 @@ public class CatalogService {
 
         Page<ProductSummaryResponse> summaryPage = productPage.map(p -> {
             List<PricingTier> tiers = tiersMap.getOrDefault(p.getId(), List.of());
-            BigDecimal startingPrice = tiers.isEmpty() ? p.getBasePrice()
-                    : tiers.get(0).getUnitPrice();
-            String currencyCode = tiers.isEmpty() ? null : tiers.get(0).getCurrencyCode();
             return new ProductSummaryResponse(
-                    p.getId(), p.getName(), p.getSku(), p.getUnitOfMeasurement(),
-                    p.getAvailabilityStatus().name(), startingPrice, currencyCode,
-                    primaryImageMap.get(p.getId())
+                p.getId(), p.getName(), p.getSlug(), p.getSku(),
+                p.getCategory() != null ? p.getCategory().getName() : null,
+                p.getBasePrice(),
+                tiers.isEmpty() ? "INR" : tiers.get(0).getCurrencyCode(),
+                p.getStock(), p.getMoq(), p.isActive(),
+                primaryImageMap.get(p.getId())
             );
         });
 
         return PagedResponse.of(summaryPage);
     }
 
-    public ProductDetailResponse getProduct(UUID id) {
-        Product product = productRepository.findWithCategoryById(id)
-                .orElseThrow(() -> ApiException.notFound("PRODUCT_NOT_FOUND", "Product not found: " + id));
-
-        List<PricingTier> tiers = pricingTierRepository.findByProductIdOrderByMinQuantityAsc(id);
-        List<String> imageUrls = productImageRepository
-                .findByProductIdInOrderBySortOrderAsc(List.of(id))
-                .stream().map(ProductImage::getImageUrl).toList();
-
-        return new ProductDetailResponse(
-                product.getId(), product.getName(), product.getSlug(), product.getSku(),
-                product.getDescription(), product.getUnitOfMeasurement(),
-                product.getAvailabilityStatus().name(),
-                product.getCategory() != null ? product.getCategory().getId() : null,
-                product.getCategory() != null ? product.getCategory().getName() : null,
-                imageUrls,
-                tiers.stream().map(PricingTierResponse::from).toList()
-        );
+    public ProductDetailResponse getProduct(String idOrSlug) {
+        Product product;
+        try {
+            UUID id = UUID.fromString(idOrSlug);
+            product = productRepository.findWithCategoryById(id)
+                    .orElseThrow(() -> ApiException.notFound("PRODUCT_NOT_FOUND", "Product not found: " + idOrSlug));
+        } catch (IllegalArgumentException e) {
+            // Not a UUID — try slug
+            product = productRepository.findBySlug(idOrSlug)
+                    .orElseThrow(() -> ApiException.notFound("PRODUCT_NOT_FOUND", "Product not found: " + idOrSlug));
+            // Ensure category is loaded
+            if (product.getCategory() == null && product.getId() != null) {
+                product = productRepository.findWithCategoryById(product.getId()).orElse(product);
+            }
+        }
+        UUID productId = product.getId();
+        List<PricingTier> tiers = pricingTierRepository.findByProductIdOrderByMinQuantityAsc(productId);
+        List<com.b2b.instantneed.catalog.entity.ProductImage> images =
+                productImageRepository.findByProductIdInOrderBySortOrderAsc(List.of(productId));
+        return ProductDetailResponse.from(product, images, tiers.stream().map(PricingTierResponse::from).toList());
     }
 
     private AvailabilityStatus parseAvailability(String value) {

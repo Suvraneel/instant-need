@@ -48,4 +48,10 @@ public class OrderController {
     public ResponseEntity<PlaceOrderResponse> reorder(@PathVariable UUID orderId) {
         return ResponseEntity.ok(orderService.reorder(orderId));
     }
+
+    @Operation(summary = "Cancel an order (only if not yet shipped)")
+    @PostMapping("/{orderId}/cancel")
+    public ResponseEntity<OrderResponse> cancelOrder(@PathVariable UUID orderId) {
+        return ResponseEntity.ok(orderService.cancelOrder(orderId));
+    }
 }

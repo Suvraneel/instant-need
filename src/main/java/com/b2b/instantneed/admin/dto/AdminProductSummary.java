@@ -16,6 +16,8 @@ public record AdminProductSummary(
         String availabilityStatus,
         boolean active,
         BigDecimal basePrice,
+        int stock,
+        int moq,
         Instant createdAt,
         Instant updatedAt
 ) {
@@ -26,6 +28,7 @@ public record AdminProductSummary(
                 p.getUnitOfMeasurement(),
                 p.getAvailabilityStatus().name(),
                 p.isActive(), p.getBasePrice(),
+                p.getStock(), p.getMoq(),
                 p.getCreatedAt(), p.getUpdatedAt()
         );
     }

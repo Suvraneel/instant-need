@@ -131,6 +131,18 @@ public class CustomerProfileService {
         addressRepository.delete(address);
     }
 
+    @Transactional
+    public AddressResponse setDefaultAddress(UUID addressId) {
+        Customer customer = securityUtils.currentCustomer();
+        Address address = ownedAddress(addressId, customer.getId());
+        clearExistingDefault(customer.getId());
+        address.setDefault(true);
+        addressRepository.save(address);
+        customer.setDefaultShippingAddressId(address.getId());
+        customerRepository.save(customer);
+        return AddressResponse.from(address);
+    }
+
     private void clearExistingDefault(UUID customerId) {
         addressRepository.findByCustomerId(customerId).stream()
                 .filter(Address::isDefault)

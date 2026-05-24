@@ -25,4 +25,10 @@ public interface ProductRepository extends JpaRepository<Product, UUID>, JpaSpec
     @EntityGraph(attributePaths = {"category"})
     @Query("SELECT p FROM Product p WHERE p.id = :id")
     Optional<Product> findWithCategoryById(@Param("id") UUID id);
+
+    Optional<Product> findBySlug(String slug);
+
+    @EntityGraph(attributePaths = {"category", "images", "pricingTiers"})
+    @Query("SELECT p FROM Product p WHERE p.slug = :slug AND p.active = true")
+    Optional<Product> findBySlugWithDetails(@Param("slug") String slug);
 }

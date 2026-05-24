@@ -6,11 +6,10 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public record OrderItemResponse(
-        UUID itemId,
+        UUID id,
         UUID productId,
         String productName,
         String sku,
-        String unitOfMeasurement,
         int quantity,
         BigDecimal unitPrice,
         BigDecimal lineTotal,
@@ -22,7 +21,6 @@ public record OrderItemResponse(
                 item.getProduct() != null ? item.getProduct().getId() : null,
                 item.getProductNameSnapshot(),
                 item.getSkuSnapshot(),
-                item.getUnitOfMeasurementSnapshot(),
                 item.getQuantity(),
                 item.getUnitPrice(),
                 item.getLineTotal(),

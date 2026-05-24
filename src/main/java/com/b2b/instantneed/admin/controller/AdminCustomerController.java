@@ -27,9 +27,10 @@ public class AdminCustomerController {
     @Operation(summary = "List all customers")
     @GetMapping
     public ResponseEntity<PagedResponse<AdminCustomerSummary>> list(
+            @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int limit) {
-        return ResponseEntity.ok(service.listCustomers(page, limit));
+        return ResponseEntity.ok(service.listCustomers(search, page, limit));
     }
 
     @Operation(summary = "Get a customer by ID")

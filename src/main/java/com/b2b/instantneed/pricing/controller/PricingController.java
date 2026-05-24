@@ -22,7 +22,7 @@ public class PricingController {
     private final PricingService pricingService;
 
     @Operation(summary = "Calculate unit price and line total for a product + quantity")
-    @PostMapping("/calculate")
+    @PostMapping({"/calculate", "/check"})
     public ResponseEntity<PriceCalculateResponse> calculate(
             @Valid @RequestBody PriceCalculateRequest request) {
         return ResponseEntity.ok(pricingService.calculate(request));

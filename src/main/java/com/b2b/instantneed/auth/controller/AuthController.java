@@ -1,6 +1,7 @@
 package com.b2b.instantneed.auth.controller;
 
 import com.b2b.instantneed.auth.dto.*;
+import com.b2b.instantneed.auth.dto.ChangePasswordRequest;
 import com.b2b.instantneed.auth.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,5 +51,20 @@ public class AuthController {
     public ResponseEntity<Map<String, String>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         authService.resetPassword(request);
         return ResponseEntity.ok(Map.of("message", "Password reset successful"));
+    }
+
+    @Operation(summary = "Change password (authenticated)")
+    @PostMapping("/change-password")
+    public ResponseEntity<Map<String, String>> changePassword(
+            @Valid @RequestBody ChangePasswordRequest request) {
+        authService.changePassword(request);
+        return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
+    }
+
+    @Operation(summary = "Logout (client-side token invalidation — returns 200 OK)")
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, String>> logout() {
+        // JWT is stateless; actual token revocation is client-side (clear storage)
+        return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
     }
 }

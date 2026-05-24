@@ -9,10 +9,13 @@ import java.util.UUID;
 public record ProductSummaryResponse(
         UUID id,
         String name,
+        String slug,
         String sku,
-        String unitOfMeasurement,
-        String availabilityStatus,
-        BigDecimal startingPrice,
+        String categoryName,
+        BigDecimal basePrice,
         String currencyCode,
-        String imageUrl
+        int stock,
+        int moq,
+        boolean active,
+        String primaryImageUrl
 ) {}

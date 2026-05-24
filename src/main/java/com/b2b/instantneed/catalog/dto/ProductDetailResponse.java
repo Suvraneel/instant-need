@@ -3,6 +3,8 @@ package com.b2b.instantneed.catalog.dto;
 import com.b2b.instantneed.catalog.entity.Product;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,22 +19,32 @@ public record ProductDetailResponse(
         String availabilityStatus,
         UUID categoryId,
         String categoryName,
-        List<String> imageUrls,
-        List<PricingTierResponse> pricingTiers
+        BigDecimal basePrice,
+        String currencyCode,
+        int stock,
+        int moq,
+        boolean active,
+        List<ProductImageDTO> images,
+        List<PricingTierResponse> pricingTiers,
+        Instant createdAt,
+        Instant updatedAt
 ) {
-    public static ProductDetailResponse from(Product p) {
+    public record ProductImageDTO(UUID id, String url, String altText, int displayOrder) {}
+
+    public static ProductDetailResponse from(Product p, List<com.b2b.instantneed.catalog.entity.ProductImage> imgs, List<PricingTierResponse> tiers) {
+        String currency = (tiers != null && !tiers.isEmpty()) ? tiers.get(0).currencyCode() : "INR";
+        List<ProductImageDTO> imageDTOs = imgs == null ? List.of() :
+                imgs.stream().map(i -> new ProductImageDTO(i.getId(), i.getImageUrl(), i.getAltText(), i.getSortOrder())).toList();
         return new ProductDetailResponse(
-                p.getId(),
-                p.getName(),
-                p.getSlug(),
-                p.getSku(),
-                p.getDescription(),
-                p.getUnitOfMeasurement(),
+                p.getId(), p.getName(), p.getSlug(), p.getSku(),
+                p.getDescription(), p.getUnitOfMeasurement(),
                 p.getAvailabilityStatus().name(),
                 p.getCategory() != null ? p.getCategory().getId() : null,
                 p.getCategory() != null ? p.getCategory().getName() : null,
-                p.getImages().stream().map(img -> img.getImageUrl()).toList(),
-                p.getPricingTiers().stream().map(PricingTierResponse::from).toList()
+                p.getBasePrice(), currency,
+                p.getStock(), p.getMoq(), p.isActive(),
+                imageDTOs, tiers,
+                p.getCreatedAt(), p.getUpdatedAt()
         );
     }
 }

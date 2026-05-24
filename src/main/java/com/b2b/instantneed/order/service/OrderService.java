@@ -4,6 +4,8 @@ import com.b2b.instantneed.cart.entity.Cart;
 import com.b2b.instantneed.cart.entity.CartItem;
 import com.b2b.instantneed.cart.entity.CartStatus;
 import com.b2b.instantneed.cart.repository.CartRepository;
+import com.b2b.instantneed.catalog.entity.Product;
+import com.b2b.instantneed.catalog.repository.ProductRepository;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.exception.ApiException;
 import com.b2b.instantneed.common.security.SecurityUtils;
@@ -17,6 +19,8 @@ import com.b2b.instantneed.order.entity.Order;
 import com.b2b.instantneed.order.entity.OrderItem;
 import com.b2b.instantneed.order.entity.OrderStatus;
 import com.b2b.instantneed.order.repository.OrderRepository;
+import com.b2b.instantneed.pricing.dto.PriceCalculateResponse;
+import com.b2b.instantneed.pricing.service.PricingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +31,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,86 +45,125 @@ public class OrderService {
     private final CartRepository cartRepository;
     private final AddressRepository addressRepository;
     private final SecurityUtils securityUtils;
+    private final ProductRepository productRepository;
+    private final PricingService pricingService;
 
     @Transactional
     public PlaceOrderResponse placeOrder(PlaceOrderRequest request) {
         Customer customer = securityUtils.currentCustomer();
 
-        // Load the active cart with items
-        Cart cart = cartRepository
-                .findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE)
-                .orElseThrow(() -> ApiException.badRequest("CART_EMPTY", "No active cart found"));
+        // --- Resolve items ---
+        List<CartItem> cartItemsToUse = null;
+        List<PlaceOrderRequest.OrderItemRequest> directItems = request.items();
+        boolean itemsProvided = directItems != null && !directItems.isEmpty();
 
-        if (cart.getItems().isEmpty()) {
-            throw ApiException.badRequest("CART_EMPTY", "Cannot place an order with an empty cart");
+        if (!itemsProvided) {
+            // Fall back to active cart
+            Cart cart = cartRepository
+                    .findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE)
+                    .orElseThrow(() -> ApiException.badRequest("CART_EMPTY", "No active cart found"));
+            if (cart.getItems().isEmpty()) {
+                throw ApiException.badRequest("CART_EMPTY", "Cannot place an order with an empty cart");
+            }
+            cartItemsToUse = new ArrayList<>(cart.getItems());
         }
 
-        // Validate shipping address belongs to this customer
-        Address address = addressRepository.findById(request.shippingAddressId())
-                .orElseThrow(() -> ApiException.notFound("ADDRESS_NOT_FOUND",
-                        "Address not found: " + request.shippingAddressId()));
-
-        if (!address.getCustomer().getId().equals(customer.getId())) {
-            throw ApiException.notFound("ADDRESS_NOT_FOUND",
-                    "Address not found: " + request.shippingAddressId());
+        // --- Resolve shipping address snapshot ---
+        Map<String, Object> addressSnapshot;
+        if (request.shippingAddress() != null) {
+            addressSnapshot = buildInlineAddressSnapshot(request.shippingAddress());
+        } else if (request.shippingAddressId() != null) {
+            Address address = addressRepository.findById(request.shippingAddressId())
+                    .orElseThrow(() -> ApiException.notFound("ADDRESS_NOT_FOUND",
+                            "Address not found: " + request.shippingAddressId()));
+            if (!address.getCustomer().getId().equals(customer.getId())) {
+                throw ApiException.notFound("ADDRESS_NOT_FOUND", "Address not found: " + request.shippingAddressId());
+            }
+            addressSnapshot = buildAddressSnapshot(address);
+        } else {
+            // Use customer's default address
+            UUID defaultId = customer.getDefaultShippingAddressId();
+            if (defaultId == null) {
+                throw ApiException.badRequest("NO_DEFAULT_ADDRESS", "No shipping address provided or set as default");
+            }
+            Address address = addressRepository.findById(defaultId)
+                    .orElseThrow(() -> ApiException.badRequest("NO_DEFAULT_ADDRESS", "Default address not found"));
+            addressSnapshot = buildAddressSnapshot(address);
         }
 
-        // Compute totals from the already-priced cart items
-        BigDecimal subtotal = cart.getItems().stream()
-                .map(CartItem::getLineTotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        String currencyCode = cart.getItems().get(0).getCurrencyCode();
-
-        // Build order number: WB-YYYYMMDD-NNNN
+        // --- Build order items + compute totals ---
         String orderNumber = generateOrderNumber();
-
-        // Snapshot customer and address at this moment in time
         Map<String, Object> customerSnapshot = buildCustomerSnapshot(customer);
-        Map<String, Object> addressSnapshot = buildAddressSnapshot(address);
+        String paymentMethod = (request.paymentMethod() != null && !request.paymentMethod().isBlank())
+                ? request.paymentMethod() : "cod";
 
-        // Create order
         Order order = Order.builder()
                 .orderNumber(orderNumber)
                 .customer(customer)
                 .shippingAddressSnapshot(addressSnapshot)
                 .customerSnapshot(customerSnapshot)
                 .status(OrderStatus.PENDING)
-                .paymentMethod("cod")
+                .paymentMethod(paymentMethod)
                 .paymentNote("Payment will be collected separately after order confirmation.")
-                .customerNote(request.customerNote())
-                .subtotalAmount(subtotal)
-                .totalAmount(subtotal)
-                .currencyCode(currencyCode)
+                .customerNote(request.notes())
+                .currencyCode("INR")
+                .subtotalAmount(BigDecimal.ZERO)
+                .totalAmount(BigDecimal.ZERO)
                 .build();
 
-        // Freeze cart items into order items (snapshot)
-        List<OrderItem> orderItems = cart.getItems().stream().map(ci -> OrderItem.builder()
-                .order(order)
-                .product(ci.getProduct())
-                .productNameSnapshot(ci.getProduct().getName())
-                .skuSnapshot(ci.getProduct().getSku())
-                .unitOfMeasurementSnapshot(ci.getProduct().getUnitOfMeasurement())
-                .quantity(ci.getQuantity())
-                .unitPrice(ci.getAppliedUnitPrice())
-                .lineTotal(ci.getLineTotal())
-                .currencyCode(ci.getCurrencyCode())
-                .build()
-        ).toList();
+        BigDecimal subtotal = BigDecimal.ZERO;
+        String currencyCode = "INR";
 
-        order.getItems().addAll(orderItems);
+        if (itemsProvided) {
+            for (PlaceOrderRequest.OrderItemRequest req : directItems) {
+                Product product = productRepository.findById(req.productId())
+                        .orElseThrow(() -> ApiException.notFound("PRODUCT_NOT_FOUND",
+                                "Product not found: " + req.productId()));
+                PriceCalculateResponse price = pricingService.calculate(product.getId(), req.quantity());
+                OrderItem item = OrderItem.builder()
+                        .order(order)
+                        .product(product)
+                        .productNameSnapshot(product.getName())
+                        .skuSnapshot(product.getSku())
+                        .unitOfMeasurementSnapshot(product.getUnitOfMeasurement() != null ? product.getUnitOfMeasurement() : "unit")
+                        .quantity(req.quantity())
+                        .unitPrice(price.appliedUnitPrice())
+                        .lineTotal(price.lineTotal())
+                        .currencyCode(price.currencyCode())
+                        .build();
+                order.getItems().add(item);
+                subtotal = subtotal.add(price.lineTotal());
+                currencyCode = price.currencyCode();
+            }
+        } else {
+            for (CartItem ci : cartItemsToUse) {
+                OrderItem item = OrderItem.builder()
+                        .order(order)
+                        .product(ci.getProduct())
+                        .productNameSnapshot(ci.getProduct().getName())
+                        .skuSnapshot(ci.getProduct().getSku())
+                        .unitOfMeasurementSnapshot(ci.getProduct().getUnitOfMeasurement() != null ? ci.getProduct().getUnitOfMeasurement() : "unit")
+                        .quantity(ci.getQuantity())
+                        .unitPrice(ci.getAppliedUnitPrice())
+                        .lineTotal(ci.getLineTotal())
+                        .currencyCode(ci.getCurrencyCode())
+                        .build();
+                order.getItems().add(item);
+                subtotal = subtotal.add(ci.getLineTotal());
+                currencyCode = ci.getCurrencyCode();
+            }
+            // Mark cart as checked out
+            cartRepository.findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE)
+                    .ifPresent(c -> { c.setStatus(CartStatus.CHECKED_OUT); cartRepository.save(c); });
+        }
+
+        order.setSubtotalAmount(subtotal);
+        order.setTotalAmount(subtotal);
+        order.setCurrencyCode(currencyCode);
         orderRepository.save(order);
 
-        // Mark cart as checked out
-        cart.setStatus(CartStatus.CHECKED_OUT);
-        cartRepository.save(cart);
-
-        return new PlaceOrderResponse(
-                order.getId(),
-                orderNumber,
-                order.getStatus().name(),
-                "Order placed successfully. Payment will be collected separately after confirmation."
-        );
+        return new PlaceOrderResponse(order.getId(), orderNumber, order.getStatus().name(),
+                "Order placed successfully.");
     }
 
     @Transactional(readOnly = true)
@@ -138,6 +182,22 @@ public class OrderService {
         Order order = orderRepository.findWithItemsByIdAndCustomerId(orderId, customer.getId())
                 .orElseThrow(() -> ApiException.notFound("ORDER_NOT_FOUND",
                         "Order not found: " + orderId));
+        return OrderResponse.from(order);
+    }
+
+    @Transactional
+    public OrderResponse cancelOrder(UUID orderId) {
+        Customer customer = securityUtils.currentCustomer();
+        Order order = orderRepository.findWithItemsByIdAndCustomerId(orderId, customer.getId())
+                .orElseThrow(() -> ApiException.notFound("ORDER_NOT_FOUND", "Order not found: " + orderId));
+        if (order.getStatus() == OrderStatus.SHIPPED || order.getStatus() == OrderStatus.DELIVERED) {
+            throw ApiException.badRequest("CANNOT_CANCEL", "Cannot cancel an order that has been shipped or delivered");
+        }
+        if (order.getStatus() == OrderStatus.CANCELLED) {
+            throw ApiException.badRequest("ALREADY_CANCELLED", "Order is already cancelled");
+        }
+        order.setStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
         return OrderResponse.from(order);
     }
 
@@ -161,8 +221,6 @@ public class OrderService {
                 });
 
         // Re-add items from the original order into the cart
-        // Import here to avoid a circular dep — use CartService would create circular dependency
-        // so we manipulate the cart directly; pricing will be re-validated on next cart mutation
         for (OrderItem oi : originalOrder.getItems()) {
             if (oi.getProduct() == null) continue; // product was deleted
 
@@ -218,12 +276,26 @@ public class OrderService {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("id", address.getId().toString());
         map.put("label", address.getLabel());
+        map.put("fullName", address.getLabel());
         map.put("line1", address.getLine1());
         map.put("line2", address.getLine2());
         map.put("city", address.getCity());
         map.put("state", address.getState());
         map.put("country", address.getCountry());
         map.put("postalCode", address.getPostalCode());
+        return map;
+    }
+
+    private Map<String, Object> buildInlineAddressSnapshot(PlaceOrderRequest.InlineAddressRequest addr) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("fullName", addr.fullName());
+        map.put("line1", addr.addressLine1());
+        map.put("line2", addr.addressLine2());
+        map.put("city", addr.city());
+        map.put("state", addr.state());
+        map.put("country", addr.country());
+        map.put("postalCode", addr.postalCode());
+        map.put("phoneNumber", addr.phoneNumber());
         return map;
     }
 }

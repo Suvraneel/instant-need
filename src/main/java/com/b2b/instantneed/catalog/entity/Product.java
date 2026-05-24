@@ -53,6 +53,14 @@ public class Product {
     @Column(name = "base_price", precision = 12, scale = 2)
     private BigDecimal basePrice;
 
+    @Column(name = "stock", nullable = false)
+    @Builder.Default
+    private int stock = 0;
+
+    @Column(name = "moq", nullable = false)
+    @Builder.Default
+    private int moq = 1;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("sortOrder ASC")
     @Builder.Default

@@ -28,9 +28,15 @@ public class AdminCustomerService {
     private final AuditLogService auditLog;
 
     @Transactional(readOnly = true)
-    public PagedResponse<AdminCustomerSummary> listCustomers(int page, int limit) {
+    public PagedResponse<AdminCustomerSummary> listCustomers(String search, int page, int limit) {
         int safePage = Math.max(1, page) - 1;
         int safeLimit = Math.min(Math.max(1, limit), 100);
+
+        if (search != null && !search.isBlank()) {
+            String q = "%" + search.toLowerCase() + "%";
+            Page<Customer> customers = customerRepository.searchByNameOrEmail(q, PageRequest.of(safePage, safeLimit));
+            return PagedResponse.of(customers.map(c -> AdminCustomerSummary.from(c.getUser(), c)));
+        }
         Page<Customer> customers = customerRepository.findAll(
                 PageRequest.of(safePage, safeLimit, Sort.by("createdAt").descending()));
         return PagedResponse.of(customers.map(c -> AdminCustomerSummary.from(c.getUser(), c)));
