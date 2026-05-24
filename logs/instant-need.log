@@ -1203,3 +1203,99 @@ Hints:
 2026-05-24 17:49:46.111  WARN 28941 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=10.0.0.1 path=/api/v1/auth/login
 2026-05-24 17:49:46.116  WARN 28941 --- [           main] c.b.i.c.s.RateLimitFilter                : Rate limit exceeded: type=AUTH_LOGIN ip=203.0.113.5 path=/api/v1/auth/login
 2026-05-24 17:49:46.232  INFO 28941 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:51:06.559  INFO 29746 --- [  restartedMain] c.b.i.InstantNeedApplication             : Starting InstantNeedApplication using Java 25.0.3 with PID 29746 (/Users/aayush/Desktop/Developer/Github-Projects/instant-need/target/classes started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:51:06.561 DEBUG 29746 --- [  restartedMain] c.b.i.InstantNeedApplication             : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:51:06.562  INFO 29746 --- [  restartedMain] c.b.i.InstantNeedApplication             : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:51:06.581  INFO 29746 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-24 17:51:06.581  INFO 29746 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-24 17:51:06.682  INFO 29746 --- [kground-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 9.0.1.Final
+2026-05-24 17:51:07.046  INFO 29746 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24 17:51:07.084  INFO 29746 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 33 ms. Found 12 JPA repository interfaces.
+2026-05-24 17:51:07.382  INFO 29746 --- [  restartedMain] o.s.b.t.TomcatWebServer                  : Tomcat initialized with port 8080 (http)
+2026-05-24 17:51:07.390  INFO 29746 --- [  restartedMain] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-24 17:51:07.406  INFO 29746 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 825 ms
+2026-05-24 17:51:07.521  INFO 29746 --- [  restartedMain] o.h.o.jpa                                : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24 17:51:07.548  INFO 29746 --- [  restartedMain] o.h.o.core                               : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24 17:51:07.727  INFO 29746 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24 17:51:07.818  INFO 29746 --- [  restartedMain] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/instant_need]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.10
+	Default catalog/schema: instant_need/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24 17:51:08.319  INFO 29746 --- [  restartedMain] o.h.o.core                               : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24 17:51:08.322  INFO 29746 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:51:08.359  INFO 29746 --- [  restartedMain] o.s.d.j.r.q.QueryEnhancerFactories       : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24 17:51:08.476 DEBUG 29746 --- [  restartedMain] c.b.i.c.s.RateLimitFilter                : Filter 'rateLimitFilter' configured for use
+2026-05-24 17:51:08.476 DEBUG 29746 --- [  restartedMain] o.s.w.f.CommonsRequestLoggingFilter      : Filter 'requestLoggingFilter' configured for use
+2026-05-24 17:51:08.476 DEBUG 29746 --- [  restartedMain] c.b.i.c.s.JwtAuthFilter                  : Filter 'jwtAuthFilter' configured for use
+2026-05-24 17:51:09.178  INFO 29746 --- [  restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-05-24 17:51:09.178  WARN 29746 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-05-24 17:51:09.224  INFO 29746 --- [  restartedMain] c.b.i.c.c.FlywayConfig                   : Running Flyway migrations...
+2026-05-24 17:51:09.301  INFO 29746 --- [  restartedMain] o.f.c.FlywayExecutor                     : Database: jdbc:postgresql://localhost:5432/instant_need (PostgreSQL 17.10)
+2026-05-24 17:51:09.341  INFO 29746 --- [  restartedMain] o.f.c.i.c.DbValidate                     : Successfully validated 7 migrations (execution time 00:00.022s)
+2026-05-24 17:51:09.350  INFO 29746 --- [  restartedMain] o.f.c.i.c.DbMigrate                      : Current version of schema "public": 7
+2026-05-24 17:51:09.353  INFO 29746 --- [  restartedMain] o.f.c.i.c.DbMigrate                      : Schema "public" is up to date. No migration necessary.
+2026-05-24 17:51:09.359  INFO 29746 --- [  restartedMain] c.b.i.c.c.FlywayConfig                   : Flyway migrations completed.
+2026-05-24 17:51:09.829  INFO 29746 --- [  restartedMain] o.s.b.a.e.w.EndpointLinksResolver        : Exposing 2 endpoints beneath base path '/actuator'
+2026-05-24 17:51:09.870  INFO 29746 --- [  restartedMain] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+2026-05-24 17:51:09.879  INFO 29746 --- [  restartedMain] o.s.b.t.TomcatWebServer                  : Tomcat started on port 8080 (http) with context path '/'
+2026-05-24 17:51:09.885  INFO 29746 --- [  restartedMain] c.b.i.InstantNeedApplication             : Started InstantNeedApplication in 3.463 seconds (process running for 3.798)
+2026-05-24 17:51:09.925 DEBUG 29746 --- [  restartedMain] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 17:51:22.211  INFO 29746 --- [ionShutdownHook] o.s.b.t.GracefulShutdown                 : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-24 17:51:22.215  INFO 29746 --- [tomcat-shutdown] o.s.b.t.GracefulShutdown                 : Graceful shutdown complete
+2026-05-24 17:51:22.221  INFO 29746 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:51:27.988  INFO 30451 --- [  restartedMain] c.b.i.InstantNeedApplication             : Starting InstantNeedApplication using Java 25.0.3 with PID 30451 (/Users/aayush/Desktop/Developer/Github-Projects/instant-need/target/classes started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:51:27.991 DEBUG 30451 --- [  restartedMain] c.b.i.InstantNeedApplication             : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:51:27.991  INFO 30451 --- [  restartedMain] c.b.i.InstantNeedApplication             : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:51:28.010  INFO 30451 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-24 17:51:28.010  INFO 30451 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-24 17:51:28.098  INFO 30451 --- [kground-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 9.0.1.Final
+2026-05-24 17:51:28.429  INFO 30451 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24 17:51:28.464  INFO 30451 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 31 ms. Found 12 JPA repository interfaces.
+2026-05-24 17:51:28.758  INFO 30451 --- [  restartedMain] o.s.b.t.TomcatWebServer                  : Tomcat initialized with port 8080 (http)
+2026-05-24 17:51:28.765  INFO 30451 --- [  restartedMain] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-24 17:51:28.782  INFO 30451 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 772 ms
+2026-05-24 17:51:28.899  INFO 30451 --- [  restartedMain] o.h.o.jpa                                : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24 17:51:28.922  INFO 30451 --- [  restartedMain] o.h.o.core                               : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24 17:51:29.088  INFO 30451 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24 17:51:29.169  INFO 30451 --- [  restartedMain] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/instant_need]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.10
+	Default catalog/schema: instant_need/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24 17:51:29.671  INFO 30451 --- [  restartedMain] o.h.o.core                               : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24 17:51:29.676  INFO 30451 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:51:29.734  INFO 30451 --- [  restartedMain] o.s.d.j.r.q.QueryEnhancerFactories       : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24 17:51:29.850 DEBUG 30451 --- [  restartedMain] c.b.i.c.s.RateLimitFilter                : Filter 'rateLimitFilter' configured for use
+2026-05-24 17:51:29.850 DEBUG 30451 --- [  restartedMain] o.s.w.f.CommonsRequestLoggingFilter      : Filter 'requestLoggingFilter' configured for use
+2026-05-24 17:51:29.850 DEBUG 30451 --- [  restartedMain] c.b.i.c.s.JwtAuthFilter                  : Filter 'jwtAuthFilter' configured for use
+2026-05-24 17:51:30.518  INFO 30451 --- [  restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-05-24 17:51:30.518  WARN 30451 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-05-24 17:51:30.562  INFO 30451 --- [  restartedMain] c.b.i.c.c.FlywayConfig                   : Running Flyway migrations...
+2026-05-24 17:51:30.632  INFO 30451 --- [  restartedMain] o.f.c.FlywayExecutor                     : Database: jdbc:postgresql://localhost:5432/instant_need (PostgreSQL 17.10)
+2026-05-24 17:51:30.660  INFO 30451 --- [  restartedMain] o.f.c.i.c.DbValidate                     : Successfully validated 7 migrations (execution time 00:00.016s)
+2026-05-24 17:51:30.667  INFO 30451 --- [  restartedMain] o.f.c.i.c.DbMigrate                      : Current version of schema "public": 7
+2026-05-24 17:51:30.669  INFO 30451 --- [  restartedMain] o.f.c.i.c.DbMigrate                      : Schema "public" is up to date. No migration necessary.
+2026-05-24 17:51:30.671  INFO 30451 --- [  restartedMain] c.b.i.c.c.FlywayConfig                   : Flyway migrations completed.
+2026-05-24 17:51:31.104  INFO 30451 --- [  restartedMain] o.s.b.a.e.w.EndpointLinksResolver        : Exposing 2 endpoints beneath base path '/actuator'
+2026-05-24 17:51:31.142  INFO 30451 --- [  restartedMain] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+2026-05-24 17:51:31.147  INFO 30451 --- [  restartedMain] o.s.b.t.TomcatWebServer                  : Tomcat started on port 8080 (http) with context path '/'
+2026-05-24 17:51:31.152  INFO 30451 --- [  restartedMain] c.b.i.InstantNeedApplication             : Started InstantNeedApplication in 3.283 seconds (process running for 3.584)
+2026-05-24 17:51:31.189 DEBUG 30451 --- [  restartedMain] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 17:51:33.719  INFO 30451 --- [ionShutdownHook] o.s.b.t.GracefulShutdown                 : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-24 17:51:33.727  INFO 30451 --- [tomcat-shutdown] o.s.b.t.GracefulShutdown                 : Graceful shutdown complete
+2026-05-24 17:51:33.739  INFO 30451 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
