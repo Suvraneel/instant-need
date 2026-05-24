@@ -1,0 +1,7 @@
+target/
+uploads/
+logs/
+*.md
+.git/
+.env
+.env.*

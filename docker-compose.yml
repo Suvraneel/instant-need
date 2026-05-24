@@ -1,0 +1,40 @@
+services:
+
+  # ── Database ────────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: instant_need
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d instant_need"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Backend (Spring Boot) ────────────────────────────────────────────────────
+  backend:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    env_file: .env
+    environment:
+      # Override DB_URL to use the Docker service name instead of localhost
+      DB_URL: jdbc:postgresql://postgres:5432/instant_need
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      # Persist uploaded images when using local storage (STORAGE_TYPE=local)
+      - uploads_data:/app/uploads
+
+  # Frontend is deployed separately on Vercel — not included here.
+
+volumes:
+  postgres_data:
+  uploads_data:

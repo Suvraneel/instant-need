@@ -866,4 +866,3 @@ Response:
 - Use React Native for mobile to reduce duplicated effort across Android and iOS.
 - Build web and admin as React/Next.js applications sharing design system and API client patterns.
 - Deliver in phases: MVP ordering first, then analytics, customer-specific pricing, and integrations.
-
