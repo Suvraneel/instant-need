@@ -9,6 +9,7 @@ import com.b2b.instantneed.catalog.repository.ProductRepository;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.exception.ApiException;
 import com.b2b.instantneed.common.security.SecurityUtils;
+import com.b2b.instantneed.common.service.EmailService;
 import com.b2b.instantneed.customer.entity.Address;
 import com.b2b.instantneed.customer.entity.Customer;
 import com.b2b.instantneed.customer.repository.AddressRepository;
@@ -47,6 +48,7 @@ public class OrderService {
     private final SecurityUtils securityUtils;
     private final ProductRepository productRepository;
     private final PricingService pricingService;
+    private final EmailService emailService;
 
     @Transactional
     public PlaceOrderResponse placeOrder(PlaceOrderRequest request) {
@@ -169,6 +171,11 @@ public class OrderService {
         order.setTotalAmount(subtotal);
         order.setCurrencyCode(currencyCode);
         orderRepository.save(order);
+
+        // Send confirmation email asynchronously — never blocks the HTTP response
+        if (customer.getUser() != null && customer.getUser().getEmail() != null) {
+            emailService.sendOrderConfirmation(customer.getUser().getEmail(), OrderResponse.from(order));
+        }
 
         return new PlaceOrderResponse(order.getId(), orderNumber, order.getStatus().name(),
                 "Order placed successfully.");

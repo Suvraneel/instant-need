@@ -8,6 +8,7 @@ import com.b2b.instantneed.catalog.entity.AvailabilityStatus;
 import com.b2b.instantneed.catalog.entity.Product;
 import com.b2b.instantneed.catalog.repository.ProductRepository;
 import com.b2b.instantneed.common.dto.PagedResponse;
+import com.b2b.instantneed.common.service.EmailService;
 import com.b2b.instantneed.pricing.service.PricingService;
 import com.b2b.instantneed.common.exception.ApiException;
 import com.b2b.instantneed.common.security.SecurityUtils;
@@ -52,6 +53,7 @@ class OrderServiceTest {
     @Mock SecurityUtils     securityUtils;
     @Mock ProductRepository productRepository;
     @Mock PricingService    pricingService;
+    @Mock EmailService      emailService;
 
     @InjectMocks OrderService orderService;
 

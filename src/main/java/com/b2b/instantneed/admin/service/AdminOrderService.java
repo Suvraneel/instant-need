@@ -5,6 +5,8 @@ import com.b2b.instantneed.admin.dto.UpdateOrderStatusRequest;
 import com.b2b.instantneed.admin.repository.AdminOrderSpecification;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.exception.ApiException;
+import com.b2b.instantneed.common.service.EmailService;
+import com.b2b.instantneed.customer.entity.Customer;
 import com.b2b.instantneed.order.dto.OrderResponse;
 import com.b2b.instantneed.order.entity.Order;
 import com.b2b.instantneed.order.entity.OrderStatus;
@@ -28,6 +30,7 @@ public class AdminOrderService {
 
     private final OrderRepository orderRepository;
     private final AuditLogService auditLog;
+    private final EmailService emailService;
 
     @Transactional(readOnly = true)
     public PagedResponse<AdminOrderSummary> listOrders(
@@ -85,6 +88,14 @@ public class AdminOrderService {
                 "Status changed from " + oldStatus + " to " + newStatus + " on order " + order.getOrderNumber(),
                 java.util.Map.of("status", oldStatus.name()),
                 java.util.Map.of("status", newStatus.name()));
+
+        // Notify customer asynchronously
+        Customer customer = order.getCustomer();
+        if (customer != null && customer.getUser() != null
+                && customer.getUser().getEmail() != null) {
+            emailService.sendOrderStatusUpdate(customer.getUser().getEmail(), response);
+        }
+
         return response;
     }
 

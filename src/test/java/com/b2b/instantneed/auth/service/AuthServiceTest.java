@@ -3,6 +3,7 @@ package com.b2b.instantneed.auth.service;
 import com.b2b.instantneed.auth.dto.*;
 import com.b2b.instantneed.common.exception.ApiException;
 import com.b2b.instantneed.common.security.JwtUtil;
+import com.b2b.instantneed.common.service.EmailService;
 import com.b2b.instantneed.customer.entity.Address;
 import com.b2b.instantneed.customer.entity.Customer;
 import com.b2b.instantneed.customer.repository.AddressRepository;
@@ -42,6 +43,7 @@ class AuthServiceTest {
     @Mock PasswordEncoder       passwordEncoder;
     @Mock AuthenticationManager authenticationManager;
     @Mock JwtUtil               jwtUtil;
+    @Mock EmailService          emailService;
 
     @InjectMocks AuthService authService;
 

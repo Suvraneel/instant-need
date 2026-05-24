@@ -4,6 +4,7 @@ import com.b2b.instantneed.admin.dto.AdminOrderSummary;
 import com.b2b.instantneed.admin.dto.UpdateOrderStatusRequest;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.exception.ApiException;
+import com.b2b.instantneed.common.service.EmailService;
 import com.b2b.instantneed.customer.entity.Customer;
 import com.b2b.instantneed.order.dto.OrderResponse;
 import com.b2b.instantneed.order.entity.Order;
@@ -39,6 +40,7 @@ class AdminOrderServiceTest {
 
     @Mock OrderRepository orderRepository;
     @Mock AuditLogService auditLog;
+    @Mock EmailService    emailService;
 
     @InjectMocks AdminOrderService service;
 

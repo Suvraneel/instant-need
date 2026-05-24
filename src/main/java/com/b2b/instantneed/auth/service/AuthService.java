@@ -2,6 +2,7 @@ package com.b2b.instantneed.auth.service;
 
 import com.b2b.instantneed.auth.dto.*;
 import com.b2b.instantneed.common.exception.ApiException;
+import com.b2b.instantneed.common.service.EmailService;
 import com.b2b.instantneed.common.util.HtmlSanitizer;
 import com.b2b.instantneed.common.security.JwtUtil;
 import com.b2b.instantneed.common.security.SecurityUtils;
@@ -37,6 +38,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final SecurityUtils securityUtils;
+    private final EmailService emailService;
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
@@ -153,7 +155,7 @@ public class AuthService {
             user.setPasswordResetToken(token);
             user.setPasswordResetTokenExpiresAt(Instant.now().plusSeconds(3600));
             userRepository.save(user);
-            // TODO: dispatch PasswordResetEmailEvent(user.getEmail(), token) once email service is wired
+            emailService.sendPasswordReset(user.getEmail(), token);
             log.info("Password reset token generated for userId={}", user.getId());
         });
         // Always return success to prevent email enumeration
