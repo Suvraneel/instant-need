@@ -4,6 +4,7 @@ import com.b2b.instantneed.admin.dto.*;
 import com.b2b.instantneed.catalog.entity.*;
 import com.b2b.instantneed.catalog.repository.*;
 import com.b2b.instantneed.common.exception.ApiException;
+import com.b2b.instantneed.common.storage.StorageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,6 +36,7 @@ class AdminProductServiceTest {
     @Mock CategoryRepository     categoryRepository;
     @Mock PricingTierRepository  pricingTierRepository;
     @Mock ProductImageRepository productImageRepository;
+    @Mock StorageService         storageService;
     @Mock AuditLogService        auditLog;
 
     @InjectMocks AdminProductService service;

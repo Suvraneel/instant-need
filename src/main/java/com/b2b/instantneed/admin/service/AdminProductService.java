@@ -6,6 +6,7 @@ import com.b2b.instantneed.catalog.entity.*;
 import com.b2b.instantneed.catalog.repository.*;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.exception.ApiException;
+import com.b2b.instantneed.common.storage.StorageService;
 import com.b2b.instantneed.common.util.HtmlSanitizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,7 +15,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +29,7 @@ public class AdminProductService {
     private final CategoryRepository categoryRepository;
     private final PricingTierRepository pricingTierRepository;
     private final ProductImageRepository productImageRepository;
+    private final StorageService storageService;
     private final AuditLogService auditLog;
     @Transactional(readOnly = true)
     public PagedResponse<AdminProductSummary> listProducts(
@@ -178,6 +182,51 @@ public class AdminProductService {
         productRepository.save(product);
         auditLog.log(AuditLogService.DELETE, AuditLogService.PRODUCT, id,
                 "Soft-deleted product: " + product.getName(), before, null);
+    }
+
+    // ── Image upload ─────────────────────────────────────────────────────────────
+
+    @Transactional
+    public ImageUploadResponse uploadImage(UUID productId, MultipartFile file,
+                                           String altText, int sortOrder) {
+        Product product = findProduct(productId);
+
+        String url;
+        try {
+            url = storageService.store(file, "products/" + productId);
+        } catch (IOException e) {
+            throw ApiException.badRequest("UPLOAD_FAILED", "Could not save file: " + e.getMessage());
+        }
+
+        ProductImage image = ProductImage.builder()
+                .product(product)
+                .imageUrl(url)
+                .altText(altText)
+                .sortOrder(sortOrder)
+                .build();
+        productImageRepository.save(image);
+
+        auditLog.log(AuditLogService.CREATE, AuditLogService.PRODUCT, productId,
+                "Image uploaded for product: " + product.getName(), null,
+                java.util.Map.of("imageUrl", url));
+
+        return ImageUploadResponse.from(image);
+    }
+
+    @Transactional
+    public void deleteImage(UUID productId, UUID imageId) {
+        findProduct(productId); // ensures product exists and admin has access
+
+        ProductImage image = productImageRepository.findById(imageId)
+                .orElseThrow(() -> ApiException.notFound("IMAGE_NOT_FOUND",
+                        "Image not found: " + imageId));
+
+        if (!image.getProduct().getId().equals(productId)) {
+            throw ApiException.notFound("IMAGE_NOT_FOUND", "Image not found: " + imageId);
+        }
+
+        storageService.delete(image.getImageUrl());
+        productImageRepository.delete(image);
     }
 
     // ── Helpers ─────────────────────────────────────────────────────────────────

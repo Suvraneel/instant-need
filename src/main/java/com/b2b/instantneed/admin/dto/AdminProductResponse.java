@@ -2,6 +2,7 @@ package com.b2b.instantneed.admin.dto;
 
 import com.b2b.instantneed.catalog.dto.PricingTierResponse;
 import com.b2b.instantneed.catalog.entity.Product;
+import com.b2b.instantneed.catalog.entity.ProductImage;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -21,10 +22,17 @@ public record AdminProductResponse(
         boolean active,
         BigDecimal basePrice,
         List<PricingTierResponse> pricingTiers,
-        List<String> imageUrls,
+        List<ImageInfo> images,
         Instant createdAt,
         Instant updatedAt
 ) {
+    /** Lightweight image projection returned with the product response. */
+    public record ImageInfo(UUID id, String url, String altText, int sortOrder) {
+        public static ImageInfo from(ProductImage img) {
+            return new ImageInfo(img.getId(), img.getImageUrl(), img.getAltText(), img.getSortOrder());
+        }
+    }
+
     public static AdminProductResponse from(Product p) {
         return new AdminProductResponse(
                 p.getId(), p.getName(), p.getSku(), p.getSlug(),
@@ -33,7 +41,7 @@ public record AdminProductResponse(
                 p.getDescription(), p.getUnitOfMeasurement(),
                 p.getAvailabilityStatus().name(), p.isActive(), p.getBasePrice(),
                 p.getPricingTiers().stream().map(PricingTierResponse::from).toList(),
-                p.getImages().stream().map(i -> i.getImageUrl()).toList(),
+                p.getImages().stream().map(ImageInfo::from).toList(),
                 p.getCreatedAt(), p.getUpdatedAt()
         );
     }

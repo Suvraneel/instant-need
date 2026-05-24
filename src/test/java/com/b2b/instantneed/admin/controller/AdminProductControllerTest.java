@@ -210,7 +210,7 @@ class AdminProductControllerTest {
                         new PricingTierResponse(null, 1, 49, new BigDecimal("250.00"), "INR"),
                         new PricingTierResponse(null, 50, null, new BigDecimal("230.00"), "INR")
                 ),
-                List.of("https://example.com/img.jpg"),
+                List.of(new AdminProductResponse.ImageInfo(UUID.randomUUID(), "https://example.com/img.jpg", null, 0)),
                 Instant.now(), Instant.now());
     }
 

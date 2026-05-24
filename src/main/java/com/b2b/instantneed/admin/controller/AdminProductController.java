@@ -9,9 +9,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -79,5 +81,30 @@ public class AdminProductController {
             @PathVariable UUID id,
             @Valid @RequestBody List<PricingTierRequest> tiers) {
         return ResponseEntity.ok(service.replacePricingTiers(id, tiers));
+    }
+
+    // ── Image upload sub-resource ────────────────────────────────────────────────
+
+    @Operation(
+            summary = "Upload an image for a product",
+            description = "Accepts a multipart/form-data request with a 'file' part (JPEG/PNG/WebP/GIF, max 5 MB). "
+                        + "Returns the stored image URL and ID.")
+    @PostMapping(value = "/{id}/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ImageUploadResponse> uploadImage(
+            @PathVariable UUID id,
+            @RequestPart("file") MultipartFile file,
+            @RequestParam(defaultValue = "") String altText,
+            @RequestParam(defaultValue = "0") int sortOrder) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(service.uploadImage(id, file, altText, sortOrder));
+    }
+
+    @Operation(summary = "Delete a product image by ID")
+    @DeleteMapping("/{id}/images/{imageId}")
+    public ResponseEntity<Void> deleteImage(
+            @PathVariable UUID id,
+            @PathVariable UUID imageId) {
+        service.deleteImage(id, imageId);
+        return ResponseEntity.noContent().build();
     }
 }

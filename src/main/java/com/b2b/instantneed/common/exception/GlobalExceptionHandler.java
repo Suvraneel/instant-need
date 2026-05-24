@@ -1,5 +1,6 @@
 package com.b2b.instantneed.common.exception;
 
+import com.b2b.instantneed.common.storage.StorageException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -8,6 +9,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -51,6 +53,18 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleDisabled(DisabledException ex) {
         return ResponseEntity.status(401)
                 .body(ErrorResponse.of("ACCOUNT_DISABLED", "Account is deactivated"));
+    }
+
+    @ExceptionHandler(StorageException.class)
+    public ResponseEntity<ErrorResponse> handleStorage(StorageException ex) {
+        return ResponseEntity.badRequest()
+                .body(ErrorResponse.of("INVALID_FILE", ex.getMessage()));
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ErrorResponse> handleMaxUploadSize(MaxUploadSizeExceededException ex) {
+        return ResponseEntity.badRequest()
+                .body(ErrorResponse.of("FILE_TOO_LARGE", "File exceeds the maximum allowed upload size of 5 MB"));
     }
 
     @ExceptionHandler(Exception.class)
