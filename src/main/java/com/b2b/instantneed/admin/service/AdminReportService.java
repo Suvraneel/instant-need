@@ -108,18 +108,21 @@ public class AdminReportService {
         Instant from  = parseDate(dateFrom, false);
         Instant to    = parseDate(dateTo, true);
 
+        String fromIso = from != null ? from.toString() : null;
+        String toIso   = to   != null ? to.toString()   : null;
+
         List<Object[]> rows = orderItemRepository.aggregateByProduct(
-                OrderStatus.CANCELLED, from, to,
+                OrderStatus.CANCELLED.name(), fromIso, toIso,
                 PageRequest.of(0, safeLimit));
 
         return rows.stream()
                 .map(r -> new TopProductEntry(
-                        (UUID)       r[3],   // product.id (may be null for deleted products)
-                        (String)     r[0],   // productNameSnapshot
-                        (String)     r[1],   // skuSnapshot
-                        ((Long)      r[4]),  // SUM(quantity)
-                        (BigDecimal) r[5],   // SUM(lineTotal)
-                        (String)     r[2]))  // currencyCode
+                        r[3] != null ? UUID.fromString((String) r[3]) : null,  // product.id (VARCHAR cast)
+                        (String)     r[0],   // product_name_snapshot
+                        (String)     r[1],   // sku_snapshot
+                        ((Number)    r[4]).longValue(),   // SUM(quantity)
+                        (BigDecimal) r[5],   // SUM(line_total)
+                        (String)     r[2]))  // currency_code
                 .toList();
     }
 
