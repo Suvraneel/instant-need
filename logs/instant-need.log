@@ -58,3 +58,6 @@
 2026-05-24 17:25:36.585 DEBUG 24709 --- [nio-8080-exec-2] o.s.w.s.DispatcherServlet                : POST "/api/v1/auth/login", parameters={}
 2026-05-24 17:25:36.881 DEBUG 24709 --- [nio-8080-exec-2] o.s.w.s.DispatcherServlet                : Completed 200 OK
 2026-05-24 17:25:36.882 DEBUG 24709 --- [nio-8080-exec-2] o.s.w.f.CommonsRequestLoggingFilter      : REQUEST  : POST /api/v1/auth/login, client=0:0:0:0:0:0:0:1, payload={"email":"aayush@example.com","password":"NewPass@5678"}]
+2026-05-24 17:26:58.458  INFO 24709 --- [ionShutdownHook] o.s.b.t.GracefulShutdown                 : Commencing graceful shutdown. Waiting for active requests to complete
+2026-05-24 17:26:58.463  INFO 24709 --- [tomcat-shutdown] o.s.b.t.GracefulShutdown                 : Graceful shutdown complete
+2026-05-24 17:26:58.473  INFO 24709 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
