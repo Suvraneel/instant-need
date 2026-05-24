@@ -11,5 +11,5 @@ public record RegisterRequest(
         @NotBlank @Size(min = 8, max = 128) String password,
         @Size(max = 100) String gstVatNumber,
         String notes,
-        @NotNull @Valid AddressRequest address
+        @Valid AddressRequest address
 ) {}

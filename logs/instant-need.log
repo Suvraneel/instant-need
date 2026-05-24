@@ -1,0 +1,60 @@
+2026-05-24 17:25:02.348  INFO 24709 --- [  restartedMain] c.b.i.InstantNeedApplication             : Starting InstantNeedApplication using Java 25.0.3 with PID 24709 (/Users/aayush/Desktop/Developer/Github-Projects/instant-need/target/classes started by aayush in /Users/aayush/Desktop/Developer/Github-Projects/instant-need)
+2026-05-24 17:25:02.350 DEBUG 24709 --- [  restartedMain] c.b.i.InstantNeedApplication             : Running with Spring Boot v4.0.6, Spring v7.0.7
+2026-05-24 17:25:02.350  INFO 24709 --- [  restartedMain] c.b.i.InstantNeedApplication             : No active profile set, falling back to 1 default profile: "default"
+2026-05-24 17:25:02.370  INFO 24709 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2026-05-24 17:25:02.370  INFO 24709 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2026-05-24 17:25:02.452  INFO 24709 --- [kground-preinit] o.h.v.i.u.Version                        : HV000001: Hibernate Validator 9.0.1.Final
+2026-05-24 17:25:02.847  INFO 24709 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-05-24 17:25:02.884  INFO 24709 --- [  restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 33 ms. Found 12 JPA repository interfaces.
+2026-05-24 17:25:03.171  INFO 24709 --- [  restartedMain] o.s.b.t.TomcatWebServer                  : Tomcat initialized with port 8080 (http)
+2026-05-24 17:25:03.179  INFO 24709 --- [  restartedMain] o.a.c.h.Http11NioProtocol                : Initializing ProtocolHandler ["http-nio-8080"]
+2026-05-24 17:25:03.201  INFO 24709 --- [  restartedMain] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 830 ms
+2026-05-24 17:25:03.320  INFO 24709 --- [  restartedMain] o.h.o.jpa                                : HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-05-24 17:25:03.342  INFO 24709 --- [  restartedMain] o.h.o.core                               : HHH000001: Hibernate ORM core version 7.2.12.Final
+2026-05-24 17:25:03.536  INFO 24709 --- [  restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-05-24 17:25:03.632  INFO 24709 --- [  restartedMain] o.h.o.c.pooling                          : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/instant_need]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 17.10
+	Default catalog/schema: instant_need/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-05-24 17:25:04.190  INFO 24709 --- [  restartedMain] o.h.o.core                               : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-05-24 17:25:04.193  INFO 24709 --- [  restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-05-24 17:25:04.232  INFO 24709 --- [  restartedMain] o.s.d.j.r.q.QueryEnhancerFactories       : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-05-24 17:25:04.346 DEBUG 24709 --- [  restartedMain] c.b.i.c.s.RateLimitFilter                : Filter 'rateLimitFilter' configured for use
+2026-05-24 17:25:04.346 DEBUG 24709 --- [  restartedMain] o.s.w.f.CommonsRequestLoggingFilter      : Filter 'requestLoggingFilter' configured for use
+2026-05-24 17:25:04.346 DEBUG 24709 --- [  restartedMain] c.b.i.c.s.JwtAuthFilter                  : Filter 'jwtAuthFilter' configured for use
+2026-05-24 17:25:05.113  INFO 24709 --- [  restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-05-24 17:25:05.114  WARN 24709 --- [  restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-05-24 17:25:05.171  INFO 24709 --- [  restartedMain] c.b.i.c.c.FlywayConfig                   : Running Flyway migrations...
+2026-05-24 17:25:05.251  INFO 24709 --- [  restartedMain] o.f.c.FlywayExecutor                     : Database: jdbc:postgresql://localhost:5432/instant_need (PostgreSQL 17.10)
+2026-05-24 17:25:05.278  INFO 24709 --- [  restartedMain] o.f.c.i.c.DbValidate                     : Successfully validated 7 migrations (execution time 00:00.014s)
+2026-05-24 17:25:05.287  INFO 24709 --- [  restartedMain] o.f.c.i.c.DbMigrate                      : Current version of schema "public": 7
+2026-05-24 17:25:05.289  INFO 24709 --- [  restartedMain] o.f.c.i.c.DbMigrate                      : Schema "public" is up to date. No migration necessary.
+2026-05-24 17:25:05.291  INFO 24709 --- [  restartedMain] c.b.i.c.c.FlywayConfig                   : Flyway migrations completed.
+2026-05-24 17:25:05.758  INFO 24709 --- [  restartedMain] o.s.b.a.e.w.EndpointLinksResolver        : Exposing 2 endpoints beneath base path '/actuator'
+2026-05-24 17:25:05.817  INFO 24709 --- [  restartedMain] o.a.c.h.Http11NioProtocol                : Starting ProtocolHandler ["http-nio-8080"]
+2026-05-24 17:25:05.823  INFO 24709 --- [  restartedMain] o.s.b.t.TomcatWebServer                  : Tomcat started on port 8080 (http) with context path '/'
+2026-05-24 17:25:05.829  INFO 24709 --- [  restartedMain] c.b.i.InstantNeedApplication             : Started InstantNeedApplication in 3.615 seconds (process running for 4.03)
+2026-05-24 17:25:05.865 DEBUG 24709 --- [  restartedMain] c.b.i.c.c.DataSeeder                     : DataSeeder is disabled (app.seed-data.enabled=false)
+2026-05-24 17:25:28.577  INFO 24709 --- [nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Initializing Servlet 'dispatcherServlet'
+2026-05-24 17:25:28.577 DEBUG 24709 --- [nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Detected StandardServletMultipartResolver
+2026-05-24 17:25:28.577 DEBUG 24709 --- [nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Detected AcceptHeaderLocaleResolver
+2026-05-24 17:25:28.578 DEBUG 24709 --- [nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@7e158f7c
+2026-05-24 17:25:28.578 DEBUG 24709 --- [nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Detected org.springframework.web.servlet.support.SessionFlashMapManager@4b6d4cee
+2026-05-24 17:25:28.579 DEBUG 24709 --- [nio-8080-exec-1] o.s.w.s.DispatcherServlet                : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2026-05-24 17:25:28.579  INFO 24709 --- [nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Completed initialization in 2 ms
+2026-05-24 17:25:28.607 DEBUG 24709 --- [nio-8080-exec-1] o.s.w.f.CommonsRequestLoggingFilter      : BEFORE   : GET /api/v1/products, client=0:0:0:0:0:0:0:1]
+2026-05-24 17:25:28.608 DEBUG 24709 --- [nio-8080-exec-1] o.s.w.s.DispatcherServlet                : GET "/api/v1/products", parameters={}
+2026-05-24 17:25:28.800 DEBUG 24709 --- [nio-8080-exec-1] o.s.w.s.DispatcherServlet                : Completed 200 OK
+2026-05-24 17:25:28.801 DEBUG 24709 --- [nio-8080-exec-1] o.s.w.f.CommonsRequestLoggingFilter      : REQUEST  : GET /api/v1/products, client=0:0:0:0:0:0:0:1]
+2026-05-24 17:25:36.584 DEBUG 24709 --- [nio-8080-exec-2] o.s.w.f.CommonsRequestLoggingFilter      : BEFORE   : POST /api/v1/auth/login, client=0:0:0:0:0:0:0:1]
+2026-05-24 17:25:36.585 DEBUG 24709 --- [nio-8080-exec-2] o.s.w.s.DispatcherServlet                : POST "/api/v1/auth/login", parameters={}
+2026-05-24 17:25:36.881 DEBUG 24709 --- [nio-8080-exec-2] o.s.w.s.DispatcherServlet                : Completed 200 OK
+2026-05-24 17:25:36.882 DEBUG 24709 --- [nio-8080-exec-2] o.s.w.f.CommonsRequestLoggingFilter      : REQUEST  : POST /api/v1/auth/login, client=0:0:0:0:0:0:0:1, payload={"email":"aayush@example.com","password":"NewPass@5678"}]

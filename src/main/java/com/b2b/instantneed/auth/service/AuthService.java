@@ -39,7 +39,7 @@ public class AuthService {
     private final SecurityUtils securityUtils;
 
     @Transactional
-    public RegisterResponse register(RegisterRequest request) {
+    public AuthResponse register(RegisterRequest request) {
         if (request.email() == null && request.phoneNumber() == null) {
             throw ApiException.badRequest("VALIDATION_ERROR", "Either email or phone number is required");
         }
@@ -69,25 +69,32 @@ public class AuthService {
                 .build();
         customer = customerRepository.save(customer);
 
-        AddressRequest addr = request.address();
-        Address address = Address.builder()
-                .customer(customer)
-                .label("Default")
-                .line1(addr.line1())
-                .line2(addr.line2())
-                .city(addr.city())
-                .state(addr.state())
-                .country(addr.country())
-                .postalCode(addr.postalCode())
-                .isDefault(true)
-                .build();
-        address = addressRepository.save(address);
-
-        customer.setDefaultShippingAddressId(address.getId());
-        customerRepository.save(customer);
+        // Address is optional at registration — can be added later via /me/addresses
+        if (request.address() != null) {
+            AddressRequest addr = request.address();
+            Address address = Address.builder()
+                    .customer(customer)
+                    .label("Default")
+                    .line1(addr.line1())
+                    .line2(addr.line2())
+                    .city(addr.city())
+                    .state(addr.state())
+                    .country(addr.country())
+                    .postalCode(addr.postalCode())
+                    .isDefault(true)
+                    .build();
+            address = addressRepository.save(address);
+            customer.setDefaultShippingAddressId(address.getId());
+            customerRepository.save(customer);
+        }
 
         log.info("Registered new customer: userId={}, customerId={}", user.getId(), customer.getId());
-        return new RegisterResponse(user.getId(), customer.getId(), "Registration successful");
+
+        // Auto-login: return tokens so the client is authenticated immediately after registration
+        String accessToken  = jwtUtil.generateAccessToken(user);
+        String refreshToken = jwtUtil.generateRefreshToken(user);
+        return new AuthResponse(accessToken, refreshToken,
+                new AuthResponse.UserInfo(user.getId(), customer.getFullName(), user.getEmail(), user.getRole()));
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -109,7 +116,7 @@ public class AuthService {
         return new AuthResponse(
                 accessToken,
                 refreshToken,
-                new AuthResponse.UserInfo(user.getId(), customer.getFullName(), user.getEmail())
+                new AuthResponse.UserInfo(user.getId(), customer.getFullName(), user.getEmail(), user.getRole())
         );
     }
 
@@ -135,7 +142,7 @@ public class AuthService {
         return new AuthResponse(
                 jwtUtil.generateAccessToken(user),
                 jwtUtil.generateRefreshToken(user),
-                new AuthResponse.UserInfo(user.getId(), customer.getFullName(), user.getEmail())
+                new AuthResponse.UserInfo(user.getId(), customer.getFullName(), user.getEmail(), user.getRole())
         );
     }
 
