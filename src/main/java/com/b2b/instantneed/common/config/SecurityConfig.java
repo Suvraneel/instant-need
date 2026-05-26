@@ -57,6 +57,17 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers
+                        .contentTypeOptions(contentTypeOptions -> {})         // X-Content-Type-Options: nosniff
+                        .frameOptions(frame -> frame.deny())                  // X-Frame-Options: DENY
+                        .httpStrictTransportSecurity(hsts -> hsts             // HSTS (HTTPS only)
+                                .includeSubDomains(true)
+                                .maxAgeInSeconds(31536000))
+                        .referrerPolicy(referrer -> referrer                  // Referrer-Policy
+                                .policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                        .contentSecurityPolicy(csp -> csp                     // Content-Security-Policy
+                                .policyDirectives("default-src 'self'; img-src 'self' data: https:; font-src 'self' data:"))
+                )
                 .authorizeHttpRequests(auth -> auth
                         // Public auth endpoints
                         .requestMatchers("/api/v1/auth/**").permitAll()
