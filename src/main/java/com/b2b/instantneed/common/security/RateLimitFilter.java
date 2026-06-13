@@ -46,6 +46,13 @@ public class RateLimitFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain chain) throws ServletException, IOException {
 
+        // OPTIONS preflights must reach Spring Security's CORS filter so that
+        // Access-Control-* headers are written before the browser checks them.
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String path = request.getRequestURI();
         String ip   = extractIp(request);
 
