@@ -1,5 +1,16 @@
 services:
 
+  # ── Redis (token revocation blacklist) ──────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --save "" --appendonly no
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
   # ── Database ────────────────────────────────────────────────────────────────
   postgres:
     image: postgres:16-alpine
@@ -24,13 +35,15 @@ services:
       - "8080:8080"
     env_file: .env
     environment:
-      # Override DB_URL to use the Docker service name instead of localhost
       DB_URL: jdbc:postgresql://postgres:5432/instant_need
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
     depends_on:
       postgres:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     volumes:
-      # Persist uploaded images when using local storage (STORAGE_TYPE=local)
       - uploads_data:/app/uploads
 
   # Frontend is deployed separately on Vercel — not included here.

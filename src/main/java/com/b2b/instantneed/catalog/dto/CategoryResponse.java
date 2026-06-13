@@ -2,6 +2,7 @@ package com.b2b.instantneed.catalog.dto;
 
 import com.b2b.instantneed.catalog.entity.Category;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +20,7 @@ public record CategoryResponse(
         return new CategoryResponse(
                 c.getId(),
                 c.getParent() != null ? c.getParent().getId() : null,
-                c.getName(),
+                HtmlUtils.htmlUnescape(c.getName()),
                 c.getSlug(),
                 c.getSortOrder(),
                 null
@@ -34,7 +35,7 @@ public record CategoryResponse(
         return new CategoryResponse(
                 c.getId(),
                 null,
-                c.getName(),
+                HtmlUtils.htmlUnescape(c.getName()),
                 c.getSlug(),
                 c.getSortOrder(),
                 kids.isEmpty() ? null : kids

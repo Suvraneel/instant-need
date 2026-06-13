@@ -23,6 +23,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UserDetailsService userDetailsService;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @Override
     protected void doFilterInternal(
@@ -39,9 +40,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String jwt = authHeader.substring(7);
         String username;
+        String jti;
         try {
             username = jwtUtil.extractUsername(jwt);
+            jti      = jwtUtil.extractJti(jwt);
         } catch (JwtException e) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // Reject tokens that have been explicitly revoked (e.g. via logout)
+        if (jti != null && tokenBlacklistService.isRevoked(jti)) {
             filterChain.doFilter(request, response);
             return;
         }

@@ -10,7 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.time.Duration;
 import java.util.Date;
+import java.util.UUID;
 import java.util.function.Function;
 
 @Component
@@ -62,8 +64,21 @@ public class JwtUtil {
         }
     }
 
+    /** Extract the unique token ID (jti) — used for blacklisting on logout. */
+    public String extractJti(String token) {
+        return extractClaim(token, Claims::getId);
+    }
+
+    /** How long until this token expires — used to set Redis TTL so the key auto-cleans. */
+    public Duration extractRemainingTtl(String token) {
+        Date expiry = extractClaim(token, Claims::getExpiration);
+        long millis = Math.max(0, expiry.getTime() - System.currentTimeMillis());
+        return Duration.ofMillis(millis);
+    }
+
     private String buildToken(UserDetails userDetails, long expiration, String type) {
         return Jwts.builder()
+                .id(UUID.randomUUID().toString())   // jti — unique per token
                 .subject(userDetails.getUsername())
                 .claim("type", type)
                 .issuedAt(new Date())

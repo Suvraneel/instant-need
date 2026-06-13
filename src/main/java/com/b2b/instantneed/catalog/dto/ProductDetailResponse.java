@@ -2,6 +2,7 @@ package com.b2b.instantneed.catalog.dto;
 
 import com.b2b.instantneed.catalog.entity.Product;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.web.util.HtmlUtils;
 
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -36,11 +37,12 @@ public record ProductDetailResponse(
         List<ProductImageDTO> imageDTOs = imgs == null ? List.of() :
                 imgs.stream().map(i -> new ProductImageDTO(i.getId(), i.getImageUrl(), i.getAltText(), i.getSortOrder())).toList();
         return new ProductDetailResponse(
-                p.getId(), p.getName(), p.getSlug(), p.getSku(),
-                p.getDescription(), p.getUnitOfMeasurement(),
+                p.getId(), HtmlUtils.htmlUnescape(p.getName()), p.getSlug(), p.getSku(),
+                p.getDescription() != null ? HtmlUtils.htmlUnescape(p.getDescription()) : null,
+                p.getUnitOfMeasurement(),
                 p.getAvailabilityStatus().name(),
                 p.getCategory() != null ? p.getCategory().getId() : null,
-                p.getCategory() != null ? p.getCategory().getName() : null,
+                p.getCategory() != null ? HtmlUtils.htmlUnescape(p.getCategory().getName()) : null,
                 p.getBasePrice(), currency,
                 p.getStock(), p.getMoq(), p.isActive(),
                 imageDTOs, tiers,

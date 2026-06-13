@@ -27,6 +27,12 @@ public class Address {
     @Builder.Default
     private String label = "Default";
 
+    @Column(name = "full_name")
+    private String fullName;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     @Column(nullable = false)
     private String line1;
 

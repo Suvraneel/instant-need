@@ -3,8 +3,11 @@ package com.b2b.instantneed.auth.controller;
 import com.b2b.instantneed.auth.dto.*;
 import com.b2b.instantneed.auth.dto.ChangePasswordRequest;
 import com.b2b.instantneed.auth.service.AuthService;
+import com.b2b.instantneed.common.security.TokenBlacklistService;
+import com.b2b.instantneed.common.security.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,8 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
+    private final JwtUtil jwtUtil;
+    private final TokenBlacklistService tokenBlacklistService;
 
     @Operation(summary = "Register a new wholesale customer")
     @PostMapping("/register")
@@ -61,10 +66,19 @@ public class AuthController {
         return ResponseEntity.ok(Map.of("message", "Password changed successfully"));
     }
 
-    @Operation(summary = "Logout (client-side token invalidation — returns 200 OK)")
+    @Operation(summary = "Logout — revokes the current access token via Redis blacklist")
     @PostMapping("/logout")
-    public ResponseEntity<Map<String, String>> logout() {
-        // JWT is stateless; actual token revocation is client-side (clear storage)
+    public ResponseEntity<Map<String, String>> logout(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            try {
+                String jti = jwtUtil.extractJti(token);
+                tokenBlacklistService.revoke(jti, jwtUtil.extractRemainingTtl(token));
+            } catch (Exception ignored) {
+                // Malformed / already-expired token — safe to ignore
+            }
+        }
         return ResponseEntity.ok(Map.of("message", "Logged out successfully"));
     }
 }

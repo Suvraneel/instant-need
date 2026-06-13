@@ -122,7 +122,7 @@ class CustomerProfileServiceTest {
         given(addressRepository.save(any())).willReturn(saved);
 
         CreateAddressRequest req = new CreateAddressRequest(
-                "Office", "12 MG Road", null, "Mumbai", "Maharashtra", "India", "400001", false);
+                "Office", "Test User", "12 MG Road", null, "Mumbai", "Maharashtra", "India", "400001", null, false);
 
         AddressResponse res = service.addAddress(req);
 
@@ -142,7 +142,7 @@ class CustomerProfileServiceTest {
         given(customerRepository.save(any())).willReturn(customer);
 
         CreateAddressRequest req = new CreateAddressRequest(
-                "Home", "1 Home St", null, "Delhi", "Delhi", "India", "110001", true);
+                "Home", "Test User", "1 Home St", null, "Delhi", "Delhi", "India", "110001", null, true);
 
         service.addAddress(req);
 

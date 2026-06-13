@@ -19,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.HtmlUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -79,8 +80,8 @@ public class CatalogService {
         Page<ProductSummaryResponse> summaryPage = productPage.map(p -> {
             List<PricingTier> tiers = tiersMap.getOrDefault(p.getId(), List.of());
             return new ProductSummaryResponse(
-                p.getId(), p.getName(), p.getSlug(), p.getSku(),
-                p.getCategory() != null ? p.getCategory().getName() : null,
+                p.getId(), HtmlUtils.htmlUnescape(p.getName()), p.getSlug(), p.getSku(),
+                p.getCategory() != null ? HtmlUtils.htmlUnescape(p.getCategory().getName()) : null,
                 p.getBasePrice(),
                 tiers.isEmpty() ? "INR" : tiers.get(0).getCurrencyCode(),
                 p.getStock(), p.getMoq(), p.isActive(),

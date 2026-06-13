@@ -71,8 +71,10 @@ public class CustomerProfileService {
         Address address = Address.builder()
                 .customer(customer)
                 .label(request.label() != null && !request.label().isBlank() ? request.label() : "Default")
-                .line1(request.line1())
-                .line2(request.line2())
+                .fullName(request.fullName())
+                .phoneNumber(request.phoneNumber())
+                .line1(request.addressLine1())
+                .line2(request.addressLine2())
                 .city(request.city())
                 .state(request.state())
                 .country(request.country())
@@ -96,8 +98,10 @@ public class CustomerProfileService {
         Address address = ownedAddress(addressId, customer.getId());
 
         if (request.label() != null) address.setLabel(request.label());
-        if (request.line1() != null && !request.line1().isBlank()) address.setLine1(request.line1());
-        if (request.line2() != null) address.setLine2(request.line2());
+        if (request.fullName() != null) address.setFullName(request.fullName());
+        if (request.phoneNumber() != null) address.setPhoneNumber(request.phoneNumber());
+        if (request.addressLine1() != null && !request.addressLine1().isBlank()) address.setLine1(request.addressLine1());
+        if (request.addressLine2() != null) address.setLine2(request.addressLine2());
         if (request.city() != null && !request.city().isBlank()) address.setCity(request.city());
         if (request.state() != null && !request.state().isBlank()) address.setState(request.state());
         if (request.country() != null && !request.country().isBlank()) address.setCountry(request.country());
