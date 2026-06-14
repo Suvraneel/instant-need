@@ -51,7 +51,7 @@ pom.xml                                   # Maven dependencies & build config
 - Add database connection properties to `application.properties`:
   ```properties
   spring.application.name=instant-need
-  spring.datasource.url=jdbc:postgresql://localhost:5432/instant-need-db
+  spring.datasource.url=jdbc:postgresql://localhost:5432/instant_need
   spring.datasource.username=<user>
   spring.datasource.password=<password>
   spring.jpa.hibernate.ddl-auto=update

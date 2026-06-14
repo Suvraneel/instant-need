@@ -20,7 +20,7 @@ services:
   #   image: postgres:16-alpine
   #   restart: unless-stopped
   #   environment:
-  #     POSTGRES_DB: instant-need-db
+  #     POSTGRES_DB: instant_need
   #     POSTGRES_USER: ${DB_USERNAME}
   #     POSTGRES_PASSWORD: ${DB_PASSWORD}
   #   ports:
@@ -28,7 +28,7 @@ services:
   #   volumes:
   #     - postgres_data:/var/lib/postgresql/data
   #   healthcheck:
-  #     test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d instant-need-db"]
+  #     test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d instant_need"]
   #     interval: 10s
   #     timeout: 5s
   #     retries: 5
@@ -42,7 +42,7 @@ services:
     env_file: .env          # DB_USERNAME, DB_PASSWORD (RDS credentials) live here
     environment:
       # AWS RDS PostgreSQL endpoint (hostname is not secret; auth is via .env + security group)
-      DB_URL: jdbc:postgresql://instant-need-db.ckdqgkcuwuyi.us-east-1.rds.amazonaws.com:5432/instant-need-db?sslmode=require
+      DB_URL: jdbc:postgresql://instant-need-db.ckdqgkcuwuyi.us-east-1.rds.amazonaws.com:5432/instant_need?sslmode=require
       REDIS_HOST: redis
       REDIS_PORT: 6379
     depends_on:
