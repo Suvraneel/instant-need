@@ -19,6 +19,8 @@ services:
       POSTGRES_DB: instant_need
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "127.0.0.1:5432:5432"  # localhost only — access via SSH tunnel, not public internet
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
