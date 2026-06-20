@@ -198,6 +198,15 @@ public class AdminProductService {
             throw ApiException.badRequest("UPLOAD_FAILED", "Could not save file: " + e.getMessage());
         }
 
+        // Remove any seeded placeholder images before storing a real one
+        List<ProductImage> placeholders = product.getImages().stream()
+                .filter(i -> i.getImageUrl() != null && i.getImageUrl().contains("placehold.co"))
+                .toList();
+        if (!placeholders.isEmpty()) {
+            productImageRepository.deleteAll(placeholders);
+            product.getImages().removeAll(placeholders);
+        }
+
         ProductImage image = ProductImage.builder()
                 .product(product)
                 .imageUrl(url)
