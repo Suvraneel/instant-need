@@ -9,5 +9,7 @@ public record AdminCategoryRequest(
         @Size(max = 255) String slug,
         UUID parentId,
         Integer sortOrder,
-        Boolean active
+        Boolean active,
+        String description,
+        @Size(max = 500) String imageUrl
 ) {}

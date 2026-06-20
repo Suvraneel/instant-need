@@ -13,6 +13,8 @@ public record CategoryResponse(
         UUID parentId,
         String name,
         String slug,
+        String description,
+        String imageUrl,
         int sortOrder,
         List<CategoryResponse> children
 ) {
@@ -22,6 +24,8 @@ public record CategoryResponse(
                 c.getParent() != null ? c.getParent().getId() : null,
                 HtmlUtils.htmlUnescape(c.getName()),
                 c.getSlug(),
+                c.getDescription(),
+                c.getImageUrl(),
                 c.getSortOrder(),
                 null
         );
@@ -37,6 +41,8 @@ public record CategoryResponse(
                 null,
                 HtmlUtils.htmlUnescape(c.getName()),
                 c.getSlug(),
+                c.getDescription(),
+                c.getImageUrl(),
                 c.getSortOrder(),
                 kids.isEmpty() ? null : kids
         );

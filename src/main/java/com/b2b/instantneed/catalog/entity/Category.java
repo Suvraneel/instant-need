@@ -35,6 +35,12 @@ public class Category {
     @Column(nullable = false, unique = true)
     private String slug;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @Column(name = "image_url", length = 500)
+    private String imageUrl;
+
     @Column(name = "is_active", nullable = false)
     @Builder.Default
     private boolean active = true;

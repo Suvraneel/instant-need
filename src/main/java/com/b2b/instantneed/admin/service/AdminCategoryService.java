@@ -5,11 +5,14 @@ import com.b2b.instantneed.admin.dto.AdminCategoryResponse;
 import com.b2b.instantneed.catalog.entity.Category;
 import com.b2b.instantneed.catalog.repository.CategoryRepository;
 import com.b2b.instantneed.common.exception.ApiException;
+import com.b2b.instantneed.common.storage.StorageService;
 import com.b2b.instantneed.common.util.HtmlSanitizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +21,7 @@ import java.util.UUID;
 public class AdminCategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final StorageService storageService;
     private final AuditLogService auditLog;
 
     @Transactional(readOnly = true)
@@ -45,6 +49,8 @@ public class AdminCategoryService {
                 .name(HtmlSanitizer.strip(request.name()))
                 .slug(slug)
                 .parent(parent)
+                .description(request.description() != null ? HtmlSanitizer.strip(request.description()) : null)
+                .imageUrl(request.imageUrl())
                 .sortOrder(request.sortOrder() != null ? request.sortOrder() : 0)
                 .active(request.active() == null || request.active())
                 .build();
@@ -67,6 +73,8 @@ public class AdminCategoryService {
         if (request.slug() != null && !request.slug().isBlank()) {
             category.setSlug(resolveUniqueSlug(request.slug(), null, id));
         }
+        if (request.description() != null) category.setDescription(HtmlSanitizer.strip(request.description()));
+        if (request.imageUrl() != null) category.setImageUrl(request.imageUrl());
         if (request.sortOrder() != null) category.setSortOrder(request.sortOrder());
         if (request.active() != null) category.setActive(request.active());
         if (request.parentId() != null) {
@@ -83,6 +91,26 @@ public class AdminCategoryService {
         auditLog.log(AuditLogService.UPDATE, AuditLogService.CATEGORY, id,
                 "Updated category: " + after.name(), before, after);
         return after;
+    }
+
+    @Transactional
+    public AdminCategoryResponse uploadImage(UUID id, MultipartFile file) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> ApiException.notFound("CATEGORY_NOT_FOUND", "Category not found: " + id));
+
+        String url;
+        try {
+            url = storageService.store(file, "categories/" + id);
+        } catch (IOException e) {
+            throw ApiException.badRequest("UPLOAD_FAILED", "Could not save file: " + e.getMessage());
+        }
+
+        category.setImageUrl(url);
+        AdminCategoryResponse updated = AdminCategoryResponse.from(categoryRepository.save(category));
+        auditLog.log(AuditLogService.UPDATE, AuditLogService.CATEGORY, id,
+                "Image uploaded for category: " + category.getName(), null,
+                java.util.Map.of("imageUrl", url));
+        return updated;
     }
 
     @Transactional

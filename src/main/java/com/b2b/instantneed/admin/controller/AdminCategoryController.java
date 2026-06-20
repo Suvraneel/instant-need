@@ -8,9 +8,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -41,6 +43,14 @@ public class AdminCategoryController {
     public ResponseEntity<AdminCategoryResponse> update(
             @PathVariable UUID id, @Valid @RequestBody AdminCategoryRequest request) {
         return ResponseEntity.ok(service.updateCategory(id, request));
+    }
+
+    @Operation(summary = "Upload an image for a category")
+    @PostMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<AdminCategoryResponse> uploadImage(
+            @PathVariable UUID id,
+            @RequestPart("file") MultipartFile file) {
+        return ResponseEntity.ok(service.uploadImage(id, file));
     }
 
     @Operation(summary = "Soft-delete a category (sets active=false)")
