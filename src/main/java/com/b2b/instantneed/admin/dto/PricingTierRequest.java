@@ -8,8 +8,8 @@ import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 
 public record PricingTierRequest(
-        @Min(1) int minQuantity,
-        Integer maxQuantity,
+        @Min(1) int minQty,
+        Integer maxQty,
         @NotNull @DecimalMin("0.01") BigDecimal unitPrice,
         @Size(min = 3, max = 3) String currencyCode
 ) {}

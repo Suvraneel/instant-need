@@ -251,8 +251,8 @@ public class AdminProductService {
                 pricingTierRepository.findByProductIdOrderByMinQuantityAsc(product.getId()));
         List<PricingTier> tiers = tierRequests.stream().map(t -> PricingTier.builder()
                 .product(product)
-                .minQuantity(t.minQuantity())
-                .maxQuantity(t.maxQuantity())
+                .minQuantity(t.minQty())
+                .maxQuantity(t.maxQty())
                 .unitPrice(t.unitPrice())
                 .currencyCode(t.currencyCode() != null ? t.currencyCode() : "INR")
                 .build()).toList();
