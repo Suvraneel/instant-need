@@ -1,5 +1,6 @@
 package com.b2b.instantneed.admin.service;
 
+import com.b2b.instantneed.admin.dto.AdminCustomerDetail;
 import com.b2b.instantneed.admin.dto.AdminCustomerSummary;
 import com.b2b.instantneed.admin.dto.UpdateCustomerRoleRequest;
 import com.b2b.instantneed.admin.dto.UpdateCustomerStatusRequest;
@@ -7,6 +8,9 @@ import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.exception.ApiException;
 import com.b2b.instantneed.customer.entity.Customer;
 import com.b2b.instantneed.customer.repository.CustomerRepository;
+import com.b2b.instantneed.order.entity.Order;
+import com.b2b.instantneed.order.entity.OrderStatus;
+import com.b2b.instantneed.order.repository.OrderRepository;
 import com.b2b.instantneed.user.entity.Role;
 import com.b2b.instantneed.user.entity.User;
 import com.b2b.instantneed.user.repository.UserRepository;
@@ -17,6 +21,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -25,6 +31,7 @@ public class AdminCustomerService {
 
     private final CustomerRepository customerRepository;
     private final UserRepository userRepository;
+    private final OrderRepository orderRepository;
     private final AuditLogService auditLog;
 
     @Transactional(readOnly = true)
@@ -43,11 +50,19 @@ public class AdminCustomerService {
     }
 
     @Transactional(readOnly = true)
-    public AdminCustomerSummary getCustomer(UUID customerId) {
+    public AdminCustomerDetail getCustomer(UUID customerId) {
         Customer customer = customerRepository.findById(customerId)
                 .orElseThrow(() -> ApiException.notFound("CUSTOMER_NOT_FOUND",
                         "Customer not found: " + customerId));
-        return AdminCustomerSummary.from(customer.getUser(), customer);
+
+        List<Order> recentOrders = orderRepository
+                .findByCustomerIdOrderByPlacedAtDesc(customerId, PageRequest.of(0, 10))
+                .getContent();
+
+        long orderCount = orderRepository.countByCustomerId(customerId);
+        BigDecimal totalRevenue = orderRepository.sumRevenueByCustomerId(customerId, OrderStatus.CANCELLED);
+
+        return AdminCustomerDetail.from(customer.getUser(), customer, recentOrders, orderCount, totalRevenue);
     }
 
     @Transactional
@@ -57,7 +72,6 @@ public class AdminCustomerService {
                         "Customer not found: " + customerId));
         User user = customer.getUser();
 
-        // Guard: never allow API-level SUPER_ADMIN promotion
         if (user.getRole() == Role.SUPER_ADMIN) {
             throw ApiException.badRequest("CANNOT_CHANGE_SUPER_ADMIN_ROLE",
                     "SUPER_ADMIN role cannot be modified through the API");

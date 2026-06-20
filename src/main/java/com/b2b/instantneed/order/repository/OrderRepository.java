@@ -28,6 +28,18 @@ public interface OrderRepository extends JpaRepository<Order, UUID>, JpaSpecific
     @Query("SELECT COALESCE(MAX(CAST(SUBSTRING(o.orderNumber, 14) AS int)), 0) FROM Order o WHERE o.orderNumber LIKE :prefix%")
     int findMaxSequenceForPrefix(@Param("prefix") String prefix);
 
+    // ── Per-customer aggregates ───────────────────────────────────────────────
+
+    long countByCustomerId(UUID customerId);
+
+    @Query("""
+            SELECT COALESCE(SUM(o.totalAmount), 0)
+            FROM Order o
+            WHERE o.customer.id = :customerId AND o.status <> :excluded
+            """)
+    BigDecimal sumRevenueByCustomerId(@Param("customerId") UUID customerId,
+                                      @Param("excluded") OrderStatus excluded);
+
     // ── Reporting queries ─────────────────────────────────────────────────────
 
     long countByStatus(OrderStatus status);

@@ -1,5 +1,6 @@
 package com.b2b.instantneed.admin.controller;
 
+import com.b2b.instantneed.admin.dto.AdminCustomerDetail;
 import com.b2b.instantneed.admin.dto.AdminCustomerSummary;
 import com.b2b.instantneed.admin.dto.UpdateCustomerRoleRequest;
 import com.b2b.instantneed.admin.dto.UpdateCustomerStatusRequest;
@@ -33,9 +34,9 @@ public class AdminCustomerController {
         return ResponseEntity.ok(service.listCustomers(search, page, limit));
     }
 
-    @Operation(summary = "Get a customer by ID")
+    @Operation(summary = "Get a customer by ID with order history")
     @GetMapping("/{customerId}")
-    public ResponseEntity<AdminCustomerSummary> get(@PathVariable UUID customerId) {
+    public ResponseEntity<AdminCustomerDetail> get(@PathVariable UUID customerId) {
         return ResponseEntity.ok(service.getCustomer(customerId));
     }
 

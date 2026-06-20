@@ -7,7 +7,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 public record AdminCustomerSummary(
-        UUID customerId,
+        UUID id,
         UUID userId,
         String email,
         String phoneNumber,
@@ -15,7 +15,7 @@ public record AdminCustomerSummary(
         String businessName,
         String role,
         boolean active,
-        Instant memberSince
+        Instant createdAt
 ) {
     public static AdminCustomerSummary from(User user, Customer customer) {
         return new AdminCustomerSummary(
