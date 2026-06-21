@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,11 +35,15 @@ public class CatalogController {
             @RequestParam(required = false) String search,
             @RequestParam(required = false) UUID categoryId,
             @RequestParam(required = false) String availability,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) Boolean inStock,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "20") int limit,
             @RequestParam(required = false) String sort) {
         return ResponseEntity.ok(
-                catalogService.getProducts(search, categoryId, availability, page, limit, sort));
+                catalogService.getProducts(search, categoryId, availability,
+                        minPrice, maxPrice, inStock, page, limit, sort));
     }
 
     @Operation(summary = "Get product detail by ID or slug")

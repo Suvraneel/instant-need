@@ -50,16 +50,21 @@ public class CatalogService {
 
     public PagedResponse<ProductSummaryResponse> getProducts(
             String search, UUID categoryId, String availability,
+            BigDecimal minPrice, BigDecimal maxPrice, Boolean inStock,
             int page, int limit, String sort) {
 
-        AvailabilityStatus status = parseAvailability(availability);
+        AvailabilityStatus status = (inStock != null && inStock)
+                ? AvailabilityStatus.IN_STOCK
+                : parseAvailability(availability);
         Pageable pageable = buildPageable(page, limit, sort);
 
         Specification<Product> spec = Specification
                 .where(ProductSpecification.activeOnly())
                 .and(ProductSpecification.hasSearch(search))
                 .and(ProductSpecification.inCategory(categoryId))
-                .and(ProductSpecification.hasAvailability(status));
+                .and(ProductSpecification.hasAvailability(status))
+                .and(ProductSpecification.priceAtLeast(minPrice))
+                .and(ProductSpecification.priceAtMost(maxPrice));
 
         Page<Product> productPage = productRepository.findAll(spec, pageable);
 
