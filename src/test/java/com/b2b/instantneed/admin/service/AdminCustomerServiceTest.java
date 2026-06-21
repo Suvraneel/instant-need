@@ -1,5 +1,6 @@
 package com.b2b.instantneed.admin.service;
 
+import com.b2b.instantneed.admin.dto.AdminCustomerDetail;
 import com.b2b.instantneed.admin.dto.AdminCustomerSummary;
 import com.b2b.instantneed.admin.dto.UpdateCustomerRoleRequest;
 import com.b2b.instantneed.admin.dto.UpdateCustomerStatusRequest;
@@ -7,6 +8,8 @@ import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.exception.ApiException;
 import com.b2b.instantneed.customer.entity.Customer;
 import com.b2b.instantneed.customer.repository.CustomerRepository;
+import com.b2b.instantneed.order.entity.OrderStatus;
+import com.b2b.instantneed.order.repository.OrderRepository;
 import com.b2b.instantneed.user.entity.AuthProvider;
 import com.b2b.instantneed.user.entity.Role;
 import com.b2b.instantneed.user.entity.User;
@@ -21,6 +24,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,6 +38,7 @@ class AdminCustomerServiceTest {
 
     @Mock CustomerRepository customerRepository;
     @Mock UserRepository     userRepository;
+    @Mock OrderRepository    orderRepository;
     @Mock AuditLogService    auditLog;
 
     @InjectMocks AdminCustomerService service;
@@ -57,15 +62,21 @@ class AdminCustomerServiceTest {
     // ── getCustomer ───────────────────────────────────────────────────────────
 
     @Test
-    void getCustomer_found_returnsSummary() {
+    void getCustomer_found_returnsDetail() {
         User u = user(Role.CUSTOMER);
         Customer c = customer(u);
         given(customerRepository.findById(c.getId())).willReturn(Optional.of(c));
+        given(orderRepository.findByCustomerIdOrderByPlacedAtDesc(eq(c.getId()), any(Pageable.class)))
+                .willReturn(new PageImpl<>(List.of()));
+        given(orderRepository.countByCustomerId(c.getId())).willReturn(0L);
+        given(orderRepository.sumRevenueByCustomerId(c.getId(), OrderStatus.CANCELLED))
+                .willReturn(BigDecimal.ZERO);
 
-        AdminCustomerSummary summary = service.getCustomer(c.getId());
+        AdminCustomerDetail detail = service.getCustomer(c.getId());
 
-        assertThat(summary.customerId()).isEqualTo(c.getId());
-        assertThat(summary.fullName()).isEqualTo("Raj Sharma");
+        assertThat(detail.id()).isEqualTo(c.getId());
+        assertThat(detail.fullName()).isEqualTo("Raj Sharma");
+        assertThat(detail.orderCount()).isZero();
     }
 
     @Test
@@ -139,7 +150,6 @@ class AdminCustomerServiceTest {
 
     @Test
     void updateRole_superAdminTarget_throwsBadRequest() {
-        // Cannot change SUPER_ADMIN's role via API
         User u = user(Role.SUPER_ADMIN);
         Customer c = customer(u);
         given(customerRepository.findById(c.getId())).willReturn(Optional.of(c));
@@ -154,7 +164,7 @@ class AdminCustomerServiceTest {
     // ── Helpers ────────────────────────────────────────────────────────────────
 
     private User user(Role role) {
-        User u = User.builder()
+        return User.builder()
                 .id(UUID.randomUUID())
                 .email("test@example.com")
                 .passwordHash("hash")
@@ -162,7 +172,6 @@ class AdminCustomerServiceTest {
                 .role(role)
                 .active(true)
                 .build();
-        return u;
     }
 
     private Customer customer(User user) {

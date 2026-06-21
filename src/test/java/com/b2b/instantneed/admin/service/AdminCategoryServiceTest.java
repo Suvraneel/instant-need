@@ -5,6 +5,7 @@ import com.b2b.instantneed.admin.dto.AdminCategoryResponse;
 import com.b2b.instantneed.catalog.entity.Category;
 import com.b2b.instantneed.catalog.repository.CategoryRepository;
 import com.b2b.instantneed.common.exception.ApiException;
+import com.b2b.instantneed.common.storage.StorageService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,6 +25,7 @@ import static org.mockito.BDDMockito.*;
 class AdminCategoryServiceTest {
 
     @Mock CategoryRepository categoryRepository;
+    @Mock StorageService     storageService;
     @Mock AuditLogService    auditLog;
 
     @InjectMocks AdminCategoryService service;
@@ -53,7 +55,7 @@ class AdminCategoryServiceTest {
         given(categoryRepository.save(any())).willReturn(saved);
 
         AdminCategoryResponse res = service.createCategory(
-                new AdminCategoryRequest("Office Supplies", null, null, 1, true));
+                new AdminCategoryRequest("Office Supplies", null, null, 1, true, null, null));
 
         assertThat(res.name()).isEqualTo("Office Supplies");
         assertThat(res.slug()).isEqualTo("office-supplies");
@@ -69,7 +71,7 @@ class AdminCategoryServiceTest {
         Category saved = category("Paper", "paper-2");
         given(categoryRepository.save(any())).willReturn(saved);
 
-        service.createCategory(new AdminCategoryRequest("Paper", null, null, 0, true));
+        service.createCategory(new AdminCategoryRequest("Paper", null, null, 0, true, null, null));
 
         var captor = org.mockito.ArgumentCaptor.forClass(Category.class);
         verify(categoryRepository).save(captor.capture());
@@ -79,7 +81,7 @@ class AdminCategoryServiceTest {
     @Test
     void createCategory_nullName_throwsBadRequest() {
         assertThatThrownBy(() -> service.createCategory(
-                new AdminCategoryRequest(null, null, null, null, null)))
+                new AdminCategoryRequest(null, null, null, null, null, null, null)))
                 .isInstanceOf(ApiException.class)
                 .extracting(e -> ((ApiException) e).getHttpStatus())
                 .isEqualTo(HttpStatus.BAD_REQUEST);
@@ -95,7 +97,7 @@ class AdminCategoryServiceTest {
         given(categoryRepository.save(any())).willReturn(cat);
 
         AdminCategoryResponse res = service.updateCategory(cat.getId(),
-                new AdminCategoryRequest("New Name", "new-slug", null, null, null));
+                new AdminCategoryRequest("New Name", "new-slug", null, null, null, null, null));
 
         assertThat(cat.getName()).isEqualTo("New Name");
         assertThat(cat.getSlug()).isEqualTo("new-slug");
@@ -109,7 +111,7 @@ class AdminCategoryServiceTest {
         given(categoryRepository.findById(cat.getId())).willReturn(Optional.of(cat));
 
         assertThatThrownBy(() -> service.updateCategory(cat.getId(),
-                new AdminCategoryRequest(null, null, cat.getId(), null, null)))
+                new AdminCategoryRequest(null, null, cat.getId(), null, null, null, null)))
                 .isInstanceOf(ApiException.class)
                 .hasMessageContaining("own parent");
     }
@@ -120,7 +122,7 @@ class AdminCategoryServiceTest {
         given(categoryRepository.findById(id)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.updateCategory(id,
-                new AdminCategoryRequest("X", null, null, null, null)))
+                new AdminCategoryRequest("X", null, null, null, null, null, null)))
                 .isInstanceOf(ApiException.class)
                 .extracting(e -> ((ApiException) e).getHttpStatus())
                 .isEqualTo(HttpStatus.NOT_FOUND);
