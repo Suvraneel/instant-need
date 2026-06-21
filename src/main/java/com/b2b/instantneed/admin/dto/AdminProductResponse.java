@@ -21,12 +21,13 @@ public record AdminProductResponse(
         String availabilityStatus,
         boolean active,
         BigDecimal basePrice,
+        int stock,
+        int moq,
         List<PricingTierResponse> pricingTiers,
         List<ImageInfo> images,
         Instant createdAt,
         Instant updatedAt
 ) {
-    /** Lightweight image projection returned with the product response. */
     public record ImageInfo(UUID id, String url, String altText, int sortOrder) {
         public static ImageInfo from(ProductImage img) {
             return new ImageInfo(img.getId(), img.getImageUrl(), img.getAltText(), img.getSortOrder());
@@ -40,6 +41,7 @@ public record AdminProductResponse(
                 p.getCategory() != null ? p.getCategory().getName() : null,
                 p.getDescription(), p.getUnitOfMeasurement(),
                 p.getAvailabilityStatus().name(), p.isActive(), p.getBasePrice(),
+                p.getStock(), p.getMoq(),
                 p.getPricingTiers().stream().map(PricingTierResponse::from).toList(),
                 p.getImages().stream().map(ImageInfo::from).toList(),
                 p.getCreatedAt(), p.getUpdatedAt()

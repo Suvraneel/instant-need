@@ -133,9 +133,8 @@ class AdminProductServiceTest {
         given(productRepository.findWithCategoryById(p.getId())).willReturn(Optional.of(p));
         given(productRepository.existsBySkuAndIdNot("NEW-SKU", p.getId())).willReturn(true);
 
-        // UpdateProductRequest(name, slug, sku, categoryId, description, uom, availability, basePrice, active, tiers, images)
         UpdateProductRequest req = new UpdateProductRequest(
-                null, null, "NEW-SKU", null, null, null, null, null, null, null, null);
+                null, null, "NEW-SKU", null, null, null, null, null, null, null, null, null, null);
 
         assertThatThrownBy(() -> service.updateProduct(p.getId(), req))
                 .isInstanceOf(ApiException.class)
@@ -150,10 +149,9 @@ class AdminProductServiceTest {
         given(productRepository.save(any())).willReturn(p);
         given(productRepository.findWithCategoryById(p.getId())).willReturn(Optional.of(p));
 
-        // UpdateProductRequest(name, slug, sku, categoryId, description, uom, availability, basePrice, active, tiers, images)
         UpdateProductRequest req = new UpdateProductRequest(
                 "Updated Name", null, null, null, null, null, null,
-                new BigDecimal("300.00"), null, null, null);
+                new BigDecimal("300.00"), null, null, null, null, null);
 
         service.updateProduct(p.getId(), req);
 

@@ -131,6 +131,8 @@ public class AdminProductService {
             product.setAvailabilityStatus(parseAvailability(request.availabilityStatus(), product.getAvailabilityStatus()));
         }
         if (request.basePrice() != null) product.setBasePrice(request.basePrice());
+        if (request.stock() != null) product.setStock(request.stock());
+        if (request.moq() != null) product.setMoq(request.moq());
         if (request.active() != null) product.setActive(request.active());
 
         productRepository.save(product);

@@ -206,6 +206,7 @@ class AdminProductControllerTest {
                 id, "A4 Paper", "PAPER-A4", "a4-paper",
                 null, null, "80 GSM A4 paper", "ream",
                 "IN_STOCK", true, new BigDecimal("250.00"),
+                100, 1,
                 List.of(
                         new PricingTierResponse(null, 1, 49, new BigDecimal("250.00"), "INR"),
                         new PricingTierResponse(null, 50, null, new BigDecimal("230.00"), "INR")
