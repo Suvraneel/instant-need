@@ -43,4 +43,9 @@ public final class ProductSpecification {
         if (max == null) return (root, query, cb) -> cb.conjunction();
         return (root, query, cb) -> cb.lessThanOrEqualTo(root.get("basePrice"), max);
     }
+
+    public static Specification<Product> inStockOnly(Boolean inStock) {
+        if (inStock == null || !inStock) return (root, query, cb) -> cb.conjunction();
+        return (root, query, cb) -> cb.greaterThan(root.get("stock"), 0);
+    }
 }

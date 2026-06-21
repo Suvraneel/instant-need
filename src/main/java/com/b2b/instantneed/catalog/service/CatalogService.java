@@ -53,9 +53,7 @@ public class CatalogService {
             BigDecimal minPrice, BigDecimal maxPrice, Boolean inStock,
             int page, int limit, String sort) {
 
-        AvailabilityStatus status = (inStock != null && inStock)
-                ? AvailabilityStatus.IN_STOCK
-                : parseAvailability(availability);
+        AvailabilityStatus status = parseAvailability(availability);
         Pageable pageable = buildPageable(page, limit, sort);
 
         Specification<Product> spec = Specification
@@ -64,7 +62,8 @@ public class CatalogService {
                 .and(ProductSpecification.inCategory(categoryId))
                 .and(ProductSpecification.hasAvailability(status))
                 .and(ProductSpecification.priceAtLeast(minPrice))
-                .and(ProductSpecification.priceAtMost(maxPrice));
+                .and(ProductSpecification.priceAtMost(maxPrice))
+                .and(ProductSpecification.inStockOnly(inStock));
 
         Page<Product> productPage = productRepository.findAll(spec, pageable);
 
