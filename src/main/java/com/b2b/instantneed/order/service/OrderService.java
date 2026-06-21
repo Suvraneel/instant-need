@@ -291,7 +291,7 @@ public class OrderService {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("id", address.getId().toString());
         map.put("label", address.getLabel());
-        map.put("fullName", address.getLabel());
+        map.put("fullName", address.getFullName());
         map.put("line1", address.getLine1());
         map.put("line2", address.getLine2());
         map.put("city", address.getCity());

@@ -26,7 +26,7 @@ public class AdminCategoryService {
 
     @Transactional(readOnly = true)
     public List<AdminCategoryResponse> listCategories() {
-        return categoryRepository.findAllByOrderBySortOrderAsc()
+        return categoryRepository.findAllByActiveTrueOrderBySortOrderAsc()
                 .stream().map(AdminCategoryResponse::from).toList();
     }
 
