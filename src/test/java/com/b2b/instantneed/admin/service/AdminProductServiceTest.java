@@ -226,7 +226,7 @@ class AdminProductServiceTest {
         // CreateProductRequest where name is blank triggers the fallback slug
         CreateProductRequest req = new CreateProductRequest(
                 "  ", null, "SKU", null, null, "ream", "IN_STOCK",
-                new BigDecimal("250.00"), null, null);
+                new BigDecimal("250.00"), null, null, true, List.of(), null);
 
         service.createProduct(req);
 
@@ -283,6 +283,6 @@ class AdminProductServiceTest {
     private CreateProductRequest createRequest(String name, String sku) {
         return new CreateProductRequest(
                 name, null, sku, null, null, "ream", "IN_STOCK",
-                new BigDecimal("250.00"), null, null);
+                new BigDecimal("250.00"), null, null, true, List.of(), null);
     }
 }
