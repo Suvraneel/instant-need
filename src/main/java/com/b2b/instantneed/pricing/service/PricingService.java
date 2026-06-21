@@ -44,13 +44,13 @@ public class PricingService {
                     "Product has no pricing tiers configured");
         }
 
+        // Find the matching tier; if quantity is below the first tier's minimum,
+        // use the first tier's price (MOQ is informational, not enforced at order time).
         PricingTier matched = tiers.stream()
                 .filter(t -> t.getMinQuantity() <= quantity
                         && (t.getMaxQuantity() == null || t.getMaxQuantity() >= quantity))
                 .findFirst()
-                .orElseThrow(() -> ApiException.badRequest("NO_TIER_MATCH",
-                        "No pricing tier covers quantity " + quantity
-                        + ". Minimum order quantity is " + tiers.get(0).getMinQuantity()));
+                .orElse(tiers.get(0));
 
         BigDecimal lineTotal = matched.getUnitPrice()
                 .multiply(BigDecimal.valueOf(quantity));
