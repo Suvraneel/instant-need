@@ -38,7 +38,9 @@ public class AdminProductService {
         int safePage = Math.max(1, page) - 1;
         int safeLimit = Math.min(Math.max(1, limit), 100);
 
-        Specification<Product> activeSpec = activeFilter(active != null ? active : true);
+        Specification<Product> activeSpec = active != null
+                ? activeFilter(active)
+                : (Specification<Product>) (r, q, cb) -> cb.conjunction();
         Specification<Product> spec = Specification
                 .where(activeSpec)
                 .and(com.b2b.instantneed.catalog.repository.ProductSpecification.hasSearch(search))
