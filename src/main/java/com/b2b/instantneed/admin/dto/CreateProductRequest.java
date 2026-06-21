@@ -18,6 +18,9 @@ public record CreateProductRequest(
         @Size(max = 50) String unitOfMeasurement,
         String availabilityStatus,
         BigDecimal basePrice,
+        Integer stock,
+        Integer moq,
+        Boolean active,
         @NotEmpty @Valid List<PricingTierRequest> pricingTiers,
         @Valid List<ProductImageRequest> images
 ) {}

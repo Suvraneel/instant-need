@@ -86,7 +86,9 @@ public class AdminProductService {
                 .unitOfMeasurement(request.unitOfMeasurement())
                 .availabilityStatus(status)
                 .basePrice(request.basePrice())
-                .active(true)
+                .stock(request.stock() != null ? request.stock() : 0)
+                .moq(request.moq() != null ? request.moq() : 1)
+                .active(request.active() == null || request.active())
                 .build();
 
         product = productRepository.save(product);
