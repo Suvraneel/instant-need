@@ -16,6 +16,7 @@ public record UpdateProductRequest(
         String description,
         @Size(max = 50) String unitOfMeasurement,
         String availabilityStatus,
+        BigDecimal mrp,
         BigDecimal basePrice,
         @Min(0) Integer stock,
         @Min(1) Integer moq,

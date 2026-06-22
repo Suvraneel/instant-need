@@ -16,6 +16,7 @@ public record CreateProductRequest(
         String description,
         @Size(max = 50) String unitOfMeasurement,
         String availabilityStatus,
+        BigDecimal mrp,
         BigDecimal basePrice,
         Integer stock,
         Integer moq,

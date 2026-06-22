@@ -20,6 +20,7 @@ public record ProductDetailResponse(
         String availabilityStatus,
         UUID categoryId,
         String categoryName,
+        BigDecimal mrp,
         BigDecimal basePrice,
         String currencyCode,
         int stock,
@@ -43,7 +44,7 @@ public record ProductDetailResponse(
                 p.getAvailabilityStatus().name(),
                 p.getCategory() != null ? p.getCategory().getId() : null,
                 p.getCategory() != null ? HtmlUtils.htmlUnescape(p.getCategory().getName()) : null,
-                p.getBasePrice(), currency,
+                p.getMrp(), p.getBasePrice(), currency,
                 p.getStock(), p.getMoq(), p.isActive(),
                 imageDTOs, tiers,
                 p.getCreatedAt(), p.getUpdatedAt()

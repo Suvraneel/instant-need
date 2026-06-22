@@ -12,6 +12,7 @@ public record ProductSummaryResponse(
         String slug,
         String sku,
         String categoryName,
+        BigDecimal mrp,
         BigDecimal basePrice,
         String currencyCode,
         int stock,

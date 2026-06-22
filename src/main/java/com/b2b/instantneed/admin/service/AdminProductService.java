@@ -85,6 +85,7 @@ public class AdminProductService {
                 .description(HtmlSanitizer.strip(request.description()))
                 .unitOfMeasurement(request.unitOfMeasurement())
                 .availabilityStatus(status)
+                .mrp(request.mrp())
                 .basePrice(request.basePrice())
                 .stock(request.stock() != null ? request.stock() : 0)
                 .moq(request.moq() != null ? request.moq() : 1)
@@ -132,6 +133,7 @@ public class AdminProductService {
         if (request.availabilityStatus() != null) {
             product.setAvailabilityStatus(parseAvailability(request.availabilityStatus(), product.getAvailabilityStatus()));
         }
+        if (request.mrp() != null) product.setMrp(request.mrp());
         if (request.basePrice() != null) product.setBasePrice(request.basePrice());
         if (request.stock() != null) product.setStock(request.stock());
         if (request.moq() != null) product.setMoq(request.moq());

@@ -50,6 +50,9 @@ public class Product {
     @Builder.Default
     private boolean active = true;
 
+    @Column(name = "mrp", precision = 12, scale = 2)
+    private BigDecimal mrp;
+
     @Column(name = "base_price", precision = 12, scale = 2)
     private BigDecimal basePrice;
 

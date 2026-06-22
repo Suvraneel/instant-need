@@ -86,6 +86,7 @@ public class CatalogService {
             return new ProductSummaryResponse(
                 p.getId(), HtmlUtils.htmlUnescape(p.getName()), p.getSlug(), p.getSku(),
                 p.getCategory() != null ? HtmlUtils.htmlUnescape(p.getCategory().getName()) : null,
+                p.getMrp(),
                 p.getBasePrice(),
                 tiers.isEmpty() ? "INR" : tiers.get(0).getCurrencyCode(),
                 p.getStock(), p.getMoq(), p.isActive(),
