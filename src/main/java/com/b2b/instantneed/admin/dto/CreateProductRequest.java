@@ -2,7 +2,6 @@ package com.b2b.instantneed.admin.dto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
@@ -21,6 +20,6 @@ public record CreateProductRequest(
         Integer stock,
         Integer moq,
         Boolean active,
-        @NotEmpty @Valid List<PricingTierRequest> pricingTiers,
+        @Valid List<PricingTierRequest> pricingTiers,
         @Valid List<ProductImageRequest> images
 ) {}
