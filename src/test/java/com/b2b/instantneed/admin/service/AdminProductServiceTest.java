@@ -134,7 +134,7 @@ class AdminProductServiceTest {
         given(productRepository.existsBySkuAndIdNot("NEW-SKU", p.getId())).willReturn(true);
 
         UpdateProductRequest req = new UpdateProductRequest(
-                null, null, "NEW-SKU", null, null, null, null, null, null, null, null, null, null);
+                null, null, "NEW-SKU", null, null, null, null, null, null, null, null, null, null, null);
 
         assertThatThrownBy(() -> service.updateProduct(p.getId(), req))
                 .isInstanceOf(ApiException.class)
@@ -151,7 +151,7 @@ class AdminProductServiceTest {
 
         UpdateProductRequest req = new UpdateProductRequest(
                 "Updated Name", null, null, null, null, null, null,
-                new BigDecimal("300.00"), null, null, null, null, null);
+                null, new BigDecimal("300.00"), null, null, null, null, null);
 
         service.updateProduct(p.getId(), req);
 
@@ -226,7 +226,7 @@ class AdminProductServiceTest {
         // CreateProductRequest where name is blank triggers the fallback slug
         CreateProductRequest req = new CreateProductRequest(
                 "  ", null, "SKU", null, null, "ream", "IN_STOCK",
-                new BigDecimal("250.00"), null, null, true, List.of(), null);
+                null, new BigDecimal("250.00"), null, null, true, List.of(), null);
 
         service.createProduct(req);
 
@@ -283,6 +283,6 @@ class AdminProductServiceTest {
     private CreateProductRequest createRequest(String name, String sku) {
         return new CreateProductRequest(
                 name, null, sku, null, null, "ream", "IN_STOCK",
-                new BigDecimal("250.00"), null, null, true, List.of(), null);
+                null, new BigDecimal("250.00"), null, null, true, List.of(), null);
     }
 }
