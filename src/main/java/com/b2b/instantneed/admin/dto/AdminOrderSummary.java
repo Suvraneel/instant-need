@@ -7,7 +7,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 public record AdminOrderSummary(
-        UUID orderId,
+        UUID id,
         String orderNumber,
         String status,
         String customerName,
