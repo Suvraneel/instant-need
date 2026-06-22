@@ -15,15 +15,17 @@ public record AdminCustomerSummary(
         String businessName,
         String role,
         boolean active,
-        Instant createdAt
+        Instant createdAt,
+        long orderCount
 ) {
-    public static AdminCustomerSummary from(User user, Customer customer) {
+    public static AdminCustomerSummary from(User user, Customer customer, long orderCount) {
         return new AdminCustomerSummary(
                 customer.getId(), user.getId(),
                 user.getEmail(), user.getPhoneNumber(),
                 customer.getFullName(), customer.getBusinessName(),
                 user.getRole().name(),
-                user.isEnabled(), customer.getCreatedAt()
+                user.isEnabled(), customer.getCreatedAt(),
+                orderCount
         );
     }
 }

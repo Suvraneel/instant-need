@@ -42,11 +42,13 @@ public class AdminCustomerService {
         if (search != null && !search.isBlank()) {
             String q = "%" + search.toLowerCase() + "%";
             Page<Customer> customers = customerRepository.searchByNameOrEmail(q, PageRequest.of(safePage, safeLimit));
-            return PagedResponse.of(customers.map(c -> AdminCustomerSummary.from(c.getUser(), c)));
+            return PagedResponse.of(customers.map(c -> AdminCustomerSummary.from(c.getUser(), c,
+                    orderRepository.countByCustomerId(c.getId()))));
         }
         Page<Customer> customers = customerRepository.findAll(
                 PageRequest.of(safePage, safeLimit, Sort.by("createdAt").descending()));
-        return PagedResponse.of(customers.map(c -> AdminCustomerSummary.from(c.getUser(), c)));
+        return PagedResponse.of(customers.map(c -> AdminCustomerSummary.from(c.getUser(), c,
+                orderRepository.countByCustomerId(c.getId()))));
     }
 
     @Transactional(readOnly = true)
@@ -78,10 +80,11 @@ public class AdminCustomerService {
         }
 
         Role newRole = Role.valueOf(request.role());
-        AdminCustomerSummary before = AdminCustomerSummary.from(user, customer);
+        long orderCount = orderRepository.countByCustomerId(customerId);
+        AdminCustomerSummary before = AdminCustomerSummary.from(user, customer, orderCount);
         user.setRole(newRole);
         userRepository.save(user);
-        AdminCustomerSummary after = AdminCustomerSummary.from(user, customer);
+        AdminCustomerSummary after = AdminCustomerSummary.from(user, customer, orderCount);
 
         auditLog.log(AuditLogService.UPDATE, AuditLogService.CUSTOMER, customerId,
                 "Role changed to " + newRole + " for user: " + customer.getFullName(),
@@ -95,10 +98,11 @@ public class AdminCustomerService {
                 .orElseThrow(() -> ApiException.notFound("CUSTOMER_NOT_FOUND",
                         "Customer not found: " + customerId));
         User user = customer.getUser();
-        AdminCustomerSummary before = AdminCustomerSummary.from(user, customer);
+        long orderCount = orderRepository.countByCustomerId(customerId);
+        AdminCustomerSummary before = AdminCustomerSummary.from(user, customer, orderCount);
         user.setActive(request.active());
         userRepository.save(user);
-        AdminCustomerSummary after = AdminCustomerSummary.from(user, customer);
+        AdminCustomerSummary after = AdminCustomerSummary.from(user, customer, orderCount);
         String action = request.active() ? "Activated customer account" : "Deactivated customer account";
         auditLog.log(AuditLogService.UPDATE, AuditLogService.CUSTOMER, customerId,
                 action + ": " + customer.getFullName(), before, after);
