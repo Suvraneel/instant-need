@@ -13,6 +13,7 @@ import com.b2b.instantneed.common.service.EmailService;
 import com.b2b.instantneed.customer.entity.Address;
 import com.b2b.instantneed.customer.entity.Customer;
 import com.b2b.instantneed.customer.repository.AddressRepository;
+import com.b2b.instantneed.customer.repository.CustomerRepository;
 import com.b2b.instantneed.order.dto.OrderResponse;
 import com.b2b.instantneed.order.dto.PlaceOrderRequest;
 import com.b2b.instantneed.order.dto.PlaceOrderResponse;
@@ -45,6 +46,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CartRepository cartRepository;
     private final AddressRepository addressRepository;
+    private final CustomerRepository customerRepository;
     private final SecurityUtils securityUtils;
     private final ProductRepository productRepository;
     private final PricingService pricingService;
@@ -74,6 +76,7 @@ public class OrderService {
         Map<String, Object> addressSnapshot;
         if (request.shippingAddress() != null) {
             addressSnapshot = buildInlineAddressSnapshot(request.shippingAddress());
+            saveInlineAddressToAccount(customer, request.shippingAddress());
         } else if (request.shippingAddressId() != null) {
             Address address = addressRepository.findById(request.shippingAddressId())
                     .orElseThrow(() -> ApiException.notFound("ADDRESS_NOT_FOUND",
@@ -291,6 +294,34 @@ public class OrderService {
                 "ACTIVE",
                 "Items added to your cart. Review and adjust quantities before placing the order."
         );
+    }
+
+    private void saveInlineAddressToAccount(Customer customer, PlaceOrderRequest.InlineAddressRequest addr) {
+        // Clear any existing default address
+        addressRepository.findByCustomerId(customer.getId()).forEach(a -> {
+            if (a.isDefault()) {
+                a.setDefault(false);
+                addressRepository.save(a);
+            }
+        });
+
+        Address saved = Address.builder()
+                .customer(customer)
+                .label("Default")
+                .fullName(addr.fullName())
+                .phoneNumber(addr.phoneNumber())
+                .line1(addr.addressLine1())
+                .line2(addr.addressLine2())
+                .city(addr.city())
+                .state(addr.state())
+                .country(addr.country() != null ? addr.country() : "India")
+                .postalCode(addr.postalCode())
+                .isDefault(true)
+                .build();
+        saved = addressRepository.save(saved);
+
+        customer.setDefaultShippingAddressId(saved.getId());
+        customerRepository.save(customer);
     }
 
     private String generateOrderNumber() {
