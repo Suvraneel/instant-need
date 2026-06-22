@@ -17,10 +17,12 @@ public final class ProductSpecification {
 
     public static Specification<Product> hasSearch(String search) {
         if (search == null || search.isBlank()) return (root, query, cb) -> cb.conjunction();
-        String pattern = "%" + search.toLowerCase() + "%";
+        String term = search.toLowerCase().trim();
+        String startsWith = term + "%";
+        String contains = "%" + term + "%";
         return (root, query, cb) -> cb.or(
-                cb.like(cb.lower(root.get("name")), pattern),
-                cb.like(cb.lower(root.get("sku")), pattern)
+                cb.like(cb.lower(root.get("name")), startsWith),
+                cb.like(cb.lower(root.get("sku")), contains)
         );
     }
 
