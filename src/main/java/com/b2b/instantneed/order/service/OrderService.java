@@ -121,6 +121,10 @@ public class OrderService {
                 Product product = productRepository.findById(req.productId())
                         .orElseThrow(() -> ApiException.notFound("PRODUCT_NOT_FOUND",
                                 "Product not found: " + req.productId()));
+                if (product.getStock() < req.quantity()) {
+                    throw ApiException.badRequest("INSUFFICIENT_STOCK",
+                            "Only " + product.getStock() + " units available for " + product.getName());
+                }
                 PriceCalculateResponse price = pricingService.calculate(product.getId(), req.quantity());
                 OrderItem item = OrderItem.builder()
                         .order(order)
@@ -136,6 +140,8 @@ public class OrderService {
                 order.getItems().add(item);
                 subtotal = subtotal.add(price.lineTotal());
                 currencyCode = price.currencyCode();
+                product.setStock(product.getStock() - req.quantity());
+                productRepository.save(product);
             }
         } else {
             for (CartItem ci : cartItemsToUse) {
@@ -143,12 +149,17 @@ public class OrderService {
                     // Product was deleted after being added to cart — skip it
                     continue;
                 }
+                Product product = ci.getProduct();
+                if (product.getStock() < ci.getQuantity()) {
+                    throw ApiException.badRequest("INSUFFICIENT_STOCK",
+                            "Only " + product.getStock() + " units available for " + product.getName());
+                }
                 OrderItem item = OrderItem.builder()
                         .order(order)
-                        .product(ci.getProduct())
-                        .productNameSnapshot(ci.getProduct().getName())
-                        .skuSnapshot(ci.getProduct().getSku())
-                        .unitOfMeasurementSnapshot(ci.getProduct().getUnitOfMeasurement() != null ? ci.getProduct().getUnitOfMeasurement() : "unit")
+                        .product(product)
+                        .productNameSnapshot(product.getName())
+                        .skuSnapshot(product.getSku())
+                        .unitOfMeasurementSnapshot(product.getUnitOfMeasurement() != null ? product.getUnitOfMeasurement() : "unit")
                         .quantity(ci.getQuantity())
                         .unitPrice(ci.getAppliedUnitPrice())
                         .lineTotal(ci.getLineTotal())
@@ -157,6 +168,8 @@ public class OrderService {
                 order.getItems().add(item);
                 subtotal = subtotal.add(ci.getLineTotal());
                 currencyCode = ci.getCurrencyCode();
+                product.setStock(product.getStock() - ci.getQuantity());
+                productRepository.save(product);
             }
             if (order.getItems().isEmpty()) {
                 throw ApiException.badRequest("CART_EMPTY",
@@ -213,6 +226,15 @@ public class OrderService {
         }
         order.setStatus(OrderStatus.CANCELLED);
         orderRepository.save(order);
+
+        // Restore stock for each item
+        for (OrderItem item : order.getItems()) {
+            if (item.getProduct() != null) {
+                item.getProduct().setStock(item.getProduct().getStock() + item.getQuantity());
+                productRepository.save(item.getProduct());
+            }
+        }
+
         return OrderResponse.from(order);
     }
 
