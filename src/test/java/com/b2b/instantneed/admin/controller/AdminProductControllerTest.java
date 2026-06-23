@@ -163,8 +163,8 @@ class AdminProductControllerTest {
     void listPricingTiers_returns200WithTiers() throws Exception {
         UUID id = UUID.randomUUID();
         given(service.listPricingTiers(id)).willReturn(List.of(
-                new PricingTierResponse(null, 1, 49,   new BigDecimal("250.00"), "INR"),
-                new PricingTierResponse(null, 50, null, new BigDecimal("230.00"), "INR")
+                new PricingTierResponse(null, 1, 49,   new BigDecimal("250.00"), null, "INR"),
+                new PricingTierResponse(null, 50, null, new BigDecimal("230.00"), null, "INR")
         ));
 
         mockMvc.perform(get("/api/v1/admin/products/{id}/pricing-tiers", id))
@@ -180,7 +180,7 @@ class AdminProductControllerTest {
     void replacePricingTiers_returns200() throws Exception {
         UUID id = UUID.randomUUID();
         given(service.replacePricingTiers(eq(id), any())).willReturn(List.of(
-                new PricingTierResponse(null, 1, null, new BigDecimal("200.00"), "INR")
+                new PricingTierResponse(null, 1, null, new BigDecimal("200.00"), null, "INR")
         ));
 
         mockMvc.perform(put("/api/v1/admin/products/{id}/pricing-tiers", id)
@@ -209,7 +209,7 @@ class AdminProductControllerTest {
                 100, 1,
                 List.of(
                         new PricingTierResponse(null, 1, 49, new BigDecimal("250.00"), "INR"),
-                        new PricingTierResponse(null, 50, null, new BigDecimal("230.00"), "INR")
+                        new PricingTierResponse(null, 50, null, new BigDecimal("230.00"), null, "INR")
                 ),
                 List.of(new AdminProductResponse.ImageInfo(UUID.randomUUID(), "https://example.com/img.jpg", null, 0)),
                 Instant.now(), Instant.now());
