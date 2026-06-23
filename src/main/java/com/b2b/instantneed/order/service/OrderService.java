@@ -5,6 +5,7 @@ import com.b2b.instantneed.cart.entity.CartItem;
 import com.b2b.instantneed.cart.entity.CartStatus;
 import com.b2b.instantneed.cart.repository.CartRepository;
 import com.b2b.instantneed.catalog.entity.Product;
+import com.b2b.instantneed.catalog.repository.PincodeMinOrderRepository;
 import com.b2b.instantneed.catalog.repository.ProductRepository;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.exception.ApiException;
@@ -51,6 +52,7 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final PricingService pricingService;
     private final EmailService emailService;
+    private final PincodeMinOrderRepository pincodeMinOrderRepository;
 
     @Transactional
     public PlaceOrderResponse placeOrder(PlaceOrderRequest request) {
@@ -186,6 +188,22 @@ public class OrderService {
         order.setSubtotalAmount(subtotal);
         order.setTotalAmount(subtotal);
         order.setCurrencyCode(currencyCode);
+
+        // Validate pincode minimum order if a rule exists
+        String postalCode = (String) addressSnapshot.get("postalCode");
+        if (postalCode != null && !postalCode.isBlank()) {
+            final BigDecimal finalSubtotal = subtotal;
+            final String finalPostalCode = postalCode;
+            pincodeMinOrderRepository.findByPincodeAndActiveTrue(postalCode).ifPresent(rule -> {
+                if (finalSubtotal.compareTo(rule.getMinAmount()) < 0) {
+                    throw ApiException.badRequest("BELOW_MIN_ORDER",
+                            "Minimum order for pincode " + finalPostalCode + " is ₹" +
+                            rule.getMinAmount().stripTrailingZeros().toPlainString() +
+                            ". Your order total is ₹" + finalSubtotal.stripTrailingZeros().toPlainString() + ".");
+                }
+            });
+        }
+
         orderRepository.save(order);
 
         // Send confirmation email asynchronously — never blocks the HTTP response

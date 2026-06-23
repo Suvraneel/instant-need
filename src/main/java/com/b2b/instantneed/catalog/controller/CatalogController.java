@@ -1,8 +1,10 @@
 package com.b2b.instantneed.catalog.controller;
 
+import com.b2b.instantneed.admin.dto.PincodeMinOrderResponse;
 import com.b2b.instantneed.catalog.dto.CategoryResponse;
 import com.b2b.instantneed.catalog.dto.ProductDetailResponse;
 import com.b2b.instantneed.catalog.dto.ProductSummaryResponse;
+import com.b2b.instantneed.catalog.repository.PincodeMinOrderRepository;
 import com.b2b.instantneed.catalog.service.CatalogService;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Tag(name = "Catalog", description = "Public product catalog — no authentication required")
@@ -21,6 +24,7 @@ import java.util.UUID;
 public class CatalogController {
 
     private final CatalogService catalogService;
+    private final PincodeMinOrderRepository pincodeMinOrderRepository;
 
     @Operation(summary = "List categories (flat or tree)")
     @GetMapping("/api/v1/categories")
@@ -50,6 +54,15 @@ public class CatalogController {
     @GetMapping("/api/v1/products/{idOrSlug}")
     public ResponseEntity<ProductDetailResponse> getProduct(@PathVariable String idOrSlug) {
         return ResponseEntity.ok(catalogService.getProduct(idOrSlug));
+    }
+
+    @Operation(summary = "Get minimum order amount for a pincode (null if no rule configured)")
+    @GetMapping("/api/v1/catalog/pincode-min-order")
+    public ResponseEntity<PincodeMinOrderResponse> getPincodeMinOrder(@RequestParam String pincode) {
+        return pincodeMinOrderRepository.findByPincodeAndActiveTrue(pincode)
+                .map(PincodeMinOrderResponse::from)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.noContent().build());
     }
 
 }
