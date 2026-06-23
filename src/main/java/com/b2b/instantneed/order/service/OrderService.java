@@ -351,6 +351,7 @@ public class OrderService {
         map.put("state", address.getState());
         map.put("country", address.getCountry());
         map.put("postalCode", address.getPostalCode());
+        map.put("phoneNumber", address.getPhoneNumber());
         return map;
     }
 
