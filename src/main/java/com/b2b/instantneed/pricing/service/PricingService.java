@@ -32,16 +32,20 @@ public class PricingService {
      * Finds the tier where minQuantity <= quantity <= maxQuantity (null maxQuantity = open-ended).
      */
     public PriceCalculateResponse calculate(UUID productId, int quantity) {
-        if (!productRepository.existsById(productId)) {
-            throw ApiException.notFound("PRODUCT_NOT_FOUND", "Product not found: " + productId);
-        }
+        var product = productRepository.findById(productId).orElseThrow(
+                () -> ApiException.notFound("PRODUCT_NOT_FOUND", "Product not found: " + productId));
 
         List<PricingTier> tiers = pricingTierRepository
                 .findByProductIdOrderByMinQuantityAsc(productId);
 
+        // No tiers configured — fall back to the product's base price.
         if (tiers.isEmpty()) {
-            throw ApiException.badRequest("NO_PRICING_TIERS",
-                    "Product has no pricing tiers configured");
+            BigDecimal unitPrice = product.getBasePrice() != null
+                    ? product.getBasePrice()
+                    : BigDecimal.ZERO;
+            String currency = "INR";
+            BigDecimal lineTotal = unitPrice.multiply(BigDecimal.valueOf(quantity));
+            return new PriceCalculateResponse(productId, quantity, unitPrice, lineTotal, currency, null);
         }
 
         // Find the matching tier; if quantity is below the first tier's minimum,
