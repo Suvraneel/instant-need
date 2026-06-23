@@ -12,9 +12,11 @@ public record PricingTierResponse(
         int minQty,
         Integer maxQty,
         BigDecimal unitPrice,
+        BigDecimal discountPercent,
         String currencyCode
 ) {
     public static PricingTierResponse from(PricingTier t) {
-        return new PricingTierResponse(t.getId(), t.getMinQuantity(), t.getMaxQuantity(), t.getUnitPrice(), t.getCurrencyCode());
+        return new PricingTierResponse(t.getId(), t.getMinQuantity(), t.getMaxQuantity(),
+                t.getUnitPrice(), t.getDiscountPercent(), t.getCurrencyCode());
     }
 }

@@ -260,6 +260,7 @@ public class AdminProductService {
                 .minQuantity(t.minQty())
                 .maxQuantity(t.maxQty())
                 .unitPrice(t.unitPrice())
+                .discountPercent(t.discountPercent())
                 .currencyCode(t.currencyCode() != null ? t.currencyCode() : "INR")
                 .build()).toList();
         pricingTierRepository.saveAll(tiers);

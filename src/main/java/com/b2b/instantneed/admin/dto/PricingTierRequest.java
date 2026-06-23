@@ -11,5 +11,6 @@ public record PricingTierRequest(
         @Min(1) int minQty,
         Integer maxQty,
         @NotNull @DecimalMin("0.01") BigDecimal unitPrice,
+        BigDecimal discountPercent,
         @Size(min = 3, max = 3) String currencyCode
 ) {}

@@ -33,6 +33,9 @@ public class PricingTier {
     @Column(name = "unit_price", nullable = false, precision = 12, scale = 2)
     private BigDecimal unitPrice;
 
+    @Column(name = "discount_percent", precision = 5, scale = 2)
+    private BigDecimal discountPercent;
+
     @Column(name = "currency_code", nullable = false, length = 3)
     @Builder.Default
     private String currencyCode = "INR";
