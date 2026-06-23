@@ -13,9 +13,18 @@ public record OrderItemResponse(
         int quantity,
         BigDecimal unitPrice,
         BigDecimal lineTotal,
-        String currencyCode
+        String currencyCode,
+        String imageUrl
 ) {
     public static OrderItemResponse from(OrderItem item) {
+        String imageUrl = null;
+        if (item.getProduct() != null && item.getProduct().getImages() != null) {
+            imageUrl = item.getProduct().getImages().stream()
+                    .filter(img -> img.getImageUrl() != null && !img.getImageUrl().contains("placehold.co"))
+                    .map(img -> img.getImageUrl())
+                    .findFirst()
+                    .orElse(null);
+        }
         return new OrderItemResponse(
                 item.getId(),
                 item.getProduct() != null ? item.getProduct().getId() : null,
@@ -24,7 +33,8 @@ public record OrderItemResponse(
                 item.getQuantity(),
                 item.getUnitPrice(),
                 item.getLineTotal(),
-                item.getCurrencyCode()
+                item.getCurrencyCode(),
+                imageUrl
         );
     }
 }

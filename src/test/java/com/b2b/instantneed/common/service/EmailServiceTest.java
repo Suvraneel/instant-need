@@ -123,7 +123,7 @@ class EmailServiceTest {
         OrderItemResponse item = new OrderItemResponse(
                 UUID.randomUUID(), UUID.randomUUID(),
                 "A4 Paper", "PAPER-A4",
-                5, new BigDecimal("250.00"), new BigDecimal("1250.00"), "INR");
+                5, new BigDecimal("250.00"), new BigDecimal("1250.00"), "INR", null);
 
         return new OrderResponse(
                 UUID.randomUUID(),
