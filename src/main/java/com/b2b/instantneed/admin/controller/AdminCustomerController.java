@@ -6,6 +6,7 @@ import com.b2b.instantneed.admin.dto.UpdateCustomerRoleRequest;
 import com.b2b.instantneed.admin.dto.UpdateCustomerStatusRequest;
 import com.b2b.instantneed.admin.service.AdminCustomerService;
 import com.b2b.instantneed.common.dto.PagedResponse;
+import com.b2b.instantneed.customer.dto.AddressResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @Tag(name = "Admin — Customers", description = "Customer account management (ROLE_ADMIN)")
@@ -38,6 +40,12 @@ public class AdminCustomerController {
     @GetMapping("/{customerId}")
     public ResponseEntity<AdminCustomerDetail> get(@PathVariable UUID customerId) {
         return ResponseEntity.ok(service.getCustomer(customerId));
+    }
+
+    @Operation(summary = "Get saved addresses for a customer")
+    @GetMapping("/{customerId}/addresses")
+    public ResponseEntity<List<AddressResponse>> getAddresses(@PathVariable UUID customerId) {
+        return ResponseEntity.ok(service.getCustomerAddresses(customerId));
     }
 
     @Operation(summary = "Activate or deactivate a customer account")

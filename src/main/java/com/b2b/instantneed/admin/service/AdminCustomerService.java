@@ -6,7 +6,9 @@ import com.b2b.instantneed.admin.dto.UpdateCustomerRoleRequest;
 import com.b2b.instantneed.admin.dto.UpdateCustomerStatusRequest;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.exception.ApiException;
+import com.b2b.instantneed.customer.dto.AddressResponse;
 import com.b2b.instantneed.customer.entity.Customer;
+import com.b2b.instantneed.customer.repository.AddressRepository;
 import com.b2b.instantneed.customer.repository.CustomerRepository;
 import com.b2b.instantneed.order.entity.Order;
 import com.b2b.instantneed.order.entity.OrderStatus;
@@ -32,6 +34,7 @@ public class AdminCustomerService {
     private final CustomerRepository customerRepository;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+    private final AddressRepository addressRepository;
     private final AuditLogService auditLog;
 
     @Transactional(readOnly = true)
@@ -65,6 +68,17 @@ public class AdminCustomerService {
         BigDecimal totalRevenue = orderRepository.sumRevenueByCustomerId(customerId, OrderStatus.CANCELLED);
 
         return AdminCustomerDetail.from(customer.getUser(), customer, recentOrders, orderCount, totalRevenue);
+    }
+
+    @Transactional(readOnly = true)
+    public List<AddressResponse> getCustomerAddresses(UUID customerId) {
+        if (!customerRepository.existsById(customerId)) {
+            throw ApiException.notFound("CUSTOMER_NOT_FOUND", "Customer not found: " + customerId);
+        }
+        return addressRepository.findByCustomerId(customerId)
+                .stream()
+                .map(AddressResponse::from)
+                .toList();
     }
 
     @Transactional
