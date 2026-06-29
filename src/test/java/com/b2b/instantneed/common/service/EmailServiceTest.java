@@ -141,7 +141,8 @@ class EmailServiceTest {
                 null,
                 List.of(item),
                 "Raj Sharma",
-                "Sharma Traders"
+                "Sharma Traders",
+                null
         );
     }
 }
