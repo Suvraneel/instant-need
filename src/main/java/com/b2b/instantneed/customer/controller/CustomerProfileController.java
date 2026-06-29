@@ -65,4 +65,11 @@ public class CustomerProfileController {
     public ResponseEntity<AddressResponse> setDefaultAddress(@PathVariable UUID addressId) {
         return ResponseEntity.ok(profileService.setDefaultAddress(addressId));
     }
+
+    @Operation(summary = "Register an Expo push token for order status notifications")
+    @PutMapping("/push-token")
+    public ResponseEntity<Void> savePushToken(@Valid @RequestBody SavePushTokenRequest request) {
+        profileService.savePushToken(request.token());
+        return ResponseEntity.noContent().build();
+    }
 }

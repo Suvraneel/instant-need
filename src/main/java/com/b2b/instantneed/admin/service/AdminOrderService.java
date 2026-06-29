@@ -6,6 +6,7 @@ import com.b2b.instantneed.admin.repository.AdminOrderSpecification;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.exception.ApiException;
 import com.b2b.instantneed.common.service.EmailService;
+import com.b2b.instantneed.common.service.ExpoPushNotificationService;
 import com.b2b.instantneed.customer.entity.Customer;
 import com.b2b.instantneed.order.dto.OrderResponse;
 import com.b2b.instantneed.order.entity.Order;
@@ -31,6 +32,7 @@ public class AdminOrderService {
     private final OrderRepository orderRepository;
     private final AuditLogService auditLog;
     private final EmailService emailService;
+    private final ExpoPushNotificationService pushService;
 
     @Transactional(readOnly = true)
     public PagedResponse<AdminOrderSummary> listOrders(
@@ -94,6 +96,9 @@ public class AdminOrderService {
         if (customer != null && customer.getUser() != null
                 && customer.getUser().getEmail() != null) {
             emailService.sendOrderStatusUpdate(customer.getUser().getEmail(), response);
+        }
+        if (customer != null && customer.getPushToken() != null) {
+            pushService.sendOrderStatusUpdate(customer.getPushToken(), response);
         }
 
         return response;

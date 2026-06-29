@@ -45,6 +45,9 @@ public class Customer {
     @Column(name = "default_shipping_address_id")
     private UUID defaultShippingAddressId;
 
+    @Column(name = "push_token")
+    private String pushToken;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 

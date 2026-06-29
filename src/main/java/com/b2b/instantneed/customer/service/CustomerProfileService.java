@@ -53,6 +53,13 @@ public class CustomerProfileService {
         return ProfileResponse.from(user, customer);
     }
 
+    @Transactional
+    public void savePushToken(String token) {
+        Customer customer = securityUtils.currentCustomer();
+        customer.setPushToken(token);
+        customerRepository.save(customer);
+    }
+
     @Transactional(readOnly = true)
     public List<AddressResponse> getAddresses() {
         Customer customer = securityUtils.currentCustomer();
