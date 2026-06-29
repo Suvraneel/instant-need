@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Set;
 import java.util.UUID;
+import java.nio.file.StandardOpenOption;
 
 /**
  * Stores uploaded files on the local filesystem and returns URLs served by the
@@ -48,6 +49,16 @@ public class LocalStorageService implements StorageService {
         log.info("[STORAGE] Saved {} ({} bytes) → {}", filename, file.getSize(), targetPath);
 
         // Return a URL relative to the baseUrl — clients fetch it directly
+        return baseUrl + "/" + subdir + "/" + filename;
+    }
+
+    @Override
+    public String storeBytes(byte[] data, String subdir, String filename) throws IOException {
+        Path targetDir = uploadRoot.resolve(subdir);
+        Files.createDirectories(targetDir);
+        Path targetPath = targetDir.resolve(filename);
+        Files.write(targetPath, data, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        log.info("[STORAGE] Saved {} ({} bytes) → {}", filename, data.length, targetPath);
         return baseUrl + "/" + subdir + "/" + filename;
     }
 

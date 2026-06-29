@@ -66,6 +66,9 @@ public class Order {
     @Column(name = "placed_at", nullable = false)
     private Instant placedAt;
 
+    @Column(name = "invoice_path", length = 500)
+    private String invoicePath;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<OrderItem> items = new ArrayList<>();

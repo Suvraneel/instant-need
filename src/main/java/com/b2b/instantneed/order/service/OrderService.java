@@ -53,6 +53,7 @@ public class OrderService {
     private final PricingService pricingService;
     private final EmailService emailService;
     private final PincodeMinOrderRepository pincodeMinOrderRepository;
+    private final InvoiceService invoiceService;
 
     @Transactional
     public PlaceOrderResponse placeOrder(PlaceOrderRequest request) {
@@ -205,6 +206,13 @@ public class OrderService {
         }
 
         orderRepository.save(order);
+
+        // Generate and store the PDF invoice
+        String invoiceUrl = invoiceService.generateAndStore(order);
+        if (invoiceUrl != null) {
+            order.setInvoicePath(invoiceUrl);
+            orderRepository.save(order);
+        }
 
         // Send confirmation email asynchronously — never blocks the HTTP response
         if (customer.getUser() != null && customer.getUser().getEmail() != null) {

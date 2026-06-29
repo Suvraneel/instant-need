@@ -67,6 +67,20 @@ public class S3StorageService implements StorageService {
     }
 
     @Override
+    public String storeBytes(byte[] data, String subdir, String filename) {
+        String s3Key = subdir + "/" + filename;
+        PutObjectRequest request = PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(s3Key)
+                .contentType("application/pdf")
+                .contentLength((long) data.length)
+                .build();
+        s3Client.putObject(request, RequestBody.fromBytes(data));
+        log.info("[S3] Uploaded {} ({} bytes) → s3://{}/{}", filename, data.length, bucket, s3Key);
+        return baseUrl + "/" + s3Key;
+    }
+
+    @Override
     public void delete(String publicUrl) {
         try {
             // "https://cdn.example.com/products/uuid/file.jpg" → "products/uuid/file.jpg"

@@ -26,7 +26,8 @@ public record OrderResponse(
         AddressSnapshot shippingAddress,
         List<OrderItemResponse> items,
         String customerName,
-        String customerBusinessName
+        String customerBusinessName,
+        String invoiceUrl
 ) {
     public record AddressSnapshot(
             String fullName,
@@ -72,7 +73,8 @@ public record OrderResponse(
                 addr,
                 order.getItems().stream().map(OrderItemResponse::from).toList(),
                 customerName,
-                businessName
+                businessName,
+                order.getInvoicePath()
         );
     }
 
