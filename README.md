@@ -95,6 +95,7 @@ Key variables:
 | `STORAGE_TYPE`    | `local`              | `local` or `s3`                    |
 | `STORAGE_BASE_URL`| `http://localhost:8080/uploads` | CDN/S3 public URL    |
 
+
 ### Production (S3 storage)
 
 Add to `.env`:
