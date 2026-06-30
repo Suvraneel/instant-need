@@ -8,11 +8,8 @@ import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
-import org.jsoup.helper.W3CDom;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.w3c.dom.Document;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -77,15 +74,11 @@ public class InvoiceService {
     private byte[] buildPdf(Order order) throws Exception {
         String html = buildHtml(order);
 
-        org.jsoup.nodes.Document jsoupDoc = Jsoup.parse(html);
-        jsoupDoc.outputSettings().syntax(org.jsoup.nodes.Document.OutputSettings.Syntax.xml);
-        Document w3cDoc = new W3CDom().fromJsoup(jsoupDoc);
-
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PdfRendererBuilder builder = new PdfRendererBuilder();
         builder.useFastMode();
         builder.useSVGDrawer(new BatikSVGDrawer());
-        builder.withW3cDocument(w3cDoc, null);
+        builder.withHtmlContent(html, null);
         builder.toStream(out);
         builder.run();
         return out.toByteArray();
