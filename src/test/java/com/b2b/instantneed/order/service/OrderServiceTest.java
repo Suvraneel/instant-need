@@ -10,6 +10,7 @@ import com.b2b.instantneed.catalog.repository.ProductRepository;
 import com.b2b.instantneed.catalog.repository.PincodeMinOrderRepository;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.service.EmailService;
+import com.b2b.instantneed.order.service.InvoiceService;
 import com.b2b.instantneed.pricing.service.PricingService;
 import com.b2b.instantneed.common.exception.ApiException;
 import com.b2b.instantneed.common.security.SecurityUtils;
@@ -24,7 +25,6 @@ import com.b2b.instantneed.order.entity.Order;
 import com.b2b.instantneed.order.entity.OrderItem;
 import com.b2b.instantneed.order.entity.OrderStatus;
 import com.b2b.instantneed.order.repository.OrderRepository;
-import org.springframework.context.ApplicationEventPublisher;
 import com.b2b.instantneed.user.entity.AuthProvider;
 import com.b2b.instantneed.user.entity.Role;
 import com.b2b.instantneed.user.entity.User;
@@ -59,7 +59,7 @@ class OrderServiceTest {
     @Mock PricingService               pricingService;
     @Mock EmailService                 emailService;
     @Mock PincodeMinOrderRepository    pincodeMinOrderRepository;
-    @Mock ApplicationEventPublisher    eventPublisher;
+    @Mock InvoiceService               invoiceService;
 
     @InjectMocks OrderService orderService;
 

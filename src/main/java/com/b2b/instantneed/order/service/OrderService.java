@@ -21,12 +21,10 @@ import com.b2b.instantneed.order.dto.PlaceOrderResponse;
 import com.b2b.instantneed.order.entity.Order;
 import com.b2b.instantneed.order.entity.OrderItem;
 import com.b2b.instantneed.order.entity.OrderStatus;
-import com.b2b.instantneed.order.event.OrderPlacedEvent;
 import com.b2b.instantneed.order.repository.OrderRepository;
 import com.b2b.instantneed.pricing.dto.PriceCalculateResponse;
 import com.b2b.instantneed.pricing.service.PricingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -55,7 +53,7 @@ public class OrderService {
     private final PricingService pricingService;
     private final EmailService emailService;
     private final PincodeMinOrderRepository pincodeMinOrderRepository;
-    private final ApplicationEventPublisher eventPublisher;
+    private final InvoiceService invoiceService;
 
     @Transactional
     public PlaceOrderResponse placeOrder(PlaceOrderRequest request) {
@@ -207,10 +205,13 @@ public class OrderService {
             });
         }
 
-        orderRepository.save(order);
+        // Generate invoice while order.getItems() is still a plain ArrayList (before Hibernate intercepts it)
+        String invoiceUrl = invoiceService.generateAndStore(order);
+        if (invoiceUrl != null) {
+            order.setInvoicePath(invoiceUrl);
+        }
 
-        // Publish event — PDF invoice is generated after this transaction commits
-        eventPublisher.publishEvent(new OrderPlacedEvent(order.getId()));
+        orderRepository.save(order);
 
         // Send confirmation email asynchronously — never blocks the HTTP response
         if (customer.getUser() != null && customer.getUser().getEmail() != null) {

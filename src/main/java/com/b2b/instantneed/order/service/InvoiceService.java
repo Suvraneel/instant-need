@@ -22,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.UUID;
 
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -38,23 +39,40 @@ public class InvoiceService {
     private final StorageService storageService;
     private final OrderRepository orderRepository;
 
-    @Transactional
-    public void generateAndStore(UUID orderId) {
-        Order order = orderRepository.findWithItemsById(orderId).orElse(null);
-        if (order == null) {
-            log.warn("[INVOICE] Order {} not found, skipping PDF generation", orderId);
-            return;
-        }
+    /**
+     * Called before the order is persisted — order.getItems() is still a plain ArrayList.
+     * Returns the stored URL, or null on failure (order is saved without an invoice URL).
+     */
+    public String generateAndStore(Order order) {
         try {
             byte[] pdf = buildPdf(order);
             String filename = order.getOrderNumber() + ".pdf";
-            String invoiceUrl = storageService.storeBytes(pdf, "invoices", filename);
-            order.setInvoicePath(invoiceUrl);
-            orderRepository.save(order);
-            log.info("[INVOICE] Stored invoice for {} → {}", order.getOrderNumber(), invoiceUrl);
+            String url = storageService.storeBytes(pdf, "invoices", filename);
+            log.info("[INVOICE] Generated invoice for {} → {}", order.getOrderNumber(), url);
+            return url;
         } catch (Exception e) {
-            log.error("[INVOICE] Failed to generate invoice for {}: {}", orderId, e.getMessage(), e);
+            log.error("[INVOICE] Failed to generate invoice for {}: {}", order.getOrderNumber(), e.getMessage(), e);
+            return null;
         }
+    }
+
+    /**
+     * Retroactive generation: loads the order fresh from DB with items, generates and stores.
+     * Used by the admin re-generate endpoint.
+     */
+    @Transactional
+    public String generateAndStoreById(UUID orderId) {
+        Order order = orderRepository.findWithItemsById(orderId).orElse(null);
+        if (order == null) {
+            log.warn("[INVOICE] Order {} not found", orderId);
+            return null;
+        }
+        String url = generateAndStore(order);
+        if (url != null) {
+            order.setInvoicePath(url);
+            orderRepository.save(order);
+        }
+        return url;
     }
 
     // ── PDF building ──────────────────────────────────────────────────────────

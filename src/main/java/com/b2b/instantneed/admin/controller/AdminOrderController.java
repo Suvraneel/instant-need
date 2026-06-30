@@ -6,6 +6,7 @@ import com.b2b.instantneed.admin.service.AdminOrderService;
 import com.b2b.instantneed.admin.service.AdminReportService;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.order.dto.OrderResponse;
+import com.b2b.instantneed.order.service.InvoiceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -17,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.UUID;
 
 @Tag(name = "Admin — Orders", description = "Order management and CSV export (ROLE_ADMIN)")
@@ -28,6 +30,7 @@ public class AdminOrderController {
 
     private final AdminOrderService orderService;
     private final AdminReportService reportService;
+    private final InvoiceService invoiceService;
 
     @Operation(summary = "List orders with optional filters: status, customerId, dateFrom, dateTo, orderNumber")
     @GetMapping
@@ -55,6 +58,17 @@ public class AdminOrderController {
             @PathVariable UUID orderId,
             @Valid @RequestBody UpdateOrderStatusRequest request) {
         return ResponseEntity.ok(orderService.updateStatus(orderId, request));
+    }
+
+    @Operation(summary = "Regenerate and store the PDF invoice for an order")
+    @PostMapping("/{orderId}/invoice/regenerate")
+    public ResponseEntity<Map<String, String>> regenerateInvoice(@PathVariable UUID orderId) {
+        String url = invoiceService.generateAndStoreById(orderId);
+        if (url == null) {
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("error", "Invoice generation failed. Check server logs."));
+        }
+        return ResponseEntity.ok(Map.of("invoiceUrl", url));
     }
 
     @Operation(summary = "Export orders to CSV (optional filters: dateFrom, dateTo, status)")
