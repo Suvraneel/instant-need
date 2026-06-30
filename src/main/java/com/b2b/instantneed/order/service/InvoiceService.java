@@ -3,6 +3,7 @@ package com.b2b.instantneed.order.service;
 import com.b2b.instantneed.common.storage.StorageService;
 import com.b2b.instantneed.order.entity.Order;
 import com.b2b.instantneed.order.entity.OrderItem;
+import com.b2b.instantneed.order.repository.OrderRepository;
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
@@ -11,6 +12,7 @@ import com.lowagie.text.pdf.draw.LineSeparator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.awt.Color;
 import java.io.ByteArrayOutputStream;
@@ -18,6 +20,7 @@ import java.math.BigDecimal;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -33,15 +36,24 @@ public class InvoiceService {
     private static final Color BORDER    = new Color(229, 231, 235); // gray-200
 
     private final StorageService storageService;
+    private final OrderRepository orderRepository;
 
-    public String generateAndStore(Order order) {
+    @Transactional
+    public void generateAndStore(UUID orderId) {
+        Order order = orderRepository.findWithItemsById(orderId).orElse(null);
+        if (order == null) {
+            log.warn("[INVOICE] Order {} not found, skipping PDF generation", orderId);
+            return;
+        }
         try {
             byte[] pdf = buildPdf(order);
             String filename = order.getOrderNumber() + ".pdf";
-            return storageService.storeBytes(pdf, "invoices", filename);
+            String invoiceUrl = storageService.storeBytes(pdf, "invoices", filename);
+            order.setInvoicePath(invoiceUrl);
+            orderRepository.save(order);
+            log.info("[INVOICE] Stored invoice for {} → {}", order.getOrderNumber(), invoiceUrl);
         } catch (Exception e) {
-            log.error("[INVOICE] Failed to generate invoice for {}: {}", order.getOrderNumber(), e.getMessage(), e);
-            return null;
+            log.error("[INVOICE] Failed to generate invoice for {}: {}", orderId, e.getMessage(), e);
         }
     }
 

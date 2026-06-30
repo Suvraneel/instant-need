@@ -7,6 +7,7 @@ import com.b2b.instantneed.cart.repository.CartRepository;
 import com.b2b.instantneed.catalog.entity.AvailabilityStatus;
 import com.b2b.instantneed.catalog.entity.Product;
 import com.b2b.instantneed.catalog.repository.ProductRepository;
+import com.b2b.instantneed.catalog.repository.PincodeMinOrderRepository;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.service.EmailService;
 import com.b2b.instantneed.pricing.service.PricingService;
@@ -15,6 +16,7 @@ import com.b2b.instantneed.common.security.SecurityUtils;
 import com.b2b.instantneed.customer.entity.Address;
 import com.b2b.instantneed.customer.entity.Customer;
 import com.b2b.instantneed.customer.repository.AddressRepository;
+import com.b2b.instantneed.customer.repository.CustomerRepository;
 import com.b2b.instantneed.order.dto.OrderResponse;
 import com.b2b.instantneed.order.dto.PlaceOrderRequest;
 import com.b2b.instantneed.order.dto.PlaceOrderResponse;
@@ -22,6 +24,7 @@ import com.b2b.instantneed.order.entity.Order;
 import com.b2b.instantneed.order.entity.OrderItem;
 import com.b2b.instantneed.order.entity.OrderStatus;
 import com.b2b.instantneed.order.repository.OrderRepository;
+import org.springframework.context.ApplicationEventPublisher;
 import com.b2b.instantneed.user.entity.AuthProvider;
 import com.b2b.instantneed.user.entity.Role;
 import com.b2b.instantneed.user.entity.User;
@@ -47,13 +50,16 @@ import static org.mockito.BDDMockito.*;
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
 
-    @Mock OrderRepository   orderRepository;
-    @Mock CartRepository    cartRepository;
-    @Mock AddressRepository addressRepository;
-    @Mock SecurityUtils     securityUtils;
-    @Mock ProductRepository productRepository;
-    @Mock PricingService    pricingService;
-    @Mock EmailService      emailService;
+    @Mock OrderRepository              orderRepository;
+    @Mock CartRepository               cartRepository;
+    @Mock AddressRepository            addressRepository;
+    @Mock CustomerRepository           customerRepository;
+    @Mock SecurityUtils                securityUtils;
+    @Mock ProductRepository            productRepository;
+    @Mock PricingService               pricingService;
+    @Mock EmailService                 emailService;
+    @Mock PincodeMinOrderRepository    pincodeMinOrderRepository;
+    @Mock ApplicationEventPublisher    eventPublisher;
 
     @InjectMocks OrderService orderService;
 
@@ -82,7 +88,8 @@ class OrderServiceTest {
         product = Product.builder()
                 .id(UUID.randomUUID()).name("A4 Paper").sku("PAPER-A4")
                 .slug("a4-paper").basePrice(new BigDecimal("250.00"))
-                .availabilityStatus(AvailabilityStatus.IN_STOCK).active(true).build();
+                .availabilityStatus(AvailabilityStatus.IN_STOCK).active(true)
+                .stock(100).build();
 
         given(securityUtils.currentCustomer()).willReturn(customer);
     }
