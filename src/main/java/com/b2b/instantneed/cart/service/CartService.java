@@ -59,6 +59,11 @@ public class CartService {
                 ? existing.getQuantity() + request.quantity()
                 : request.quantity();
 
+        if (newQuantity > product.getStock()) {
+            throw ApiException.badRequest("INSUFFICIENT_STOCK",
+                    "Only " + product.getStock() + " units available for " + product.getName());
+        }
+
         PriceCalculateResponse price = pricingService.calculate(product.getId(), newQuantity);
 
         if (existing != null) {
@@ -102,6 +107,13 @@ public class CartService {
             throw ApiException.badRequest("PRODUCT_DELETED",
                     "The product in this cart item no longer exists");
         }
+
+        int stock = item.getProduct().getStock();
+        if (request.quantity() > stock) {
+            throw ApiException.badRequest("INSUFFICIENT_STOCK",
+                    "Only " + stock + " units available for " + item.getProduct().getName());
+        }
+
         PriceCalculateResponse price = pricingService.calculate(
                 item.getProduct().getId(), request.quantity());
 

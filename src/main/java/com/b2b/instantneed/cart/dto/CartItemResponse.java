@@ -12,6 +12,7 @@ public record CartItemResponse(
         String sku,
         String unitOfMeasurement,
         int quantity,
+        int stock,
         BigDecimal appliedUnitPrice,
         BigDecimal lineTotal,
         String currencyCode
@@ -24,6 +25,7 @@ public record CartItemResponse(
                 item.getProduct().getSku(),
                 item.getProduct().getUnitOfMeasurement(),
                 item.getQuantity(),
+                item.getProduct().getStock(),
                 item.getAppliedUnitPrice(),
                 item.getLineTotal(),
                 item.getCurrencyCode()
