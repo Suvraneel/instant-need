@@ -52,11 +52,16 @@ public class InvoiceService {
         "m.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z");
 
     private static String icon(String path) {
-        return "<svg width=\"11\" height=\"11\" viewBox=\"0 0 24 24\""
-            + " style=\"display:inline-block;vertical-align:middle;margin-right:3px;\""
-            + " xmlns=\"http://www.w3.org/2000/svg\">"
-            + "<path d=\"" + path + "\" fill=\"#666\"/>"
-            + "</svg>";
+        // openhtmltopdf does not reliably support display:inline-block on <svg>.
+        // Base64-encoded SVG in an <img> tag is processed by BatikSVGDrawer reliably.
+        String svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\">"
+                   + "<path d=\"" + path + "\" fill=\"#666\"/>"
+                   + "</svg>";
+        String b64 = java.util.Base64.getEncoder()
+                         .encodeToString(svg.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        return "<img src=\"data:image/svg+xml;base64," + b64 + "\""
+             + " width=\"11\" height=\"11\""
+             + " style=\"vertical-align:middle;margin-right:3px;\"/>";
     }
 
     private final StorageService  storageService;
@@ -107,6 +112,9 @@ public class InvoiceService {
         builder.useSVGDrawer(new BatikSVGDrawer());
 
         // Noto Sans covers the ₹ symbol (U+20B9) — DejaVu Sans (openhtmltopdf default) does not
+        if (InvoiceService.class.getResourceAsStream("/fonts/NotoSans-Regular.ttf") == null) {
+            log.error("[INVOICE] NotoSans-Regular.ttf not found on classpath — ₹ will render as #");
+        }
         builder.useFont(
             () -> InvoiceService.class.getResourceAsStream("/fonts/NotoSans-Regular.ttf"),
             "Noto Sans", 400, BaseRendererBuilder.FontStyle.NORMAL, true
