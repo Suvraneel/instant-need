@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
@@ -203,6 +204,11 @@ public class OrderService {
                             ". Your order total is ₹" + finalSubtotal.stripTrailingZeros().toPlainString() + ".");
                 }
             });
+        }
+
+        // Set placedAt now so buildHtml can format the date (PrePersist hasn't run yet)
+        if (order.getPlacedAt() == null) {
+            order.setPlacedAt(Instant.now());
         }
 
         // Generate invoice while order.getItems() is still a plain ArrayList (before Hibernate intercepts it)
