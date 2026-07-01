@@ -4,6 +4,7 @@ import com.b2b.instantneed.common.storage.StorageService;
 import com.b2b.instantneed.order.entity.Order;
 import com.b2b.instantneed.order.entity.OrderItem;
 import com.b2b.instantneed.order.repository.OrderRepository;
+import com.openhtmltopdf.outputdevice.helper.BaseRendererBuilder;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,32 @@ public class InvoiceService {
     private static final String     NAVY   = "#0d2b5e";
     private static final String     BLUE   = "#1a56db";
     private static final String     PRIMARY = "#4F46E5";
+
+    // ── Inline SVG icons (Material Design paths, 11×11 px) ───────────────────
+    private static final String ICO_PHONE = icon(
+        "M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24" +
+        " 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17" +
+        " 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z");
+    private static final String ICO_EMAIL = icon(
+        "M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6" +
+        " c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z");
+    private static final String ICO_GLOBE = icon(
+        "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" +
+        "m-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z" +
+        "m6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7" +
+        " h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z");
+    private static final String ICO_CLOCK = icon(
+        "M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2z" +
+        "M12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" +
+        "m.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z");
+
+    private static String icon(String path) {
+        return "<svg width=\"11\" height=\"11\" viewBox=\"0 0 24 24\""
+            + " style=\"display:inline-block;vertical-align:middle;margin-right:3px;\""
+            + " xmlns=\"http://www.w3.org/2000/svg\">"
+            + "<path d=\"" + path + "\" fill=\"#666\"/>"
+            + "</svg>";
+    }
 
     private final StorageService  storageService;
     private final OrderRepository orderRepository;
@@ -78,6 +105,17 @@ public class InvoiceService {
         PdfRendererBuilder builder = new PdfRendererBuilder();
         builder.useFastMode();
         builder.useSVGDrawer(new BatikSVGDrawer());
+
+        // Noto Sans covers the ₹ symbol (U+20B9) — DejaVu Sans (openhtmltopdf default) does not
+        builder.useFont(
+            () -> InvoiceService.class.getResourceAsStream("/fonts/NotoSans-Regular.ttf"),
+            "Noto Sans", 400, BaseRendererBuilder.FontStyle.NORMAL, true
+        );
+        builder.useFont(
+            () -> InvoiceService.class.getResourceAsStream("/fonts/NotoSans-Bold.ttf"),
+            "Noto Sans", 700, BaseRendererBuilder.FontStyle.NORMAL, true
+        );
+
         builder.withHtmlContent(html, null);
         builder.toStream(out);
         builder.run();
@@ -154,7 +192,8 @@ public class InvoiceService {
             + "  <meta charset=\"utf-8\"/>\n"
             + "  <style>\n"
             + "    * { box-sizing: border-box; margin: 0; padding: 0; }\n"
-            + "    body { font-family: 'DejaVu Sans', Arial, sans-serif; font-size: 11px; color: #222; line-height: 1.4; padding: 16px; }\n"
+            + "    body { font-family: 'Noto Sans', 'DejaVu Sans', Arial, sans-serif;"
+            +          " font-size: 11px; color: #222; line-height: 1.4; padding: 16px; }\n"
             + "    table { width: 100%; border-collapse: collapse; }\n"
             + "  </style>\n"
             + "</head>\n"
@@ -197,9 +236,9 @@ public class InvoiceService {
             + "      <div style=\"color:" + BLUE + ";font-weight:bold;font-size:12px;margin-bottom:4px;\">InstantNeed Private Limited</div>\n"
             + "      <div>5959, 12 Cross Road</div>\n"
             + "      <div style=\"margin-bottom:5px;\">Ambala Cantt, Haryana 133001</div>\n"
-            + "      <div><strong>Phone:</strong> +91 8295781959</div>\n"
-            + "      <div><strong>Email:</strong> Support@instantneed.in</div>\n"
-            + "      <div><strong>Website:</strong> www.instantneed.in</div>\n"
+            + "      <div>" + ICO_PHONE + "<strong>Phone:</strong> +91 8295781959</div>\n"
+            + "      <div>" + ICO_EMAIL + "<strong>Email:</strong> Support@instantneed.in</div>\n"
+            + "      <div>" + ICO_GLOBE + "<strong>Website:</strong> www.instantneed.in</div>\n"
             + "    </td>\n"
             + "    <td style=\"vertical-align:top;width:45%;padding-left:16px;\">\n"
             + "      <div style=\"border:1px solid #d0d8ea;border-radius:8px;padding:12px 16px;\">\n"
@@ -214,7 +253,7 @@ public class InvoiceService {
             // ── ORDER SUMMARY bar + items table ──────────────────────────────
             + "<div style=\"margin-bottom:12px;\">\n"
             + "  <div style=\"background-color:" + NAVY + ";color:white;padding:8px 14px;"
-            + "font-weight:bold;font-size:13px;letter-spacing:0.5px;margin-bottom:0;\">\n"
+            + "font-weight:bold;font-size:13px;letter-spacing:0.5px;\">\n"
             + "    ORDER SUMMARY\n"
             + "  </div>\n"
             + "  <table style=\"border:1px solid #d0d8ea;border-top:none;\">\n"
@@ -275,9 +314,9 @@ public class InvoiceService {
             + "  <tr>\n"
             + "    <td style=\"vertical-align:top;font-size:10.5px;line-height:1.7;\">\n"
             + "      <div style=\"color:" + NAVY + ";font-weight:bold;margin-bottom:3px;\">Need Help?</div>\n"
-            + "      <div>Phone: +91 8295781959</div>\n"
-            + "      <div>Email: Support@instantneed.in</div>\n"
-            + "      <div>Mon &#x2013; Sat | 10:00 AM &#x2013; 7:00 PM</div>\n"
+            + "      <div>" + ICO_PHONE + "Phone: +91 8295781959</div>\n"
+            + "      <div>" + ICO_EMAIL + "Email: Support@instantneed.in</div>\n"
+            + "      <div>" + ICO_CLOCK + "Mon &#x2013; Sat | 10:00 AM &#x2013; 7:00 PM</div>\n"
             + "    </td>\n"
             + "    <td style=\"text-align:right;vertical-align:bottom;\">\n"
             + "      <div style=\"color:" + BLUE + ";font-weight:bold;font-size:12.5px;margin-bottom:3px;\">"
