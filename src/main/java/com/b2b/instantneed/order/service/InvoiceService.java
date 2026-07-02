@@ -52,16 +52,23 @@ public class InvoiceService {
         "m.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z");
 
     private static String icon(String path) {
-        // openhtmltopdf does not reliably support display:inline-block on <svg>.
-        // Base64-encoded SVG in an <img> tag is processed by BatikSVGDrawer reliably.
         String svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\">"
                    + "<path d=\"" + path + "\" fill=\"#666\"/>"
                    + "</svg>";
         String b64 = java.util.Base64.getEncoder()
                          .encodeToString(svg.getBytes(java.nio.charset.StandardCharsets.UTF_8));
         return "<img src=\"data:image/svg+xml;base64," + b64 + "\""
-             + " width=\"11\" height=\"11\""
-             + " style=\"vertical-align:middle;margin-right:3px;\"/>";
+             + " width=\"11\" height=\"11\"/>";
+    }
+
+    /** Wraps icon + text in a 2-cell table so vertical-align:middle works reliably in openhtmltopdf. */
+    private static String icoRow(String ico, String content) {
+        return "<table style=\"width:auto;border-collapse:collapse;margin-bottom:3px;\">"
+             + "<tr>"
+             + "<td style=\"vertical-align:middle;padding-right:4px;width:15px;\">" + ico + "</td>"
+             + "<td style=\"vertical-align:middle;\">" + content + "</td>"
+             + "</tr>"
+             + "</table>";
     }
 
     private final StorageService  storageService;
@@ -244,9 +251,9 @@ public class InvoiceService {
             + "      <div style=\"color:" + BLUE + ";font-weight:bold;font-size:12px;margin-bottom:4px;\">InstantNeed Private Limited</div>\n"
             + "      <div>5959, 12 Cross Road</div>\n"
             + "      <div style=\"margin-bottom:5px;\">Ambala Cantt, Haryana 133001</div>\n"
-            + "      <div>" + ICO_PHONE + "<strong>Phone:</strong> +91 8295781959</div>\n"
-            + "      <div>" + ICO_EMAIL + "<strong>Email:</strong> Support@instantneed.in</div>\n"
-            + "      <div>" + ICO_GLOBE + "<strong>Website:</strong> www.instantneed.in</div>\n"
+            + icoRow(ICO_PHONE, "<strong>Phone:</strong> +91 8295781959")
+            + icoRow(ICO_EMAIL, "<strong>Email:</strong> Support@instantneed.in")
+            + icoRow(ICO_GLOBE, "<strong>Website:</strong> www.instantneed.in")
             + "    </td>\n"
             + "    <td style=\"vertical-align:top;width:45%;padding-left:16px;\">\n"
             + "      <div style=\"border:1px solid #d0d8ea;border-radius:8px;padding:12px 16px;\">\n"
@@ -285,7 +292,7 @@ public class InvoiceService {
             + "      <tr style=\"background-color:#f0f4ff;\">\n"
             + "        <td colspan=\"3\" style=\"padding:10px;\"></td>\n"
             + "        <td style=\"padding:10px;font-weight:bold;font-size:12px;text-align:right;color:" + PRIMARY + ";\">TOTAL AMOUNT</td>\n"
-            + "        <td style=\"padding:10px;text-align:right;font-weight:bold;font-size:16px;color:#111111;\">&#x20b9;" + displayTotal + "</td>\n"
+            + "        <td style=\"padding:10px;text-align:right;font-weight:bold;font-size:16px;color:#111111;\">&#x20b9;" + amt(BigDecimal.valueOf(displayTotal)) + "</td>\n"
             + "      </tr>\n"
             + "    </tfoot>\n"
             + "  </table>\n"
@@ -322,9 +329,9 @@ public class InvoiceService {
             + "  <tr>\n"
             + "    <td style=\"vertical-align:top;font-size:10.5px;line-height:1.7;\">\n"
             + "      <div style=\"color:" + NAVY + ";font-weight:bold;margin-bottom:3px;\">Need Help?</div>\n"
-            + "      <div>" + ICO_PHONE + "Phone: +91 8295781959</div>\n"
-            + "      <div>" + ICO_EMAIL + "Email: Support@instantneed.in</div>\n"
-            + "      <div>" + ICO_CLOCK + "Mon &#x2013; Sat | 10:00 AM &#x2013; 7:00 PM</div>\n"
+            + icoRow(ICO_PHONE, "Phone: +91 8295781959")
+            + icoRow(ICO_EMAIL, "Email: Support@instantneed.in")
+            + icoRow(ICO_CLOCK, "Mon &#x2013; Sat | 10:00 AM &#x2013; 7:00 PM")
             + "    </td>\n"
             + "    <td style=\"text-align:right;vertical-align:bottom;\">\n"
             + "      <div style=\"color:" + BLUE + ";font-weight:bold;font-size:12.5px;margin-bottom:3px;\">"
