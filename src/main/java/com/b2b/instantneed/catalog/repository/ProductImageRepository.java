@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface ProductImageRepository extends JpaRepository<ProductImage, UUID> {
 
     List<ProductImage> findByProductIdInOrderBySortOrderAsc(Collection<UUID> productIds);
+
+    List<ProductImage> findAllByImageUrlIsNotNullAndThumbnailUrlIsNull();
 }

@@ -48,36 +48,58 @@ public class S3StorageService implements StorageService {
     @Override
     public String store(MultipartFile file, String subdir) throws IOException {
         validate(file);
-
-        String extension = extension(file.getOriginalFilename());
-        String filename  = UUID.randomUUID() + extension;
-        String s3Key     = subdir + "/" + filename;
-
-        PutObjectRequest request = PutObjectRequest.builder()
-                .bucket(bucket)
-                .key(s3Key)
-                .contentType(file.getContentType())
-                .contentLength(file.getSize())
-                .build();
-
-        s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
-        log.info("[S3] Uploaded {} ({} bytes) → s3://{}/{}", filename, file.getSize(), bucket, s3Key);
-
-        return baseUrl + "/" + s3Key;
+        String filename = UUID.randomUUID() + extension(file.getOriginalFilename());
+        return putBytes(file.getBytes(), subdir, filename, file.getContentType());
     }
 
     @Override
-    public String storeBytes(byte[] data, String subdir, String filename) {
+    public StoredImage storeWithThumbnail(MultipartFile file, String subdir) throws IOException {
+        validate(file);
+        byte[] bytes = file.getBytes();
+        String filename = UUID.randomUUID() + extension(file.getOriginalFilename());
+        String url = putBytes(bytes, subdir, filename, file.getContentType());
+
+        String thumbnailUrl = ImageThumbnailer.resize(bytes, file.getContentType())
+                .map(thumbBytes -> {
+                    try {
+                        return putBytes(thumbBytes, subdir, thumbnailFilename(filename), "image/jpeg");
+                    } catch (Exception e) {
+                        log.warn("[S3] Thumbnail upload failed for {}: {}", filename, e.getMessage());
+                        return null;
+                    }
+                })
+                .orElse(null);
+
+        return new StoredImage(url, thumbnailUrl);
+    }
+
+    private String putBytes(byte[] bytes, String subdir, String filename, String contentType) {
         String s3Key = subdir + "/" + filename;
         PutObjectRequest request = PutObjectRequest.builder()
                 .bucket(bucket)
                 .key(s3Key)
-                .contentType("application/pdf")
-                .contentLength((long) data.length)
+                .contentType(contentType)
+                .contentLength((long) bytes.length)
                 .build();
-        s3Client.putObject(request, RequestBody.fromBytes(data));
-        log.info("[S3] Uploaded {} ({} bytes) → s3://{}/{}", filename, data.length, bucket, s3Key);
+        s3Client.putObject(request, RequestBody.fromBytes(bytes));
+        log.info("[S3] Uploaded {} ({} bytes) → s3://{}/{}", filename, bytes.length, bucket, s3Key);
         return baseUrl + "/" + s3Key;
+    }
+
+    private static String thumbnailFilename(String filename) {
+        int dot = filename.lastIndexOf('.');
+        return (dot == -1 ? filename : filename.substring(0, dot)) + "_thumb.jpg";
+    }
+
+    @Override
+    public String storeBytes(byte[] data, String subdir, String filename) {
+        // Preserved for the existing invoice-PDF caller.
+        return putBytes(data, subdir, filename, "application/pdf");
+    }
+
+    @Override
+    public String storeBytes(byte[] data, String subdir, String filename, String contentType) {
+        return putBytes(data, subdir, filename, contentType);
     }
 
     @Override

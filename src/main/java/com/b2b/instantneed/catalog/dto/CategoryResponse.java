@@ -15,6 +15,7 @@ public record CategoryResponse(
         String slug,
         String description,
         String imageUrl,
+        String thumbnailUrl,
         int sortOrder,
         List<CategoryResponse> children
 ) {
@@ -26,6 +27,7 @@ public record CategoryResponse(
                 c.getSlug(),
                 c.getDescription(),
                 c.getImageUrl(),
+                c.getThumbnailUrl(),
                 c.getSortOrder(),
                 null
         );
@@ -43,6 +45,7 @@ public record CategoryResponse(
                 c.getSlug(),
                 c.getDescription(),
                 c.getImageUrl(),
+                c.getThumbnailUrl(),
                 c.getSortOrder(),
                 kids.isEmpty() ? null : kids
         );

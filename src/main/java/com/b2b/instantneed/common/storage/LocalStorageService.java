@@ -4,13 +4,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.Set;
 import java.util.UUID;
-import java.nio.file.StandardOpenOption;
 
 /**
  * Stores uploaded files on the local filesystem and returns URLs served by the
@@ -38,28 +36,55 @@ public class LocalStorageService implements StorageService {
     @Override
     public String store(MultipartFile file, String subdir) throws IOException {
         validate(file);
+        String filename = UUID.randomUUID() + extension(file.getOriginalFilename());
+        return writeBytes(file.getBytes(), subdir, filename);
+    }
 
-        String extension  = extension(file.getOriginalFilename());
-        String filename   = UUID.randomUUID() + extension;
-        Path   targetDir  = uploadRoot.resolve(subdir);
+    @Override
+    public StoredImage storeWithThumbnail(MultipartFile file, String subdir) throws IOException {
+        validate(file);
+        byte[] bytes = file.getBytes();
+        String filename = UUID.randomUUID() + extension(file.getOriginalFilename());
+        String url = writeBytes(bytes, subdir, filename);
+
+        String thumbnailUrl = ImageThumbnailer.resize(bytes, file.getContentType())
+                .map(thumbBytes -> {
+                    try {
+                        return writeBytes(thumbBytes, subdir, thumbnailFilename(filename));
+                    } catch (IOException e) {
+                        log.warn("[STORAGE] Thumbnail write failed for {}: {}", filename, e.getMessage());
+                        return null;
+                    }
+                })
+                .orElse(null);
+
+        return new StoredImage(url, thumbnailUrl);
+    }
+
+    private String writeBytes(byte[] bytes, String subdir, String filename) throws IOException {
+        Path targetDir = uploadRoot.resolve(subdir);
         Files.createDirectories(targetDir);
-
         Path targetPath = targetDir.resolve(filename);
-        Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
-        log.info("[STORAGE] Saved {} ({} bytes) → {}", filename, file.getSize(), targetPath);
-
-        // Return a URL relative to the baseUrl — clients fetch it directly
+        Files.write(targetPath, bytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+        log.info("[STORAGE] Saved {} ({} bytes) → {}", filename, bytes.length, targetPath);
         return baseUrl + "/" + subdir + "/" + filename;
+    }
+
+    private static String thumbnailFilename(String filename) {
+        int dot = filename.lastIndexOf('.');
+        return (dot == -1 ? filename : filename.substring(0, dot)) + "_thumb.jpg";
     }
 
     @Override
     public String storeBytes(byte[] data, String subdir, String filename) throws IOException {
-        Path targetDir = uploadRoot.resolve(subdir);
-        Files.createDirectories(targetDir);
-        Path targetPath = targetDir.resolve(filename);
-        Files.write(targetPath, data, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-        log.info("[STORAGE] Saved {} ({} bytes) → {}", filename, data.length, targetPath);
-        return baseUrl + "/" + subdir + "/" + filename;
+        return writeBytes(data, subdir, filename);
+    }
+
+    @Override
+    public String storeBytes(byte[] data, String subdir, String filename, String contentType) throws IOException {
+        // Content type is inferred from the file extension by the static resource
+        // handler for local storage — nothing further to configure here.
+        return writeBytes(data, subdir, filename);
     }
 
     @Override

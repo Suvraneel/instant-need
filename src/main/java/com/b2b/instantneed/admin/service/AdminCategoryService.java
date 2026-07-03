@@ -98,18 +98,19 @@ public class AdminCategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> ApiException.notFound("CATEGORY_NOT_FOUND", "Category not found: " + id));
 
-        String url;
+        StorageService.StoredImage stored;
         try {
-            url = storageService.store(file, "categories/" + id);
+            stored = storageService.storeWithThumbnail(file, "categories/" + id);
         } catch (IOException e) {
             throw ApiException.badRequest("UPLOAD_FAILED", "Could not save file: " + e.getMessage());
         }
 
-        category.setImageUrl(url);
+        category.setImageUrl(stored.url());
+        category.setThumbnailUrl(stored.thumbnailUrl());
         AdminCategoryResponse updated = AdminCategoryResponse.from(categoryRepository.save(category));
         auditLog.log(AuditLogService.UPDATE, AuditLogService.CATEGORY, id,
                 "Image uploaded for category: " + category.getName(), null,
-                java.util.Map.of("imageUrl", url));
+                java.util.Map.of("imageUrl", stored.url()));
         return updated;
     }
 

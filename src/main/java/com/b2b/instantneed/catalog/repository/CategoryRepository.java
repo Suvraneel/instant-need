@@ -20,6 +20,8 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
     boolean existsBySlugAndIdNot(String slug, UUID id);
 
+    List<Category> findAllByImageUrlIsNotNullAndThumbnailUrlIsNull();
+
     @Query("SELECT c FROM Category c LEFT JOIN FETCH c.children WHERE c.parent IS NULL AND c.active = true ORDER BY c.sortOrder")
     List<Category> findRootCategoriesWithChildren();
 }

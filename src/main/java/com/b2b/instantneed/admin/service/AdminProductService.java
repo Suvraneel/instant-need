@@ -197,9 +197,9 @@ public class AdminProductService {
                                            String altText, int sortOrder) {
         Product product = findProduct(productId);
 
-        String url;
+        StorageService.StoredImage stored;
         try {
-            url = storageService.store(file, "products/" + productId);
+            stored = storageService.storeWithThumbnail(file, "products/" + productId);
         } catch (IOException e) {
             throw ApiException.badRequest("UPLOAD_FAILED", "Could not save file: " + e.getMessage());
         }
@@ -215,7 +215,8 @@ public class AdminProductService {
 
         ProductImage image = ProductImage.builder()
                 .product(product)
-                .imageUrl(url)
+                .imageUrl(stored.url())
+                .thumbnailUrl(stored.thumbnailUrl())
                 .altText(altText)
                 .sortOrder(sortOrder)
                 .build();
@@ -223,7 +224,7 @@ public class AdminProductService {
 
         auditLog.log(AuditLogService.CREATE, AuditLogService.PRODUCT, productId,
                 "Image uploaded for product: " + product.getName(), null,
-                java.util.Map.of("imageUrl", url));
+                java.util.Map.of("imageUrl", stored.url()));
 
         return ImageUploadResponse.from(image);
     }

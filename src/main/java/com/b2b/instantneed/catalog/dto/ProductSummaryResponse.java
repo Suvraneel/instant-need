@@ -18,5 +18,6 @@ public record ProductSummaryResponse(
         int stock,
         int moq,
         boolean active,
-        String primaryImageUrl
+        String primaryImageUrl,
+        String primaryThumbnailUrl
 ) {}

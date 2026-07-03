@@ -73,16 +73,17 @@ public class CatalogService {
                 .findByProductIdInOrderByMinQuantityAsc(ids)
                 .stream().collect(Collectors.groupingBy(t -> t.getProduct().getId()));
 
-        Map<UUID, String> primaryImageMap = productImageRepository
+        Map<UUID, ProductImage> primaryImageMap = productImageRepository
                 .findByProductIdInOrderBySortOrderAsc(ids)
                 .stream().collect(Collectors.toMap(
                         img -> img.getProduct().getId(),
-                        ProductImage::getImageUrl,
+                        img -> img,
                         (a, b) -> a  // keep first
                 ));
 
         Page<ProductSummaryResponse> summaryPage = productPage.map(p -> {
             List<PricingTier> tiers = tiersMap.getOrDefault(p.getId(), List.of());
+            ProductImage primaryImage = primaryImageMap.get(p.getId());
             return new ProductSummaryResponse(
                 p.getId(), HtmlUtils.htmlUnescape(p.getName()), p.getSlug(), p.getSku(),
                 p.getCategory() != null ? HtmlUtils.htmlUnescape(p.getCategory().getName()) : null,
@@ -90,7 +91,8 @@ public class CatalogService {
                 p.getBasePrice(),
                 tiers.isEmpty() ? "INR" : tiers.get(0).getCurrencyCode(),
                 p.getStock(), p.getMoq(), p.isActive(),
-                primaryImageMap.get(p.getId())
+                primaryImage != null ? primaryImage.getImageUrl() : null,
+                primaryImage != null ? primaryImage.getThumbnailUrl() : null
             );
         });
 

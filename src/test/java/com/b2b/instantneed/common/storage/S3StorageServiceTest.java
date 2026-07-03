@@ -14,7 +14,11 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -141,5 +145,48 @@ class S3StorageServiceTest {
 
         assertThatCode(() -> service.delete("https://cdn.example.com/products/x/file.jpg"))
                 .doesNotThrowAnyException();
+    }
+
+    // ── storeWithThumbnail ────────────────────────────────────────────────────
+
+    @Test
+    void storeWithThumbnail_realImage_uploadsOriginalAndThumbnail() throws IOException {
+        MockMultipartFile file = new MockMultipartFile(
+                "file", "large.jpg", "image/jpeg", renderJpeg(1200, 900));
+
+        StorageService.StoredImage stored = service.storeWithThumbnail(file, "products/uuid-thumb");
+
+        assertThat(stored.url()).startsWith(BASE_URL + "/products/uuid-thumb/");
+        assertThat(stored.thumbnailUrl()).isNotNull();
+        assertThat(stored.thumbnailUrl()).endsWith("_thumb.jpg");
+
+        // Two objects uploaded: the original and the thumbnail
+        ArgumentCaptor<PutObjectRequest> captor = ArgumentCaptor.forClass(PutObjectRequest.class);
+        verify(s3Client, org.mockito.Mockito.times(2)).putObject(captor.capture(), any(RequestBody.class));
+        List<PutObjectRequest> requests = captor.getAllValues();
+        assertThat(requests.get(1).key()).endsWith("_thumb.jpg");
+        assertThat(requests.get(1).contentType()).isEqualTo("image/jpeg");
+    }
+
+    @Test
+    void storeWithThumbnail_undecodableBytes_fallsBackToNullThumbnail() throws IOException {
+        MockMultipartFile file = new MockMultipartFile(
+                "file", "not-an-image.jpg", "image/jpeg", new byte[1024]);
+
+        StorageService.StoredImage stored = service.storeWithThumbnail(file, "products/uuid-bad");
+
+        assertThat(stored.url()).isNotNull();
+        assertThat(stored.thumbnailUrl()).isNull();
+        verify(s3Client, org.mockito.Mockito.times(1)).putObject(any(PutObjectRequest.class), any(RequestBody.class));
+    }
+
+    private static byte[] renderJpeg(int width, int height) throws IOException {
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        var g = image.createGraphics();
+        g.fillRect(0, 0, width, height);
+        g.dispose();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ImageIO.write(image, "jpg", out);
+        return out.toByteArray();
     }
 }

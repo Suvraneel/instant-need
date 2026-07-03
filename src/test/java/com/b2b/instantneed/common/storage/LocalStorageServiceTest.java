@@ -5,6 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.mock.web.MockMultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -120,5 +123,51 @@ class LocalStorageServiceTest {
     void delete_nonExistentFile_doesNotThrow() {
         assertThatCode(() -> service.delete("http://localhost:8080/uploads/products/x/missing.jpg"))
                 .doesNotThrowAnyException();
+    }
+
+    // ── storeWithThumbnail ────────────────────────────────────────────────────
+
+    @Test
+    void storeWithThumbnail_realImage_generatesSmallerThumbnail() throws IOException {
+        byte[] largeJpeg = renderJpeg(1200, 900);
+        MockMultipartFile file = new MockMultipartFile(
+                "file", "large.jpg", "image/jpeg", largeJpeg);
+
+        StorageService.StoredImage stored = service.storeWithThumbnail(file, "products/uuid-thumb");
+
+        assertThat(stored.url()).startsWith("http://localhost:8080/uploads/products/uuid-thumb/");
+        assertThat(stored.thumbnailUrl()).isNotNull();
+        assertThat(stored.thumbnailUrl()).endsWith("_thumb.jpg");
+
+        Path thumbFile = tempDir.resolve(
+                "products/uuid-thumb/" + stored.thumbnailUrl().substring(stored.thumbnailUrl().lastIndexOf('/') + 1));
+        assertThat(Files.exists(thumbFile)).isTrue();
+        assertThat(Files.size(thumbFile)).isLessThan(largeJpeg.length);
+
+        BufferedImage decoded = ImageIO.read(thumbFile.toFile());
+        assertThat(Math.max(decoded.getWidth(), decoded.getHeight())).isLessThanOrEqualTo(480);
+    }
+
+    @Test
+    void storeWithThumbnail_undecodableBytes_fallsBackToNullThumbnail() throws IOException {
+        // Not a real image — ImageIO can't decode it, so no thumbnail should be produced,
+        // but the original must still be stored successfully.
+        MockMultipartFile file = new MockMultipartFile(
+                "file", "not-an-image.jpg", "image/jpeg", new byte[1024]);
+
+        StorageService.StoredImage stored = service.storeWithThumbnail(file, "products/uuid-bad");
+
+        assertThat(stored.url()).isNotNull();
+        assertThat(stored.thumbnailUrl()).isNull();
+    }
+
+    private static byte[] renderJpeg(int width, int height) throws IOException {
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        var g = image.createGraphics();
+        g.fillRect(0, 0, width, height);
+        g.dispose();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ImageIO.write(image, "jpg", out);
+        return out.toByteArray();
     }
 }

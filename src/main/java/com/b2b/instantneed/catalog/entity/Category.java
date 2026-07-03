@@ -41,6 +41,9 @@ public class Category {
     @Column(name = "image_url", length = 500)
     private String imageUrl;
 
+    @Column(name = "thumbnail_url", length = 500)
+    private String thumbnailUrl;
+
     @Column(name = "is_active", nullable = false)
     @Builder.Default
     private boolean active = true;
