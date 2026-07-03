@@ -7,11 +7,13 @@ import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.exception.ApiException;
 import com.b2b.instantneed.common.service.EmailService;
 import com.b2b.instantneed.common.service.ExpoPushNotificationService;
+import com.b2b.instantneed.common.storage.StorageService;
 import com.b2b.instantneed.customer.entity.Customer;
 import com.b2b.instantneed.order.dto.OrderResponse;
 import com.b2b.instantneed.order.entity.Order;
 import com.b2b.instantneed.order.entity.OrderStatus;
 import com.b2b.instantneed.order.repository.OrderRepository;
+import com.b2b.instantneed.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,6 +35,7 @@ public class AdminOrderService {
     private final AuditLogService auditLog;
     private final EmailService emailService;
     private final ExpoPushNotificationService pushService;
+    private final StorageService storageService;
 
     @Transactional(readOnly = true)
     public PagedResponse<AdminOrderSummary> listOrders(
@@ -64,6 +67,22 @@ public class AdminOrderService {
         Order order = orderRepository.findWithItemsById(orderId)
                 .orElseThrow(() -> ApiException.notFound("ORDER_NOT_FOUND", "Order not found: " + orderId));
         return OrderResponse.from(order);
+    }
+
+    /** Streams the invoice PDF for any order — admin access is not scoped to a customer. */
+    @Transactional(readOnly = true)
+    public OrderService.InvoiceFile getInvoicePdf(UUID orderId) {
+        Order order = orderRepository.findWithItemsById(orderId)
+                .orElseThrow(() -> ApiException.notFound("ORDER_NOT_FOUND", "Order not found: " + orderId));
+        if (order.getInvoicePath() == null) {
+            throw ApiException.notFound("INVOICE_NOT_FOUND", "No invoice has been generated for this order yet");
+        }
+        try {
+            byte[] bytes = storageService.retrieve(order.getInvoicePath());
+            return new OrderService.InvoiceFile(bytes, order.getOrderNumber() + ".pdf");
+        } catch (java.io.IOException e) {
+            throw ApiException.notFound("INVOICE_NOT_FOUND", "Invoice file could not be read: " + e.getMessage());
+        }
     }
 
     @Transactional

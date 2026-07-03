@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +43,16 @@ public class OrderController {
     @GetMapping("/{orderId}")
     public ResponseEntity<OrderResponse> getOrder(@PathVariable UUID orderId) {
         return ResponseEntity.ok(orderService.getOrder(orderId));
+    }
+
+    @Operation(summary = "Download the PDF invoice for an order (customer must own the order)")
+    @GetMapping("/{orderId}/invoice")
+    public ResponseEntity<byte[]> getInvoice(@PathVariable UUID orderId) {
+        OrderService.InvoiceFile file = orderService.getInvoicePdf(orderId);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.filename() + "\"")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(file.bytes());
     }
 
     @Operation(summary = "Reorder: copy a past order's items into the active cart")

@@ -67,5 +67,15 @@ public interface StorageService {
      */
     void delete(String publicUrl);
 
+    /**
+     * Read back the raw bytes of a file identified by its public URL.
+     * Used to stream PII-sensitive content (e.g. invoices) through an
+     * authenticated API endpoint rather than exposing it at a public URL.
+     *
+     * @param publicUrl URL that was previously returned by {@link #store} or {@link #storeBytes}
+     * @throws IOException if the file cannot be read (including "not found")
+     */
+    byte[] retrieve(String publicUrl) throws IOException;
+
     record StoredImage(String url, String thumbnailUrl) {}
 }

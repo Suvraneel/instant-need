@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
@@ -116,6 +117,17 @@ public class S3StorageService implements StorageService {
             log.info("[S3] Deleted s3://{}/{}", bucket, s3Key);
         } catch (Exception e) {
             log.warn("[S3] Could not delete {}: {}", publicUrl, e.getMessage());
+        }
+    }
+
+    @Override
+    public byte[] retrieve(String publicUrl) throws IOException {
+        String s3Key = publicUrl.replace(baseUrl + "/", "");
+        try (var in = s3Client.getObject(GetObjectRequest.builder()
+                .bucket(bucket)
+                .key(s3Key)
+                .build())) {
+            return in.readAllBytes();
         }
     }
 

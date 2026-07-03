@@ -71,6 +71,16 @@ public class AdminOrderController {
         return ResponseEntity.ok(Map.of("invoiceUrl", url));
     }
 
+    @Operation(summary = "Download the PDF invoice for any order")
+    @GetMapping("/{orderId}/invoice")
+    public ResponseEntity<byte[]> getInvoice(@PathVariable UUID orderId) {
+        com.b2b.instantneed.order.service.OrderService.InvoiceFile file = orderService.getInvoicePdf(orderId);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.filename() + "\"")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(file.bytes());
+    }
+
     @Operation(summary = "Export orders to CSV (optional filters: dateFrom, dateTo, status)")
     @GetMapping("/export/csv")
     public ResponseEntity<byte[]> exportCsv(

@@ -102,6 +102,13 @@ public class LocalStorageService implements StorageService {
         }
     }
 
+    @Override
+    public byte[] retrieve(String publicUrl) throws IOException {
+        String path = publicUrl.replace(baseUrl + "/", "");
+        Path   file = uploadRoot.resolve(path);
+        return Files.readAllBytes(file);
+    }
+
     // ── Helpers ────────────────────────────────────────────────────────────────
 
     private void validate(MultipartFile file) {
