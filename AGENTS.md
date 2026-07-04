@@ -8,6 +8,21 @@ This backend is one of four sibling repos on disk: `instant-need` (this one),
 either frontend without any single repo's build catching it — there is no
 shared CI across repos. Follow this before treating any change as complete.
 
+**Pre-commit regression checklist**
+- [ ] Identified every caller of the code being changed (grepped this repo;
+      checked `instant-need-web`/`instant-need-mobile` if it's a shared
+      type, endpoint, or config file like `SecurityConfig`/`StorageService`)
+- [ ] Reused an existing helper/pattern instead of writing a new one, where
+      one already exists
+- [ ] Diff touches only the files this task needs
+- [ ] Added/updated a test for the changed behavior (a MockMvc test for any
+      `SecurityConfig` change; a unit test for service/logic changes)
+- [ ] Ran `./mvnw compile` and the full test suite via Docker, compared
+      against a pre-change baseline (`git stash` + rerun) — no *new*
+      failures introduced
+- [ ] For storage/image changes: verified against both `LocalStorageService`
+      and `S3StorageService`
+
 **Before changing existing code**
 - For cross-cutting files — `SecurityConfig`, `StorageService` and its
   implementations, DTOs/response shapes, anything under `common/` — grep for
