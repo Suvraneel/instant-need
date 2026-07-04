@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -65,6 +66,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleMaxUploadSize(MaxUploadSizeExceededException ex) {
         return ResponseEntity.badRequest()
                 .body(ErrorResponse.of("FILE_TOO_LARGE", "File exceeds the maximum allowed upload size of 5 MB"));
+    }
+
+    // A missing static file (e.g. /uploads/**) is a normal 404, not a server error —
+    // without this, it fell through to handleGeneral() and was reported as a 500.
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException ex) {
+        return ResponseEntity.status(404)
+                .body(ErrorResponse.of("NOT_FOUND", "Resource not found"));
     }
 
     @ExceptionHandler(Exception.class)

@@ -1,5 +1,55 @@
 # Agent Instructions for instant-need
 
+## Regression Prevention Workflow
+
+This backend is one of four sibling repos on disk: `instant-need` (this one),
+`instant-need-shared` (types/API client consumed by web+mobile),
+`instant-need-web`, `instant-need-mobile`. A change here can silently break
+either frontend without any single repo's build catching it — there is no
+shared CI across repos. Follow this before treating any change as complete.
+
+**Before changing existing code**
+- For cross-cutting files — `SecurityConfig`, `StorageService` and its
+  implementations, DTOs/response shapes, anything under `common/` — grep for
+  every caller in this repo first, then check whether `instant-need-web` or
+  `instant-need-mobile` consume the affected endpoint/field directly.
+- Authorization rules in `SecurityConfig` are a known regression hotspot:
+  a path being reachable via `store()`/`storeBytes()` doesn't mean it's
+  publicly viewable — check the `authorizeHttpRequests` block explicitly.
+  Public image URLs (`/uploads/products/**`, `/uploads/categories/**`) and
+  private ones (`/uploads/invoices/**`, PII-bearing) are handled differently
+  on purpose; don't collapse that distinction.
+
+**Reuse over rewrite**
+- Check for an existing helper before adding new logic (e.g. `putBytes`/
+  `writeBytes` in the storage services, `ApiException.notFound(...)` for
+  errors) instead of duplicating patterns inline.
+
+**Scope discipline**
+- Keep diffs to the files the task needs. Flag unrelated issues you notice
+  separately instead of folding them into the current change.
+
+**Tests**
+- No local JDK — run tests via Docker:
+  `docker run --rm -v "$PWD":/app -w /app -v maven-repo-cache:/root/.m2 eclipse-temurin:25-jdk-noble bash -c "./mvnw test"`
+- Before changing shared logic, capture a baseline: `git stash`, rerun the
+  full suite, note failure/error counts, `git stash pop`, rerun, and confirm
+  no *new* failures were introduced (this repo has some pre-existing
+  environment-dependent failures — e.g. `AuthControllerTest`,
+  `PricingServiceTest`, `CartServiceTest` — that require DB/Redis not present
+  in a sandboxed test run; don't mistake these for regressions you caused).
+- Any change to `SecurityConfig`'s authorization rules should have a MockMvc
+  test asserting which paths are public vs authenticated, so the next change
+  to that file breaks a test instead of shipping silently.
+
+**Verify before declaring done**
+- Compile (`./mvnw compile`) and run the full test suite via Docker, comparing
+  against the baseline above.
+- For anything touching image/file storage, confirm behavior against *both*
+  `LocalStorageService` and `S3StorageService` — this app switches between
+  them via `STORAGE_TYPE`, and a fix that only works for one silently breaks
+  the other in whichever environment is currently active.
+
 ## Project Overview
 **Type:** Spring Boot 4.0.6 REST API Service  
 **Language:** Java 25  
