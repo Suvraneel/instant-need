@@ -76,6 +76,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/categories/**").permitAll()
                         .requestMatchers("/api/v1/products/**").permitAll()
                         .requestMatchers("/api/v1/pricing/**").permitAll()
+                        // Public catalog images served from local storage (STORAGE_TYPE=local).
+                        // Invoices deliberately stay authenticated — see OrderController — since
+                        // they carry customer PII and use sequential, guessable filenames.
+                        .requestMatchers("/uploads/products/**").permitAll()
+                        .requestMatchers("/uploads/categories/**").permitAll()
                         // Infrastructure
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
