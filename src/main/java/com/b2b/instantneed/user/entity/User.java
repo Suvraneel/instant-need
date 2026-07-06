@@ -51,8 +51,11 @@ public class User implements UserDetails {
     @Column(name = "last_login_at")
     private Instant lastLoginAt;
 
+    // Holds a SHA-256 hash of the reset token, not the raw value emailed to the
+    // user — column name is unchanged to avoid a migration, but the content
+    // changed; see AuthService.forgotPassword()/resetPassword().
     @Column(name = "password_reset_token")
-    private String passwordResetToken;
+    private String passwordResetTokenHash;
 
     @Column(name = "password_reset_token_expires_at")
     private Instant passwordResetTokenExpiresAt;

@@ -31,6 +31,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -178,16 +179,29 @@ class AuthServiceTest {
     // ── forgotPassword ────────────────────────────────────────────────────────
 
     @Test
-    void forgotPassword_existingUser_setsResetToken() {
+    void forgotPassword_existingUser_setsResetTokenHash() {
         User u = user(Role.CUSTOMER);
         given(userRepository.findByEmail(u.getEmail())).willReturn(Optional.of(u));
 
         authService.forgotPassword(new ForgotPasswordRequest(u.getEmail()));
 
-        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
-        verify(userRepository).save(captor.capture());
-        assertThat(captor.getValue().getPasswordResetToken()).isNotBlank();
-        assertThat(captor.getValue().getPasswordResetTokenExpiresAt()).isAfter(Instant.now());
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userRepository).save(userCaptor.capture());
+        String stored = userCaptor.getValue().getPasswordResetTokenHash();
+        assertThat(stored).isNotBlank();
+        // A raw UUID token is 36 chars with dashes; a SHA-256 hex digest is 64
+        // hex chars — this shape check alone proves it's a hash, not the raw
+        // token, without needing to know the token's actual value.
+        assertThat(stored).hasSize(64).matches("^[0-9a-f]+$");
+        assertThat(userCaptor.getValue().getPasswordResetTokenExpiresAt()).isAfter(Instant.now());
+
+        // Stronger check: capture the raw token actually emailed to the user
+        // and confirm the stored value is its hash — not the token itself.
+        ArgumentCaptor<String> tokenCaptor = ArgumentCaptor.forClass(String.class);
+        verify(emailService).sendPasswordReset(eq(u.getEmail()), tokenCaptor.capture());
+        String emailedToken = tokenCaptor.getValue();
+        assertThat(stored).isEqualTo(AuthService.hashToken(emailedToken));
+        assertThat(stored).isNotEqualTo(emailedToken);
     }
 
     @Test
@@ -205,24 +219,26 @@ class AuthServiceTest {
     @Test
     void resetPassword_validToken_updatesHash() {
         User u = user(Role.CUSTOMER);
-        u.setPasswordResetToken("valid-token");
+        u.setPasswordResetTokenHash(AuthService.hashToken("valid-token"));
         u.setPasswordResetTokenExpiresAt(Instant.now().plusSeconds(3600));
-        given(userRepository.findByPasswordResetToken("valid-token")).willReturn(Optional.of(u));
+        given(userRepository.findByPasswordResetTokenHash(AuthService.hashToken("valid-token")))
+                .willReturn(Optional.of(u));
         given(passwordEncoder.encode("NewPass@123")).willReturn("new-hash");
 
         authService.resetPassword(new ResetPasswordRequest("valid-token", "NewPass@123"));
 
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).save(captor.capture());
-        assertThat(captor.getValue().getPasswordResetToken()).isNull();
+        assertThat(captor.getValue().getPasswordResetTokenHash()).isNull();
     }
 
     @Test
     void resetPassword_expiredToken_throwsBadRequest() {
         User u = user(Role.CUSTOMER);
-        u.setPasswordResetToken("expired");
+        u.setPasswordResetTokenHash(AuthService.hashToken("expired"));
         u.setPasswordResetTokenExpiresAt(Instant.now().minusSeconds(1)); // already expired
-        given(userRepository.findByPasswordResetToken("expired")).willReturn(Optional.of(u));
+        given(userRepository.findByPasswordResetTokenHash(AuthService.hashToken("expired")))
+                .willReturn(Optional.of(u));
 
         assertThatThrownBy(() -> authService.resetPassword(new ResetPasswordRequest("expired", "NewPass@1")))
                 .isInstanceOf(ApiException.class)
@@ -231,7 +247,7 @@ class AuthServiceTest {
 
     @Test
     void resetPassword_invalidToken_throwsBadRequest() {
-        given(userRepository.findByPasswordResetToken("no-such-token")).willReturn(Optional.empty());
+        given(userRepository.findByPasswordResetTokenHash(any())).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> authService.resetPassword(new ResetPasswordRequest("no-such-token", "x")))
                 .isInstanceOf(ApiException.class)

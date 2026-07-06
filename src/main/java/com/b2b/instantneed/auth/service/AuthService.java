@@ -23,7 +23,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
+import java.util.HexFormat;
 import java.util.UUID;
 
 @Slf4j
@@ -151,8 +155,10 @@ public class AuthService {
     @Transactional
     public void forgotPassword(ForgotPasswordRequest request) {
         userRepository.findByEmail(request.email()).ifPresent(user -> {
+            // The raw token is what's emailed and never stored — only its hash
+            // is persisted, so a DB leak alone can't be used to reset a password.
             String token = UUID.randomUUID().toString();
-            user.setPasswordResetToken(token);
+            user.setPasswordResetTokenHash(hashToken(token));
             user.setPasswordResetTokenExpiresAt(Instant.now().plusSeconds(3600));
             userRepository.save(user);
             emailService.sendPasswordReset(user.getEmail(), token);
@@ -163,7 +169,7 @@ public class AuthService {
 
     @Transactional
     public void resetPassword(ResetPasswordRequest request) {
-        User user = userRepository.findByPasswordResetToken(request.token())
+        User user = userRepository.findByPasswordResetTokenHash(hashToken(request.token()))
                 .orElseThrow(() -> ApiException.badRequest("INVALID_TOKEN", "Invalid or expired reset token"));
 
         if (user.getPasswordResetTokenExpiresAt() == null ||
@@ -172,11 +178,27 @@ public class AuthService {
         }
 
         user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
-        user.setPasswordResetToken(null);
+        user.setPasswordResetTokenHash(null);
         user.setPasswordResetTokenExpiresAt(null);
         userRepository.save(user);
 
         log.info("Password reset completed for userId={}", user.getId());
+    }
+
+    /**
+     * SHA-256 is deliberately used here instead of BCrypt: reset tokens are
+     * high-entropy random UUIDs (unlike user-chosen passwords), so a fast
+     * deterministic hash is sufficient to defeat "DB leak → directly usable
+     * token" while still allowing an equality lookup by hash.
+     */
+    static String hashToken(String token) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(token.getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(hash);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 not available", e);
+        }
     }
 
     @Transactional
