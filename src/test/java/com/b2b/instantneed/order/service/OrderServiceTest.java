@@ -5,6 +5,7 @@ import com.b2b.instantneed.cart.entity.CartItem;
 import com.b2b.instantneed.cart.entity.CartStatus;
 import com.b2b.instantneed.cart.repository.CartRepository;
 import com.b2b.instantneed.catalog.entity.AvailabilityStatus;
+import com.b2b.instantneed.catalog.entity.PincodeMinOrder;
 import com.b2b.instantneed.catalog.entity.Product;
 import com.b2b.instantneed.catalog.repository.ProductRepository;
 import com.b2b.instantneed.catalog.repository.PincodeMinOrderRepository;
@@ -103,6 +104,8 @@ class OrderServiceTest {
         given(cartRepository.findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE))
                 .willReturn(Optional.of(cart));
         given(addressRepository.findById(address.getId())).willReturn(Optional.of(address));
+        given(pincodeMinOrderRepository.findByPincodeAndActiveTrue(address.getPostalCode()))
+                .willReturn(Optional.of(activeRule(BigDecimal.ZERO)));
         given(orderRepository.findMaxSequenceForPrefix(anyString())).willReturn(0);
         given(orderRepository.save(any())).willAnswer(inv -> {
             Order o = inv.getArgument(0);
@@ -180,6 +183,8 @@ class OrderServiceTest {
         given(cartRepository.findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE))
                 .willReturn(Optional.of(cart));
         given(addressRepository.findById(address.getId())).willReturn(Optional.of(address));
+        given(pincodeMinOrderRepository.findByPincodeAndActiveTrue(address.getPostalCode()))
+                .willReturn(Optional.of(activeRule(BigDecimal.ZERO)));
         given(orderRepository.findMaxSequenceForPrefix(anyString())).willReturn(0);
 
         assertThatThrownBy(() -> orderService.placeOrder(
@@ -207,6 +212,37 @@ class OrderServiceTest {
                 .isInstanceOf(ApiException.class)
                 .extracting(e -> ((ApiException) e).getHttpStatus())
                 .isEqualTo(HttpStatus.NOT_FOUND); // never reveals existence
+    }
+
+    @Test
+    void placeOrder_pincodeHasNoRule_throwsNotServiceable() {
+        Cart cart = activeCartWithItem();
+        given(cartRepository.findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE))
+                .willReturn(Optional.of(cart));
+        given(addressRepository.findById(address.getId())).willReturn(Optional.of(address));
+        given(pincodeMinOrderRepository.findByPincodeAndActiveTrue(address.getPostalCode()))
+                .willReturn(Optional.empty());
+
+        assertThatThrownBy(() -> orderService.placeOrder(
+                new PlaceOrderRequest(null, address.getId(), null, null, null)))
+                .isInstanceOf(ApiException.class)
+                .extracting(e -> ((ApiException) e).getHttpStatus())
+                .isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    void placeOrder_belowPincodeMinimum_throwsBadRequest() {
+        Cart cart = activeCartWithItem(); // subtotal = 1250.00
+        given(cartRepository.findByCustomerIdAndStatus(customer.getId(), CartStatus.ACTIVE))
+                .willReturn(Optional.of(cart));
+        given(addressRepository.findById(address.getId())).willReturn(Optional.of(address));
+        given(pincodeMinOrderRepository.findByPincodeAndActiveTrue(address.getPostalCode()))
+                .willReturn(Optional.of(activeRule(new BigDecimal("2000.00"))));
+
+        assertThatThrownBy(() -> orderService.placeOrder(
+                new PlaceOrderRequest(null, address.getId(), null, null, null)))
+                .isInstanceOf(ApiException.class)
+                .hasMessageContaining("Minimum order");
     }
 
     // ── getOrders ─────────────────────────────────────────────────────────────
@@ -301,6 +337,12 @@ class OrderServiceTest {
     }
 
     // ── Helpers ────────────────────────────────────────────────────────────────
+
+    private PincodeMinOrder activeRule(BigDecimal minAmount) {
+        return PincodeMinOrder.builder()
+                .id(UUID.randomUUID()).pincode(address.getPostalCode())
+                .minAmount(minAmount).active(true).build();
+    }
 
     private Cart activeCartWithItem() {
         Cart cart = Cart.builder()

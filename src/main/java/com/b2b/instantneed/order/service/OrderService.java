@@ -4,6 +4,7 @@ import com.b2b.instantneed.cart.entity.Cart;
 import com.b2b.instantneed.cart.entity.CartItem;
 import com.b2b.instantneed.cart.entity.CartStatus;
 import com.b2b.instantneed.cart.repository.CartRepository;
+import com.b2b.instantneed.catalog.entity.PincodeMinOrder;
 import com.b2b.instantneed.catalog.entity.Product;
 import com.b2b.instantneed.catalog.repository.PincodeMinOrderRepository;
 import com.b2b.instantneed.catalog.repository.ProductRepository;
@@ -102,6 +103,15 @@ public class OrderService {
             addressSnapshot = buildAddressSnapshot(address);
         }
 
+        // --- Validate pincode is serviceable (checked before touching stock/cart) ---
+        String postalCode = (String) addressSnapshot.get("postalCode");
+        if (postalCode == null || postalCode.isBlank()) {
+            throw ApiException.badRequest("PINCODE_NOT_SERVICEABLE", "Shipping address is missing a pincode");
+        }
+        PincodeMinOrder pincodeRule = pincodeMinOrderRepository.findByPincodeAndActiveTrue(postalCode)
+                .orElseThrow(() -> ApiException.badRequest("PINCODE_NOT_SERVICEABLE",
+                        "We don't currently deliver to pincode " + postalCode + ". Please check back soon or contact support."));
+
         // --- Build order items + compute totals ---
         String orderNumber = generateOrderNumber();
         Map<String, Object> customerSnapshot = buildCustomerSnapshot(customer);
@@ -193,19 +203,12 @@ public class OrderService {
         order.setTotalAmount(subtotal);
         order.setCurrencyCode(currencyCode);
 
-        // Validate pincode minimum order if a rule exists
-        String postalCode = (String) addressSnapshot.get("postalCode");
-        if (postalCode != null && !postalCode.isBlank()) {
-            final BigDecimal finalSubtotal = subtotal;
-            final String finalPostalCode = postalCode;
-            pincodeMinOrderRepository.findByPincodeAndActiveTrue(postalCode).ifPresent(rule -> {
-                if (finalSubtotal.compareTo(rule.getMinAmount()) < 0) {
-                    throw ApiException.badRequest("BELOW_MIN_ORDER",
-                            "Minimum order for pincode " + finalPostalCode + " is ₹" +
-                            rule.getMinAmount().stripTrailingZeros().toPlainString() +
-                            ". Your order total is ₹" + finalSubtotal.stripTrailingZeros().toPlainString() + ".");
-                }
-            });
+        // Enforce the pincode's minimum order amount (serviceability already checked above)
+        if (subtotal.compareTo(pincodeRule.getMinAmount()) < 0) {
+            throw ApiException.badRequest("BELOW_MIN_ORDER",
+                    "Minimum order for pincode " + postalCode + " is ₹" +
+                    pincodeRule.getMinAmount().stripTrailingZeros().toPlainString() +
+                    ". Your order total is ₹" + subtotal.stripTrailingZeros().toPlainString() + ".");
         }
 
         // Set placedAt now so buildHtml can format the date (PrePersist hasn't run yet)
