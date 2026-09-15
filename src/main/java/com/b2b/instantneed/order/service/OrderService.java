@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -114,7 +115,7 @@ public class OrderService {
 
         // --- Build order items + compute totals ---
         String orderNumber = generateOrderNumber();
-        Map<String, Object> customerSnapshot = buildCustomerSnapshot(customer);
+        Map<String, Object> customerSnapshot = buildCustomerSnapshot(customer, request.gstinUin());
         String paymentMethod = (request.paymentMethod() != null && !request.paymentMethod().isBlank())
                 ? request.paymentMethod() : "cod";
 
@@ -154,8 +155,11 @@ public class OrderService {
                         .quantity(req.quantity())
                         .unitPrice(price.appliedUnitPrice())
                         .lineTotal(price.lineTotal())
+                        .mrpSnapshot(product.getMrp())
+                        .hsnCodeSnapshot(product.getHsnCode())
                         .currencyCode(price.currencyCode())
                         .build();
+                applyTaxSnapshot(item, product, price.lineTotal());
                 order.getItems().add(item);
                 subtotal = subtotal.add(price.lineTotal());
                 currencyCode = price.currencyCode();
@@ -182,8 +186,11 @@ public class OrderService {
                         .quantity(ci.getQuantity())
                         .unitPrice(ci.getAppliedUnitPrice())
                         .lineTotal(ci.getLineTotal())
+                        .mrpSnapshot(product.getMrp())
+                        .hsnCodeSnapshot(product.getHsnCode())
                         .currencyCode(ci.getCurrencyCode())
                         .build();
+                applyTaxSnapshot(item, product, ci.getLineTotal());
                 order.getItems().add(item);
                 subtotal = subtotal.add(ci.getLineTotal());
                 currencyCode = ci.getCurrencyCode();
@@ -395,13 +402,50 @@ public class OrderService {
         return prefix + String.format("%04d", next);
     }
 
-    private Map<String, Object> buildCustomerSnapshot(Customer customer) {
+    private Map<String, Object> buildCustomerSnapshot(Customer customer, String gstinUin) {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("id", customer.getId().toString());
         map.put("fullName", customer.getFullName());
         map.put("businessName", customer.getBusinessName());
-        map.put("gstVatNumber", customer.getGstVatNumber());
+        map.put("gstinUin", gstinUin == null || gstinUin.isBlank() ? null : gstinUin.trim().toUpperCase());
         return map;
+    }
+
+    private void applyTaxSnapshot(OrderItem item, Product product, BigDecimal grossAmount) {
+        BigDecimal cgstRate = nonNegative(product.getCgstRate());
+        BigDecimal sgstRate = nonNegative(product.getSgstRate());
+        BigDecimal totalRate = cgstRate.add(sgstRate);
+
+        BigDecimal taxableAmount;
+        BigDecimal cgstAmount;
+        BigDecimal sgstAmount;
+        if (totalRate.signum() == 0) {
+            taxableAmount = grossAmount.setScale(2, RoundingMode.HALF_UP);
+            cgstAmount = BigDecimal.ZERO.setScale(2);
+            sgstAmount = BigDecimal.ZERO.setScale(2);
+        } else {
+            taxableAmount = grossAmount
+                    .divide(BigDecimal.ONE.add(totalRate.movePointLeft(2)), 2, RoundingMode.HALF_UP);
+            cgstAmount = taxableAmount.multiply(cgstRate)
+                    .movePointLeft(2).setScale(2, RoundingMode.HALF_UP);
+            sgstAmount = taxableAmount.multiply(sgstRate)
+                    .movePointLeft(2).setScale(2, RoundingMode.HALF_UP);
+
+            // Keep the invoice mathematically balanced after two-decimal rounding.
+            BigDecimal roundingAdjustment = grossAmount.setScale(2, RoundingMode.HALF_UP)
+                    .subtract(taxableAmount).subtract(cgstAmount).subtract(sgstAmount);
+            sgstAmount = sgstAmount.add(roundingAdjustment).setScale(2, RoundingMode.HALF_UP);
+        }
+
+        item.setCgstRate(cgstRate);
+        item.setSgstRate(sgstRate);
+        item.setTaxableAmount(taxableAmount);
+        item.setCgstAmount(cgstAmount);
+        item.setSgstAmount(sgstAmount);
+    }
+
+    private static BigDecimal nonNegative(BigDecimal value) {
+        return value == null || value.signum() < 0 ? BigDecimal.ZERO : value;
     }
 
     private Map<String, Object> buildAddressSnapshot(Address address) {

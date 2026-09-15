@@ -17,8 +17,18 @@ public record PlaceOrderRequest(
         @Valid InlineAddressRequest shippingAddress,
 
         String paymentMethod,
-        String notes
+        String notes,
+        String gstinUin
 ) {
+    public PlaceOrderRequest(
+            List<@Valid OrderItemRequest> items,
+            UUID shippingAddressId,
+            @Valid InlineAddressRequest shippingAddress,
+            String paymentMethod,
+            String notes) {
+        this(items, shippingAddressId, shippingAddress, paymentMethod, notes, null);
+    }
+
     public record OrderItemRequest(UUID productId, int quantity) {}
 
     public record InlineAddressRequest(

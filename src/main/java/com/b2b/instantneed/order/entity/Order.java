@@ -69,6 +69,18 @@ public class Order {
     @Column(name = "invoice_path", length = 500)
     private String invoicePath;
 
+    @Column(name = "invoice_number", length = 16, unique = true)
+    private String invoiceNumber;
+
+    @Column(name = "eway_bill_number", length = 100)
+    private String ewayBillNumber;
+
+    @Column(name = "transport", length = 100)
+    private String transport;
+
+    @Column(name = "vehicle_number", length = 50)
+    private String vehicleNumber;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<OrderItem> items = new ArrayList<>();

@@ -33,6 +33,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
@@ -130,6 +131,38 @@ class OrderServiceTest {
         assertThat(res.orderNumber()).startsWith("WB-");
         assertThat(res.status()).isEqualTo("PENDING");
         assertThat(cart.getStatus()).isEqualTo(CartStatus.CHECKED_OUT);
+    }
+
+    @Test
+    void placeOrder_extractsGstInclusiveTaxAndSnapshotsCustomerGstin() {
+        product.setCgstRate(new BigDecimal("2.5"));
+        product.setSgstRate(new BigDecimal("2.5"));
+        product.setMrp(new BigDecimal("110.00"));
+        product.setHsnCode("33061020");
+
+        given(addressRepository.findById(address.getId())).willReturn(Optional.of(address));
+        given(pincodeMinOrderRepository.findByPincodeAndActiveTrue(address.getPostalCode()))
+                .willReturn(Optional.of(activeRule(BigDecimal.ZERO)));
+        given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
+        given(pricingService.calculate(product.getId(), 2)).willReturn(new com.b2b.instantneed.pricing.dto.PriceCalculateResponse(
+                product.getId(), 2, new BigDecimal("100.00"), new BigDecimal("200.00"), "INR", null));
+        given(orderRepository.findMaxSequenceForPrefix(anyString())).willReturn(0);
+        given(orderRepository.save(any())).willAnswer(invocation -> invocation.getArgument(0));
+
+        orderService.placeOrder(new PlaceOrderRequest(
+                List.of(new PlaceOrderRequest.OrderItemRequest(product.getId(), 2)),
+                address.getId(), null, "cod", null, "06AAMFI3712M1Z6"));
+
+        ArgumentCaptor<Order> orderCaptor = ArgumentCaptor.forClass(Order.class);
+        verify(orderRepository).save(orderCaptor.capture());
+        Order saved = orderCaptor.getValue();
+        OrderItem item = saved.getItems().get(0);
+        assertThat(item.getMrpSnapshot()).isEqualByComparingTo("110.00");
+        assertThat(item.getHsnCodeSnapshot()).isEqualTo("33061020");
+        assertThat(item.getTaxableAmount()).isEqualByComparingTo("190.48");
+        assertThat(item.getCgstAmount()).isEqualByComparingTo("4.76");
+        assertThat(item.getSgstAmount()).isEqualByComparingTo("4.76");
+        assertThat(saved.getCustomerSnapshot()).containsEntry("gstinUin", "06AAMFI3712M1Z6");
     }
 
     @Test

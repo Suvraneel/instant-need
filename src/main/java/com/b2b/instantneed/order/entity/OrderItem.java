@@ -47,6 +47,27 @@ public class OrderItem {
     @Column(name = "unit_price", nullable = false, precision = 14, scale = 2)
     private BigDecimal unitPrice;
 
+    @Column(name = "mrp_snapshot", precision = 14, scale = 2)
+    private BigDecimal mrpSnapshot;
+
+    @Column(name = "hsn_code_snapshot", length = 20)
+    private String hsnCodeSnapshot;
+
+    @Column(name = "cgst_rate", precision = 5, scale = 2)
+    private BigDecimal cgstRate;
+
+    @Column(name = "sgst_rate", precision = 5, scale = 2)
+    private BigDecimal sgstRate;
+
+    @Column(name = "taxable_amount", precision = 14, scale = 2)
+    private BigDecimal taxableAmount;
+
+    @Column(name = "cgst_amount", precision = 14, scale = 2)
+    private BigDecimal cgstAmount;
+
+    @Column(name = "sgst_amount", precision = 14, scale = 2)
+    private BigDecimal sgstAmount;
+
     @Column(name = "line_total", nullable = false, precision = 14, scale = 2)
     private BigDecimal lineTotal;
 

@@ -132,6 +132,23 @@ class AuthServiceTest {
         assertThat(res.user().email()).isEqualTo(u.getEmail());
     }
 
+    @Test
+    void login_adminWithoutCustomerProfile_returnsTokensAndRoleName() {
+        User u = user(Role.ADMIN);
+        given(authenticationManager.authenticate(any()))
+                .willReturn(new UsernamePasswordAuthenticationToken(u, null, u.getAuthorities()));
+        given(userRepository.save(any())).willReturn(u);
+        given(customerRepository.findByUserId(u.getId())).willReturn(Optional.empty());
+        given(jwtUtil.generateAccessToken(u)).willReturn("access-token");
+        given(jwtUtil.generateRefreshToken(u)).willReturn("refresh-token");
+
+        AuthResponse res = authService.login(new LoginRequest("admin@instantneed.com", "Admin@123"));
+
+        assertThat(res.accessToken()).isEqualTo("access-token");
+        assertThat(res.user().fullName()).isEqualTo("ADMIN");
+        assertThat(res.user().role()).isEqualTo(Role.ADMIN);
+    }
+
     // ── refresh ───────────────────────────────────────────────────────────────
 
     @Test
@@ -147,6 +164,23 @@ class AuthServiceTest {
         AuthResponse res = authService.refresh(new RefreshTokenRequest("good-refresh"));
 
         assertThat(res.accessToken()).isEqualTo("new-access");
+    }
+
+    @Test
+    void refresh_adminWithoutCustomerProfile_returnsNewTokens() {
+        User u = user(Role.ADMIN);
+        given(jwtUtil.extractUsername("good-refresh")).willReturn(u.getEmail());
+        given(userRepository.findByEmail(u.getEmail())).willReturn(Optional.of(u));
+        given(jwtUtil.isRefreshTokenValid("good-refresh", u)).willReturn(true);
+        given(customerRepository.findByUserId(u.getId())).willReturn(Optional.empty());
+        given(jwtUtil.generateAccessToken(u)).willReturn("new-access");
+        given(jwtUtil.generateRefreshToken(u)).willReturn("new-refresh");
+
+        AuthResponse res = authService.refresh(new RefreshTokenRequest("good-refresh"));
+
+        assertThat(res.accessToken()).isEqualTo("new-access");
+        assertThat(res.user().fullName()).isEqualTo("ADMIN");
+        assertThat(res.user().role()).isEqualTo(Role.ADMIN);
     }
 
     @Test

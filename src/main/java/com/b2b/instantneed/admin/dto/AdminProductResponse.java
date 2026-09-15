@@ -22,6 +22,9 @@ public record AdminProductResponse(
         boolean active,
         BigDecimal mrp,
         BigDecimal basePrice,
+        String hsnCode,
+        BigDecimal cgstRate,
+        BigDecimal sgstRate,
         int stock,
         int moq,
         List<PricingTierResponse> pricingTiers,
@@ -29,6 +32,17 @@ public record AdminProductResponse(
         Instant createdAt,
         Instant updatedAt
 ) {
+    public AdminProductResponse(
+            UUID id, String name, String sku, String slug, UUID categoryId, String categoryName,
+            String description, String unitOfMeasurement, String availabilityStatus, boolean active,
+            BigDecimal mrp, BigDecimal basePrice, int stock, int moq,
+            List<PricingTierResponse> pricingTiers, List<ImageInfo> images,
+            Instant createdAt, Instant updatedAt) {
+        this(id, name, sku, slug, categoryId, categoryName, description, unitOfMeasurement,
+                availabilityStatus, active, mrp, basePrice, null, null, null, stock, moq,
+                pricingTiers, images, createdAt, updatedAt);
+    }
+
     public record ImageInfo(UUID id, String url, String altText, int sortOrder) {
         public static ImageInfo from(ProductImage img) {
             return new ImageInfo(img.getId(), img.getImageUrl(), img.getAltText(), img.getSortOrder());
@@ -42,6 +56,7 @@ public record AdminProductResponse(
                 p.getCategory() != null ? p.getCategory().getName() : null,
                 p.getDescription(), p.getUnitOfMeasurement(),
                 p.getAvailabilityStatus().name(), p.isActive(), p.getMrp(), p.getBasePrice(),
+                p.getHsnCode(), p.getCgstRate(), p.getSgstRate(),
                 p.getStock(), p.getMoq(),
                 p.getPricingTiers().stream().map(PricingTierResponse::from).toList(),
                 p.getImages().stream().map(ImageInfo::from).toList(),

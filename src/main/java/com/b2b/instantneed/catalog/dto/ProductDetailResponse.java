@@ -23,6 +23,9 @@ public record ProductDetailResponse(
         String categorySlug,
         BigDecimal mrp,
         BigDecimal basePrice,
+        String hsnCode,
+        BigDecimal cgstRate,
+        BigDecimal sgstRate,
         String currencyCode,
         int stock,
         int moq,
@@ -46,7 +49,7 @@ public record ProductDetailResponse(
                 p.getCategory() != null ? p.getCategory().getId() : null,
                 p.getCategory() != null ? HtmlUtils.htmlUnescape(p.getCategory().getName()) : null,
                 p.getCategory() != null ? p.getCategory().getSlug() : null,
-                p.getMrp(), p.getBasePrice(), currency,
+                p.getMrp(), p.getBasePrice(), p.getHsnCode(), p.getCgstRate(), p.getSgstRate(), currency,
                 p.getStock(), p.getMoq(), p.isActive(),
                 imageDTOs, tiers,
                 p.getCreatedAt(), p.getUpdatedAt()

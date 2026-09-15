@@ -1,0 +1,25 @@
+ALTER TABLE products ADD COLUMN IF NOT EXISTS hsn_code VARCHAR(20);
+ALTER TABLE products ADD COLUMN IF NOT EXISTS cgst_rate NUMERIC(5, 2);
+ALTER TABLE products ADD COLUMN IF NOT EXISTS sgst_rate NUMERIC(5, 2);
+
+ALTER TABLE order_items ADD COLUMN IF NOT EXISTS mrp_snapshot NUMERIC(14, 2);
+ALTER TABLE order_items ADD COLUMN IF NOT EXISTS hsn_code_snapshot VARCHAR(20);
+ALTER TABLE order_items ADD COLUMN IF NOT EXISTS cgst_rate NUMERIC(5, 2);
+ALTER TABLE order_items ADD COLUMN IF NOT EXISTS sgst_rate NUMERIC(5, 2);
+ALTER TABLE order_items ADD COLUMN IF NOT EXISTS taxable_amount NUMERIC(14, 2);
+ALTER TABLE order_items ADD COLUMN IF NOT EXISTS cgst_amount NUMERIC(14, 2);
+ALTER TABLE order_items ADD COLUMN IF NOT EXISTS sgst_amount NUMERIC(14, 2);
+
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS invoice_number VARCHAR(16);
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS eway_bill_number VARCHAR(100);
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS transport VARCHAR(100);
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS vehicle_number VARCHAR(50);
+
+CREATE UNIQUE INDEX IF NOT EXISTS ux_orders_invoice_number
+    ON orders (invoice_number)
+    WHERE invoice_number IS NOT NULL;
+
+CREATE TABLE IF NOT EXISTS invoice_sequences (
+    financial_year VARCHAR(7) PRIMARY KEY,
+    last_sequence INTEGER NOT NULL
+);

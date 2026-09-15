@@ -27,8 +27,25 @@ public record OrderResponse(
         List<OrderItemResponse> items,
         String customerName,
         String customerBusinessName,
+        String customerGstinUin,
+        String invoiceNumber,
+        String ewayBillNumber,
+        String transport,
+        String vehicleNumber,
         String invoiceUrl
 ) {
+    public OrderResponse(
+            UUID id, String orderNumber, String status, String paymentMethod,
+            BigDecimal subtotalAmount, BigDecimal discountAmount, BigDecimal shippingAmount,
+            BigDecimal totalAmount, String currencyCode, String notes, Instant placedAt,
+            Instant updatedAt, AddressSnapshot shippingAddress, List<OrderItemResponse> items,
+            String customerName, String customerBusinessName, String invoiceUrl) {
+        this(id, orderNumber, status, paymentMethod, subtotalAmount, discountAmount,
+                shippingAmount, totalAmount, currencyCode, notes, placedAt, updatedAt,
+                shippingAddress, items, customerName, customerBusinessName, null,
+                null, null, null, null, invoiceUrl);
+    }
+
     public record AddressSnapshot(
             String fullName,
             String addressLine1,
@@ -56,6 +73,7 @@ public record OrderResponse(
         Map<String, Object> custMap = order.getCustomerSnapshot();
         String customerName = custMap != null ? strOf(custMap, "fullName") : null;
         String businessName = custMap != null ? strOf(custMap, "businessName") : null;
+        String gstinUin = custMap != null ? strOf(custMap, "gstinUin") : null;
 
         return new OrderResponse(
                 order.getId(),
@@ -74,6 +92,11 @@ public record OrderResponse(
                 order.getItems().stream().map(OrderItemResponse::from).toList(),
                 customerName,
                 businessName,
+                gstinUin,
+                order.getInvoiceNumber(),
+                order.getEwayBillNumber(),
+                order.getTransport(),
+                order.getVehicleNumber(),
                 order.getInvoicePath()
         );
     }

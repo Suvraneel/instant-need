@@ -113,8 +113,8 @@ public class AuthService {
         user.setLastLoginAt(Instant.now());
         userRepository.save(user);
 
-        Customer customer = customerRepository.findByUserId(user.getId())
-                .orElseThrow(() -> ApiException.notFound("CUSTOMER_NOT_FOUND", "Customer profile not found"));
+        Customer customer = customerRepository.findByUserId(user.getId()).orElse(null);
+        String fullName = resolveDisplayName(user, customer);
 
         String accessToken = jwtUtil.generateAccessToken(user);
         String refreshToken = jwtUtil.generateRefreshToken(user);
@@ -122,7 +122,7 @@ public class AuthService {
         return new AuthResponse(
                 accessToken,
                 refreshToken,
-                new AuthResponse.UserInfo(user.getId(), customer.getFullName(), user.getEmail(), user.getRole())
+                new AuthResponse.UserInfo(user.getId(), fullName, user.getEmail(), user.getRole())
         );
     }
 
@@ -142,14 +142,22 @@ public class AuthService {
             throw ApiException.unauthorized("INVALID_TOKEN", "Invalid or expired refresh token");
         }
 
-        Customer customer = customerRepository.findByUserId(user.getId())
-                .orElseThrow(() -> ApiException.notFound("CUSTOMER_NOT_FOUND", "Customer profile not found"));
+        Customer customer = customerRepository.findByUserId(user.getId()).orElse(null);
+        String fullName = resolveDisplayName(user, customer);
 
         return new AuthResponse(
                 jwtUtil.generateAccessToken(user),
                 jwtUtil.generateRefreshToken(user),
-                new AuthResponse.UserInfo(user.getId(), customer.getFullName(), user.getEmail(), user.getRole())
+                new AuthResponse.UserInfo(user.getId(), fullName, user.getEmail(), user.getRole())
         );
+    }
+
+    private String resolveDisplayName(User user, Customer customer) {
+        if (customer != null) return customer.getFullName();
+        if (user.getRole() == Role.CUSTOMER) {
+            throw ApiException.notFound("CUSTOMER_NOT_FOUND", "Customer profile not found");
+        }
+        return user.getRole().name().replace('_', ' ');
     }
 
     @Transactional

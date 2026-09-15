@@ -10,6 +10,7 @@ import com.b2b.instantneed.order.dto.OrderResponse;
 import com.b2b.instantneed.order.entity.Order;
 import com.b2b.instantneed.order.entity.OrderStatus;
 import com.b2b.instantneed.order.repository.OrderRepository;
+import com.b2b.instantneed.order.service.InvoiceService;
 import com.b2b.instantneed.user.entity.AuthProvider;
 import com.b2b.instantneed.user.entity.Role;
 import com.b2b.instantneed.user.entity.User;
@@ -41,6 +42,7 @@ class AdminOrderServiceTest {
     @Mock OrderRepository orderRepository;
     @Mock AuditLogService auditLog;
     @Mock EmailService    emailService;
+    @Mock InvoiceService invoiceService;
 
     @InjectMocks AdminOrderService service;
 
@@ -126,6 +128,23 @@ class AdminOrderServiceTest {
         assertThat(o.getStatus()).isEqualTo(OrderStatus.CONFIRMED);
         verify(auditLog).log(eq(AuditLogService.UPDATE), eq(AuditLogService.ORDER),
                 any(), contains("CONFIRMED"), any(), any());
+    }
+
+    @Test
+    void updateStatus_withDispatchDetails_regeneratesInvoiceAndPersistsFields() {
+        Order o = order(OrderStatus.SHIPPED);
+        given(orderRepository.findWithItemsById(o.getId())).willReturn(Optional.of(o));
+        given(orderRepository.save(any())).willReturn(o);
+        given(invoiceService.generateAndStore(o)).willReturn("https://cdn.example/invoices/INV-2026-09-0001.pdf");
+
+        service.updateStatus(o.getId(), new UpdateOrderStatusRequest(
+                "SHIPPED", "EWB-123", "Self", "HR01AB1234"));
+
+        assertThat(o.getEwayBillNumber()).isEqualTo("EWB-123");
+        assertThat(o.getTransport()).isEqualTo("Self");
+        assertThat(o.getVehicleNumber()).isEqualTo("HR01AB1234");
+        assertThat(o.getInvoicePath()).isEqualTo("https://cdn.example/invoices/INV-2026-09-0001.pdf");
+        verify(invoiceService).generateAndStore(o);
     }
 
     @Test

@@ -14,6 +14,7 @@ import com.b2b.instantneed.order.entity.Order;
 import com.b2b.instantneed.order.entity.OrderStatus;
 import com.b2b.instantneed.order.repository.OrderRepository;
 import com.b2b.instantneed.order.service.OrderService;
+import com.b2b.instantneed.order.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +37,7 @@ public class AdminOrderService {
     private final EmailService emailService;
     private final ExpoPushNotificationService pushService;
     private final StorageService storageService;
+    private final InvoiceService invoiceService;
 
     @Transactional(readOnly = true)
     public PagedResponse<AdminOrderSummary> listOrders(
@@ -103,6 +105,22 @@ public class AdminOrderService {
 
         OrderStatus oldStatus = order.getStatus();
         order.setStatus(newStatus);
+        boolean dispatchDetailsChanged = request.ewayBillNumber() != null
+                || request.transport() != null
+                || request.vehicleNumber() != null;
+        if (request.ewayBillNumber() != null) {
+            order.setEwayBillNumber(blankToNull(request.ewayBillNumber()));
+        }
+        if (request.transport() != null) {
+            order.setTransport(blankToNull(request.transport()));
+        }
+        if (request.vehicleNumber() != null) {
+            order.setVehicleNumber(blankToNull(request.vehicleNumber()));
+        }
+        if (dispatchDetailsChanged) {
+            String invoiceUrl = invoiceService.generateAndStore(order);
+            if (invoiceUrl != null) order.setInvoicePath(invoiceUrl);
+        }
         orderRepository.save(order);
         OrderResponse response = OrderResponse.from(order);
         auditLog.log(AuditLogService.UPDATE, AuditLogService.ORDER, orderId,
@@ -131,6 +149,10 @@ public class AdminOrderService {
             throw ApiException.badRequest("INVALID_STATUS",
                     "Invalid status filter. Must be one of: PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED");
         }
+    }
+
+    private static String blankToNull(String value) {
+        return value == null || value.isBlank() ? null : value.trim();
     }
 
     private Instant parseDate(String value, boolean endOfDay) {

@@ -18,9 +18,21 @@ public record CreateProductRequest(
         String availabilityStatus,
         BigDecimal mrp,
         BigDecimal basePrice,
+        @Size(max = 20) String hsnCode,
+        BigDecimal cgstRate,
+        BigDecimal sgstRate,
         Integer stock,
         Integer moq,
         Boolean active,
         @Valid List<PricingTierRequest> pricingTiers,
         @Valid List<ProductImageRequest> images
-) {}
+) {
+    public CreateProductRequest(
+            String name, String slug, String sku, UUID categoryId, String description,
+            String unitOfMeasurement, String availabilityStatus, BigDecimal mrp,
+            BigDecimal basePrice, Integer stock, Integer moq, Boolean active,
+            List<PricingTierRequest> pricingTiers, List<ProductImageRequest> images) {
+        this(name, slug, sku, categoryId, description, unitOfMeasurement, availabilityStatus,
+                mrp, basePrice, null, null, null, stock, moq, active, pricingTiers, images);
+    }
+}

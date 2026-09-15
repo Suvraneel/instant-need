@@ -87,6 +87,9 @@ public class AdminProductService {
                 .availabilityStatus(status)
                 .mrp(request.mrp())
                 .basePrice(request.basePrice())
+                .hsnCode(request.hsnCode())
+                .cgstRate(request.cgstRate())
+                .sgstRate(request.sgstRate())
                 .stock(request.stock() != null ? request.stock() : 0)
                 .moq(request.moq() != null ? request.moq() : 1)
                 .active(request.active() == null || request.active())
@@ -135,6 +138,9 @@ public class AdminProductService {
         }
         if (request.mrp() != null) product.setMrp(request.mrp());
         if (request.basePrice() != null) product.setBasePrice(request.basePrice());
+        if (request.hsnCode() != null) product.setHsnCode(request.hsnCode().isBlank() ? null : request.hsnCode().trim());
+        if (request.cgstRate() != null) product.setCgstRate(request.cgstRate());
+        if (request.sgstRate() != null) product.setSgstRate(request.sgstRate());
         if (request.stock() != null) product.setStock(request.stock());
         if (request.moq() != null) product.setMoq(request.moq());
         if (request.active() != null) product.setActive(request.active());

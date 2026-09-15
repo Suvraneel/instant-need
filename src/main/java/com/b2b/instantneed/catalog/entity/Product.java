@@ -56,6 +56,15 @@ public class Product {
     @Column(name = "base_price", precision = 12, scale = 2)
     private BigDecimal basePrice;
 
+    @Column(name = "hsn_code", length = 20)
+    private String hsnCode;
+
+    @Column(name = "cgst_rate", precision = 5, scale = 2)
+    private BigDecimal cgstRate;
+
+    @Column(name = "sgst_rate", precision = 5, scale = 2)
+    private BigDecimal sgstRate;
+
     @Column(name = "stock", nullable = false)
     @Builder.Default
     private int stock = 0;

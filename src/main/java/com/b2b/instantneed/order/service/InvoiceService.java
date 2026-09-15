@@ -14,10 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
-import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -27,62 +28,25 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class InvoiceService {
 
-    private static final ZoneOffset IST    = ZoneOffset.ofHoursMinutes(5, 30);
-    private static final Locale     IN     = new Locale("en", "IN");
-    private static final String     NAVY   = "#0d2b5e";
-    private static final String     BLUE   = "#1a56db";
-    private static final String     PRIMARY = "#4F46E5";
+    private static final ZoneId INDIA = ZoneId.of("Asia/Kolkata");
+    private static final Locale IN = new Locale("en", "IN");
+    private static final String BORDER = "#333333";
+    private static final String LIGHT = "#f2f2f2";
 
-    // ── Inline SVG icons (Material Design paths, 11×11 px) ───────────────────
-    private static final String ICO_PHONE = icon(
-        "M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24" +
-        " 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17" +
-        " 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z");
-    private static final String ICO_EMAIL = icon(
-        "M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6" +
-        " c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z");
-    private static final String ICO_GLOBE = icon(
-        "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" +
-        "m-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93z" +
-        "m6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7" +
-        " h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z");
-    private static final String ICO_CLOCK = icon(
-        "M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2z" +
-        "M12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z" +
-        "m.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z");
-
-    private static String icon(String path) {
-        String svg = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"11\" height=\"11\" viewBox=\"0 0 24 24\">"
-                   + "<path d=\"" + path + "\" fill=\"#666\"/>"
-                   + "</svg>";
-        String b64 = java.util.Base64.getEncoder()
-                         .encodeToString(svg.getBytes(java.nio.charset.StandardCharsets.UTF_8));
-        return "<img src=\"data:image/svg+xml;base64," + b64 + "\""
-             + " width=\"11\" height=\"11\"/>";
-    }
-
-    /** Wraps icon + text in a 2-cell table so vertical-align:middle works reliably in openhtmltopdf. */
-    private static String icoRow(String ico, String content) {
-        return "<table style=\"width:auto;border-collapse:collapse;margin-bottom:3px;\">"
-             + "<tr>"
-             + "<td style=\"vertical-align:middle;padding-right:4px;width:15px;\">" + ico + "</td>"
-             + "<td style=\"vertical-align:middle;\">" + content + "</td>"
-             + "</tr>"
-             + "</table>";
-    }
-
-    private final StorageService  storageService;
+    private final StorageService storageService;
     private final OrderRepository orderRepository;
+    private final InvoiceNumberService invoiceNumberService;
 
-    /**
-     * Called before the order is persisted — order.getItems() is still a plain ArrayList.
-     */
     public String generateAndStore(Order order) {
         try {
+            if (order.getInvoiceNumber() == null || order.getInvoiceNumber().isBlank()) {
+                order.setInvoiceNumber(invoiceNumberService.next(order.getPlacedAt() != null
+                        ? order.getPlacedAt() : java.time.Instant.now()));
+            }
             byte[] pdf = buildPdf(order);
-            String filename = order.getOrderNumber() + ".pdf";
+            String filename = order.getInvoiceNumber() + ".pdf";
             String url = storageService.storeBytes(pdf, "invoices", filename);
-            log.info("[INVOICE] Generated invoice for {} → {}", order.getOrderNumber(), url);
+            log.info("[INVOICE] Generated invoice {} for order {}", order.getInvoiceNumber(), order.getOrderNumber());
             return url;
         } catch (Exception e) {
             log.error("[INVOICE] Failed to generate invoice for {}: {}", order.getOrderNumber(), e.getMessage(), e);
@@ -90,9 +54,6 @@ public class InvoiceService {
         }
     }
 
-    /**
-     * Retroactive generation: loads order fresh with items, generates and stores.
-     */
     @Transactional
     public String generateAndStoreById(UUID orderId) {
         Order order = orderRepository.findWithItemsById(orderId).orElse(null);
@@ -108,302 +69,238 @@ public class InvoiceService {
         return url;
     }
 
-    // ── PDF rendering ─────────────────────────────────────────────────────────
-
     private byte[] buildPdf(Order order) throws Exception {
-        String html = buildHtml(order);
-
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         PdfRendererBuilder builder = new PdfRendererBuilder();
         builder.useFastMode();
         builder.useSVGDrawer(new BatikSVGDrawer());
-
-        // Noto Sans covers the ₹ symbol (U+20B9) — DejaVu Sans (openhtmltopdf default) does not
-        if (InvoiceService.class.getResourceAsStream("/fonts/NotoSans-Regular.ttf") == null) {
-            log.error("[INVOICE] NotoSans-Regular.ttf not found on classpath — ₹ will render as #");
-        }
-        builder.useFont(
-            () -> InvoiceService.class.getResourceAsStream("/fonts/NotoSans-Regular.ttf"),
-            "Noto Sans", 400, BaseRendererBuilder.FontStyle.NORMAL, true
-        );
-        builder.useFont(
-            () -> InvoiceService.class.getResourceAsStream("/fonts/NotoSans-Bold.ttf"),
-            "Noto Sans", 700, BaseRendererBuilder.FontStyle.NORMAL, true
-        );
-
-        builder.withHtmlContent(html, null);
+        builder.useFont(() -> InvoiceService.class.getResourceAsStream("/fonts/NotoSans-Regular.ttf"),
+                "Noto Sans", 400, BaseRendererBuilder.FontStyle.NORMAL, true);
+        builder.useFont(() -> InvoiceService.class.getResourceAsStream("/fonts/NotoSans-Bold.ttf"),
+                "Noto Sans", 700, BaseRendererBuilder.FontStyle.NORMAL, true);
+        builder.withHtmlContent(buildHtml(order), null);
         builder.toStream(out);
         builder.run();
         return out.toByteArray();
     }
 
-    // ── HTML template (mirrors lib/invoice.ts :: buildInvoiceHtml) ────────────
-
     private String buildHtml(Order order) {
-        long displayTotal = Math.round(order.getTotalAmount().doubleValue());
-        double roundOff   = displayTotal - order.getTotalAmount().doubleValue();
+        String date = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+                .withZone(INDIA).format(order.getPlacedAt());
+        Map<String, Object> address = order.getShippingAddressSnapshot();
+        Map<String, Object> customer = order.getCustomerSnapshot();
+        String customerName = first(s(customer, "businessName"), s(customer, "fullName"), "Retail Customer");
+        String customerGstin = first(s(customer, "gstinUin"), "—");
+        String customerAddress = addressLine(address);
 
-        // Date in IST, matching new Date(str).toLocaleString("en-IN", {...})
-        java.time.ZonedDateTime zdt = order.getPlacedAt().atZone(IST);
-        String dateStr = DateTimeFormatter.ofPattern("d MMMM yyyy", Locale.ENGLISH).format(zdt)
-                + ", "
-                + DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH).format(zdt)
-                              .toLowerCase(Locale.ENGLISH);
+        StringBuilder rows = new StringBuilder();
+        Map<String, TaxGroup> groups = new LinkedHashMap<>();
+        int index = 1;
+        for (OrderItem item : order.getItems()) {
+            BigDecimal taxable = taxable(item);
+            BigDecimal cgst = amount(item.getCgstAmount());
+            BigDecimal sgst = amount(item.getSgstAmount());
+            BigDecimal cgstRate = rate(item.getCgstRate());
+            BigDecimal sgstRate = rate(item.getSgstRate());
+            BigDecimal gross = amount(item.getLineTotal());
+            String groupKey = cgstRate.stripTrailingZeros().toPlainString() + "/"
+                    + sgstRate.stripTrailingZeros().toPlainString();
+            TaxGroup group = groups.computeIfAbsent(groupKey,
+                    ignored -> new TaxGroup(cgstRate, sgstRate));
+            group.add(taxable, cgst, sgst);
 
-        // Shipping address snapshot
-        Map<String, Object> addr = order.getShippingAddressSnapshot();
-        String addrFn     = s(addr, "fullName");
-        String addrLine1  = s(addr, "line1");
-        if (addrLine1 == null) addrLine1 = s(addr, "addressLine1");
-        String addrLine2  = s(addr, "line2");
-        if (addrLine2 == null) addrLine2 = s(addr, "addressLine2");
-        String addrCity   = s(addr, "city");
-        String addrState  = s(addr, "state");
-        String addrPostal = s(addr, "postalCode");
-        String addrPhone  = s(addr, "phoneNumber");
-
-        String pmRaw     = order.getPaymentMethod() != null ? order.getPaymentMethod() : "";
-        String pmDisplay = "COD".equalsIgnoreCase(pmRaw) ? "Cash On Delivery" : pmRaw;
-
-        // ── Item rows ──────────────────────────────────────────────────────────
-        StringBuilder itemRows = new StringBuilder();
-        List<OrderItem> items = order.getItems();
-        for (int i = 0; i < items.size(); i++) {
-            OrderItem item = items.get(i);
-            itemRows
-                .append("<tr style=\"border-bottom:1px solid #e4eaf5;\">")
-                .append("<td style=\"padding:10px;text-align:center;color:").append(BLUE)
-                    .append(";font-weight:600;\">").append(i + 1).append("</td>")
-                .append("<td style=\"padding:10px;\">")
-                    .append("<div style=\"font-weight:700;font-size:12px;margin-bottom:2px;\">")
-                        .append(e(item.getProductNameSnapshot())).append("</div>")
-                    .append("<div style=\"color:").append(BLUE).append(";font-size:10px;\">")
-                        .append(e(item.getSkuSnapshot())).append("</div>")
-                .append("</td>")
-                .append("<td style=\"padding:10px;text-align:center;font-size:12px;\">")
-                    .append(item.getQuantity()).append("</td>")
-                .append("<td style=\"padding:10px;text-align:right;font-size:12px;\">")
-                    .append(amt(item.getUnitPrice())).append("</td>")
-                .append("<td style=\"padding:10px;text-align:right;font-size:12px;\">")
-                    .append(amt(item.getLineTotal())).append("</td>")
-                .append("</tr>");
+            rows.append("<tr>")
+                    .append(cell(String.valueOf(index++), "center"))
+                    .append(cell(e(item.getProductNameSnapshot()), "left"))
+                    .append(cell(e(first(item.getHsnCodeSnapshot(), "—")), "center"))
+                    .append(cell(String.valueOf(item.getQuantity()), "center"))
+                    .append(cell(e(first(item.getUnitOfMeasurementSnapshot(), "—")), "center"))
+                    .append(cell(money(item.getMrpSnapshot()), "right"))
+                    .append(cell(money(item.getUnitPrice()), "right"))
+                    .append(cell(percent(cgstRate), "center"))
+                    .append(cell(money(cgst), "right"))
+                    .append(cell(percent(sgstRate), "center"))
+                    .append(cell(money(sgst), "right"))
+                    .append(cell(money(gross), "right"))
+                    .append("</tr>");
         }
 
-        // ── Round-off row (only if diff ≥ 0.01) ───────────────────────────────
-        StringBuilder roundOffRow = new StringBuilder();
-        if (Math.abs(roundOff) >= 0.01) {
-            roundOffRow
-                .append("<tr>")
-                .append("<td colspan=\"2\"></td>")
-                .append("<td colspan=\"2\" style=\"padding:3px 10px;color:#555;text-align:right;\">Round Off</td>")
-                .append("<td style=\"padding:3px 10px;text-align:right;\">&#x20b9;")
-                    .append(String.format("%.2f", roundOff)).append("</td>")
-                .append("</tr>");
+        StringBuilder taxRows = new StringBuilder();
+        BigDecimal totalTaxable = BigDecimal.ZERO;
+        BigDecimal totalCgst = BigDecimal.ZERO;
+        BigDecimal totalSgst = BigDecimal.ZERO;
+        for (TaxGroup group : groups.values()) {
+            totalTaxable = totalTaxable.add(group.taxable);
+            totalCgst = totalCgst.add(group.cgst);
+            totalSgst = totalSgst.add(group.sgst);
+            taxRows.append("<tr>")
+                    .append(cell(percent(group.cgstRate.add(group.sgstRate)), "center"))
+                    .append(cell(money(group.taxable), "right"))
+                    .append(cell(money(group.cgst), "right"))
+                    .append(cell(money(group.sgst), "right"))
+                    .append(cell(money(group.cgst.add(group.sgst)), "right"))
+                    .append("</tr>");
         }
+        taxRows.append("<tr class=\"bold\">")
+                .append(cell("Total", "center"))
+                .append(cell(money(totalTaxable), "right"))
+                .append(cell(money(totalCgst), "right"))
+                .append(cell(money(totalSgst), "right"))
+                .append(cell(money(totalCgst.add(totalSgst)), "right"))
+                .append("</tr>");
 
-        return "<!DOCTYPE html>\n"
-            + "<html>\n"
-            + "<head>\n"
-            + "  <meta charset=\"utf-8\"/>\n"
-            + "  <style>\n"
-            + "    * { box-sizing: border-box; margin: 0; padding: 0; }\n"
-            + "    body { font-family: 'Noto Sans', 'DejaVu Sans', Arial, sans-serif;"
-            +          " font-size: 11px; color: #222; line-height: 1.4; padding: 16px; }\n"
-            + "    table { width: 100%; border-collapse: collapse; }\n"
-            + "  </style>\n"
-            + "</head>\n"
-            + "<body>\n"
+        String transport = first(order.getTransport(), "—");
+        String vehicle = first(order.getVehicleNumber(), "—");
+        String eway = first(order.getEwayBillNumber(), "—");
+        String invoiceNumber = first(order.getInvoiceNumber(), order.getOrderNumber());
 
-            // ── Header: logo | ORDER CONFIRMATION ────────────────────────────
-            + "<table style=\"margin-bottom:10px;border-bottom:2px solid #d0d8ea;padding-bottom:10px;\">\n"
-            + "  <tr>\n"
-            + "    <td style=\"vertical-align:top;\">\n"
-            + "      <table style=\"width:auto;border-collapse:separate;\">\n"
-            + "        <tr>\n"
-            + "          <td style=\"vertical-align:middle;padding-right:8px;\">\n"
-            + "            <svg width=\"48\" height=\"48\" viewBox=\"0 0 64 64\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n"
-            + "              <rect width=\"64\" height=\"64\" rx=\"15\" fill=\"#2563eb\"/>\n"
-            + "              <path d=\"M35 10L19 37L30 37L24 54L40 27L30 27Z\" fill=\"white\"/>\n"
-            + "            </svg>\n"
-            + "          </td>\n"
-            + "          <td style=\"vertical-align:middle;\">\n"
-            + "            <div style=\"font-size:22px;font-weight:bold;line-height:1;\">"
-            + "              <span style=\"color:" + BLUE + ";\">Instant</span>"
-            + "              <span style=\"color:" + NAVY + ";\">Need</span>"
-            + "            </div>\n"
-            + "            <div style=\"color:#666;font-size:10px;margin-top:2px;\">Your Business, Our Priority.</div>\n"
-            + "          </td>\n"
-            + "        </tr>\n"
-            + "      </table>\n"
-            + "    </td>\n"
-            + "    <td style=\"text-align:right;vertical-align:top;\">\n"
-            + "      <div style=\"color:" + BLUE + ";font-size:19px;font-weight:bold;margin-bottom:6px;\">ORDER CONFIRMATION</div>\n"
-            + "      <div style=\"margin-bottom:3px;\"><strong>Order ID:</strong> #" + e(order.getOrderNumber()) + "</div>\n"
-            + "      <div><strong>Date:</strong> " + dateStr + "</div>\n"
-            + "    </td>\n"
-            + "  </tr>\n"
-            + "</table>\n"
-
-            // ── Company info | Order Placed box ──────────────────────────────
-            + "<table style=\"margin-bottom:18px;\">\n"
-            + "  <tr>\n"
-            + "    <td style=\"vertical-align:top;width:55%;\">\n"
-            + "      <div style=\"color:" + BLUE + ";font-weight:bold;font-size:12px;margin-bottom:4px;\">InstantNeed Private Limited</div>\n"
-            + "      <div>5959, 12 Cross Road</div>\n"
-            + "      <div style=\"margin-bottom:5px;\">Ambala Cantt, Haryana 133001</div>\n"
-            + icoRow(ICO_PHONE, "<strong>Phone:</strong> +91 8295781959")
-            + icoRow(ICO_EMAIL, "<strong>Email:</strong> Support@instantneed.in")
-            + icoRow(ICO_GLOBE, "<strong>Website:</strong> www.instantneed.in")
-            + "    </td>\n"
-            + "    <td style=\"vertical-align:top;width:45%;padding-left:16px;\">\n"
-            + "      <div style=\"border:1px solid #d0d8ea;border-radius:8px;padding:12px 16px;\">\n"
-            + "        <div style=\"color:" + BLUE + ";font-weight:bold;font-size:14px;margin-bottom:3px;\">Order Placed!</div>\n"
-            + "        <div style=\"color:#555;font-size:10.5px;\">Thank you for your order.</div>\n"
-            + "        <div style=\"color:#555;font-size:10.5px;\">We'll notify you when it ships.</div>\n"
-            + "      </div>\n"
-            + "    </td>\n"
-            + "  </tr>\n"
-            + "</table>\n"
-
-            // ── ORDER SUMMARY bar + items table ──────────────────────────────
-            + "<div style=\"margin-bottom:12px;\">\n"
-            + "  <div style=\"background-color:" + NAVY + ";color:white;padding:8px 14px;"
-            + "font-weight:bold;font-size:13px;letter-spacing:0.5px;\">\n"
-            + "    ORDER SUMMARY\n"
-            + "  </div>\n"
-            + "  <table style=\"border:1px solid #d0d8ea;border-top:none;\">\n"
-            + "    <thead>\n"
-            + "      <tr style=\"background-color:" + BLUE + ";color:white;\">\n"
-            + "        <th style=\"padding:8px 10px;width:36px;text-align:center;font-size:10.5px;\">#</th>\n"
-            + "        <th style=\"padding:8px 10px;text-align:left;font-size:10.5px;\">ITEM NAME</th>\n"
-            + "        <th style=\"padding:8px 10px;text-align:center;font-size:10.5px;\">QUANTITY</th>\n"
-            + "        <th style=\"padding:8px 10px;text-align:right;font-size:10.5px;\">RATE (&#x20b9;)</th>\n"
-            + "        <th style=\"padding:8px 10px;text-align:right;font-size:10.5px;\">AMOUNT (&#x20b9;)</th>\n"
-            + "      </tr>\n"
-            + "    </thead>\n"
-            + "    <tbody>" + itemRows + "</tbody>\n"
-            + "    <tfoot>\n"
-            + "      <tr style=\"border-top:2px solid #d0d8ea;\">\n"
-            + "        <td colspan=\"2\"></td>\n"
-            + "        <td colspan=\"2\" style=\"padding:7px 10px;color:" + BLUE + ";font-weight:700;text-align:right;\">Subtotal</td>\n"
-            + "        <td style=\"padding:7px 10px;text-align:right;font-weight:700;\">&#x20b9;" + amt(order.getSubtotalAmount()) + "</td>\n"
-            + "      </tr>\n"
-            + roundOffRow
-            + "      <tr style=\"background-color:#f0f4ff;\">\n"
-            + "        <td colspan=\"3\" style=\"padding:10px;\"></td>\n"
-            + "        <td style=\"padding:10px;font-weight:bold;font-size:12px;text-align:right;color:" + PRIMARY + ";\">TOTAL AMOUNT</td>\n"
-            + "        <td style=\"padding:10px;text-align:right;font-weight:bold;font-size:16px;color:#111111;\">&#x20b9;" + amt(BigDecimal.valueOf(displayTotal)) + "</td>\n"
-            + "      </tr>\n"
-            + "    </tfoot>\n"
-            + "  </table>\n"
-            + "</div>\n"
-
-            // ── Amount in words ───────────────────────────────────────────────
-            + "<p style=\"margin-bottom:12px;font-size:11px;\">"
-            + "<strong style=\"color:" + NAVY + ";\">Amount in Words:</strong> " + amountToWords(displayTotal)
-            + "</p>\n"
-
-            // ── Shipping address | Payment method ─────────────────────────────
-            + "<table style=\"margin-bottom:12px;border-collapse:separate;border-spacing:10px 0;\">\n"
-            + "  <tr>\n"
-            + "    <td style=\"border:1px solid #d0d8ea;border-radius:7px;padding:10px 12px;vertical-align:top;width:50%;\">\n"
-            + "      <div style=\"color:" + BLUE + ";font-weight:bold;font-size:11px;margin-bottom:7px;"
-            + "padding-bottom:6px;border-bottom:1px dashed #d0d8ea;\">SHIPPING ADDRESS</div>\n"
-            + (addrFn   != null ? "<div style=\"font-weight:600;\">" + e(addrFn) + "</div>\n" : "")
-            + "<div>" + e(addrLine1) + "</div>\n"
-            + (addrLine2 != null && !addrLine2.isBlank() ? "<div>" + e(addrLine2) + "</div>\n" : "")
-            + "<div>" + e(addrCity) + ", " + e(addrState) + " " + e(addrPostal) + "</div>\n"
-            + (addrPhone != null ? "<div>" + e(addrPhone) + "</div>\n" : "")
-            + "    </td>\n"
-            + "    <td style=\"border:1px solid #d0d8ea;border-radius:7px;padding:10px 12px;vertical-align:top;width:50%;\">\n"
-            + "      <div style=\"color:" + BLUE + ";font-weight:bold;font-size:11px;margin-bottom:7px;"
-            + "padding-bottom:6px;border-bottom:1px dashed #d0d8ea;\">PAYMENT METHOD</div>\n"
-            + "      <div style=\"font-weight:600;margin-bottom:3px;\">" + e(pmDisplay) + "</div>\n"
-            + "      <div style=\"color:#666;font-size:10.5px;\">Payment due on delivery</div>\n"
-            + "    </td>\n"
-            + "  </tr>\n"
-            + "</table>\n"
-
-            // ── Need Help? | Thank you ────────────────────────────────────────
-            + "<table style=\"margin-bottom:10px;\">\n"
-            + "  <tr>\n"
-            + "    <td style=\"vertical-align:top;font-size:10.5px;line-height:1.7;\">\n"
-            + "      <div style=\"color:" + NAVY + ";font-weight:bold;margin-bottom:3px;\">Need Help?</div>\n"
-            + icoRow(ICO_PHONE, "Phone: +91 8295781959")
-            + icoRow(ICO_EMAIL, "Email: Support@instantneed.in")
-            + icoRow(ICO_CLOCK, "Mon &#x2013; Sat | 10:00 AM &#x2013; 7:00 PM")
-            + "    </td>\n"
-            + "    <td style=\"text-align:right;vertical-align:bottom;\">\n"
-            + "      <div style=\"color:" + BLUE + ";font-weight:bold;font-size:12.5px;margin-bottom:3px;\">"
-            + "Thank you for choosing InstantNeed.</div>\n"
-            + "      <div style=\"color:#555;font-size:10.5px;\">We look forward to serving your business again!</div>\n"
-            + "    </td>\n"
-            + "  </tr>\n"
-            + "</table>\n"
-
-            // ── Footer bar ────────────────────────────────────────────────────
-            + "<table style=\"background-color:" + NAVY + ";border-radius:4px;\">\n"
-            + "  <tr>\n"
-            + "    <td style=\"padding:8px 14px;font-weight:bold;font-size:12px;color:white;\">InstantNeed</td>\n"
-            + "    <td style=\"padding:8px 14px;text-align:right;color:#c0ceea;font-size:10px;\">"
-            + "This is a system generated invoice and does not require a signature.</td>\n"
-            + "  </tr>\n"
-            + "</table>\n"
-
-            + "</body>\n"
-            + "</html>";
+        return "<!DOCTYPE html><html><head><meta charset=\"utf-8\"/>"
+                + "<style>"
+                + "@page{size:A4;margin:12mm}*{box-sizing:border-box}"
+                + "body{font-family:'Noto Sans',Arial,sans-serif;font-size:10px;color:#111;margin:0}"
+                + "table{width:100%;border-collapse:collapse}td,th{border:1px solid " + BORDER + ";padding:6px 5px}"
+                + "th{background:" + LIGHT + ";font-weight:700;text-align:center}"
+                + ".no-border td{border:0}.header{font-size:25px;font-weight:800}.subhead{font-size:14px}"
+                + ".small{font-size:9px}.bold{font-weight:700}.right{text-align:right}.center{text-align:center}"
+                + ".section{margin-top:10px}.label{font-weight:700}.terms{line-height:1.7}"
+                + "</style></head><body>"
+                + "<table class=\"no-border\"><tr><td style=\"width:65%;vertical-align:top\">"
+                + "<div class=\"header\">INSTANTNEED</div><div class=\"subhead\">B2B Wholesale</div>"
+                + "<div>Shop No. 5959, 12 Cross Road, Ambala-133001, Haryana</div>"
+                + "<div class=\"bold\" style=\"font-size:13px;margin-top:5px\">GSTIN / UIN : 06AAMFI3712M1Z6</div>"
+                + "</td><td style=\"text-align:right;vertical-align:top;border:0\"><div style=\"font-size:22px;font-weight:800\">TAX INVOICE</div>"
+                + "<div style=\"font-size:13px;margin-top:8px\">Original Copy</div></td></tr></table>"
+                + "<table class=\"section\"><tr><td style=\"width:50%;vertical-align:top\">"
+                + info("Invoice No.", invoiceNumber) + info("Dated", date)
+                + info("Place of Supply", "Haryana (06)") + info("Reverse Charge", "N")
+                + "</td><td style=\"width:50%;vertical-align:top\">"
+                + info("Transport", transport) + info("Vehicle No.", vehicle)
+                + info("E-Way Bill No.", eway) + "</td></tr></table>"
+                + "<table class=\"section\"><tr><td style=\"width:50%;vertical-align:top\">"
+                + "<div class=\"label\">Billed To:</div><div>" + e(customerName) + "</div><div>" + customerAddress + "</div>"
+                + "<div class=\"bold\">GSTIN/UIN : " + e(customerGstin) + "</div></td>"
+                + "<td style=\"width:50%;vertical-align:top\"><div class=\"label\">Shipped To:</div><div>" + e(customerName) + "</div>"
+                + "<div>" + customerAddress + "</div><div class=\"bold\">GSTIN/UIN : " + e(customerGstin) + "</div></td></tr></table>"
+                + "<table class=\"section\"><thead><tr>"
+                + header("S.N.") + header("Description of Goods", "width:24%") + header("HSN Code")
+                + header("Qty") + header("Unit") + header("MRP (₹)") + header("Price (₹)", "width:8%")
+                + header("CGST") + header("CGST Amt") + header("SGST") + header("SGST Amt") + header("Total (₹)")
+                + "</tr></thead><tbody>" + rows + "</tbody><tfoot><tr class=\"bold\">"
+                + "<td colspan=\"3\" style=\"text-align:right\">Grand Total</td>"
+                + cell(String.valueOf(order.getItems().stream().mapToInt(OrderItem::getQuantity).sum()), "center")
+                + cell("—", "center") + "<td colspan=\"6\"></td>" + cell(money(order.getTotalAmount()), "right")
+                + "</tr></tfoot></table>"
+                + "<table class=\"section\" style=\"width:68%\"><thead><tr>"
+                + header("Tax Rate") + header("Taxable Amt. (₹)") + header("CGST Amt. (₹)")
+                + header("SGST Amt. (₹)") + header("Total Tax (₹)") + "</tr></thead><tbody>" + taxRows + "</tbody></table>"
+                + "<table class=\"section\"><tr><td><span class=\"label\">Amount in Words (Rupees) : </span>"
+                + e(amountToWords(order.getTotalAmount())) + "</td></tr></table>"
+                + "<table class=\"section\"><tr><td style=\"width:55%;vertical-align:top\" class=\"terms\"><div class=\"label\">Terms &amp; Conditions:</div>"
+                + "1. E. &amp; O.E.<br/>2. Goods once sold will not be taken back.<br/>"
+                + "3. Interest @ 18% p.a. will be charged if payment is not made within the stipulated time.<br/>"
+                + "4. Subject to Ambala Jurisdiction only.</td><td style=\"vertical-align:bottom;text-align:right\">"
+                + "Receiver's Signature :<br/><br/><br/><span class=\"bold\">for INSTANTNEED</span><br/>Authorised Signatory</td></tr></table>"
+                + "</body></html>";
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
-
-    /** HTML-escape a value (null-safe). */
-    private static String e(String v) {
-        if (v == null) return "";
-        return v.replace("&", "&amp;")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("\"", "&quot;");
+    private static String info(String label, String value) {
+        return "<div><span class=\"label\">" + label + " :</span> " + e(value) + "</div>";
     }
 
-    /** Format a BigDecimal with en-IN locale and 2 decimal places. */
-    private static String amt(BigDecimal v) {
-        if (v == null) return "0.00";
+    private static String header(String text) { return header(text, ""); }
+    private static String header(String text, String style) {
+        return "<th style=\"" + style + "\">" + text + "</th>";
+    }
+
+    private static String cell(String text, String align) {
+        return "<td class=\"" + align + "\">" + text + "</td>";
+    }
+
+    private static String addressLine(Map<String, Object> address) {
+        if (address == null) return "—";
+        String line1 = first(s(address, "line1"), s(address, "addressLine1"), "");
+        String line2 = first(s(address, "line2"), s(address, "addressLine2"), "");
+        String city = first(s(address, "city"), "");
+        String state = first(s(address, "state"), "");
+        String postal = first(s(address, "postalCode"), "");
+        return e(line1) + (line2.isBlank() ? "" : ", " + e(line2)) + "<br/>"
+                + e(city) + ", " + e(state) + " " + e(postal);
+    }
+
+    private static BigDecimal taxable(OrderItem item) {
+        return item.getTaxableAmount() != null ? item.getTaxableAmount() : amount(item.getLineTotal());
+    }
+
+    private static BigDecimal amount(BigDecimal value) {
+        return value == null ? BigDecimal.ZERO.setScale(2) : value.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private static BigDecimal rate(BigDecimal value) {
+        return value == null ? BigDecimal.ZERO.setScale(2) : value.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private static String money(BigDecimal value) {
         NumberFormat nf = NumberFormat.getNumberInstance(IN);
         nf.setMinimumFractionDigits(2);
         nf.setMaximumFractionDigits(2);
-        return nf.format(v);
+        return nf.format(amount(value));
     }
 
-    /** Pull a String from a JSON snapshot map. */
+    private static String percent(BigDecimal value) {
+        return value.stripTrailingZeros().toPlainString() + "%";
+    }
+
+    private static String first(String... values) {
+        for (String value : values) if (value != null && !value.isBlank()) return value;
+        return "";
+    }
+
     private static String s(Map<String, Object> map, String key) {
-        if (map == null) return null;
-        Object v = map.get(key);
-        return v != null ? v.toString() : null;
+        if (map == null || map.get(key) == null) return null;
+        return map.get(key).toString();
     }
 
-    // ── Amount in words (mirrors lib/invoice.ts :: amountToWords) ────────────
+    private static String e(String value) {
+        if (value == null) return "";
+        return value.replace("&", "&amp;").replace("<", "&lt;")
+                .replace(">", "&gt;").replace("\"", "&quot;");
+    }
 
-    private static String amountToWords(long rupees) {
+    private static String amountToWords(BigDecimal value) {
+        long rupees = value == null ? 0 : value.setScale(0, RoundingMode.HALF_UP).longValue();
         if (rupees == 0) return "Zero Rupees Only";
         return "Rupees " + words(rupees).trim() + " Only";
     }
 
-    private static final String[] ONES = {
-        "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
-        "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
-        "Seventeen", "Eighteen", "Nineteen"
-    };
-    private static final String[] TENS = {
-        "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
-    };
+    private static final String[] ONES = {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+    private static final String[] TENS = {"", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"};
 
     private static String words(long n) {
         if (n == 0) return "";
-        if (n < 20)       return ONES[(int) n] + " ";
-        if (n < 100)      return TENS[(int)(n / 10)] + (n % 10 != 0 ? " " + ONES[(int)(n % 10)] : "") + " ";
-        if (n < 1_000)    return ONES[(int)(n / 100)] + " Hundred " + words(n % 100);
-        if (n < 1_00_000) return words(n / 1_000)     + "Thousand " + words(n % 1_000);
-        if (n < 1_00_00_000) return words(n / 1_00_000)    + "Lakh "  + words(n % 1_00_000);
-        return                  words(n / 1_00_00_000) + "Crore " + words(n % 1_00_00_000);
+        if (n < 20) return ONES[(int) n] + " ";
+        if (n < 100) return TENS[(int) (n / 10)] + (n % 10 == 0 ? "" : " " + ONES[(int) (n % 10)]) + " ";
+        if (n < 1_000) return ONES[(int) (n / 100)] + " Hundred " + words(n % 100);
+        if (n < 1_00_000) return words(n / 1_000) + "Thousand " + words(n % 1_000);
+        if (n < 1_00_00_000) return words(n / 1_00_000) + "Lakh " + words(n % 1_00_000);
+        return words(n / 1_00_00_000) + "Crore " + words(n % 1_00_00_000);
+    }
+
+    private static final class TaxGroup {
+        private final BigDecimal cgstRate;
+        private final BigDecimal sgstRate;
+        private BigDecimal taxable = BigDecimal.ZERO;
+        private BigDecimal cgst = BigDecimal.ZERO;
+        private BigDecimal sgst = BigDecimal.ZERO;
+
+        private TaxGroup(BigDecimal cgstRate, BigDecimal sgstRate) {
+            this.cgstRate = cgstRate;
+            this.sgstRate = sgstRate;
+        }
+
+        private void add(BigDecimal taxable, BigDecimal cgst, BigDecimal sgst) {
+            this.taxable = this.taxable.add(taxable);
+            this.cgst = this.cgst.add(cgst);
+            this.sgst = this.sgst.add(sgst);
+        }
     }
 }
