@@ -31,6 +31,7 @@ public class InvoiceService {
     private static final ZoneId INDIA = ZoneId.of("Asia/Kolkata");
     private static final Locale IN = new Locale("en", "IN");
     private static final String BORDER = "#333333";
+    private static final String BORDER_WIDTH = "1.25px";
     private static final String LIGHT = "#f2f2f2";
 
     private final StorageService storageService;
@@ -158,11 +159,11 @@ public class InvoiceService {
                 + "<style>"
                 + "@page{size:A4;margin:12mm}*{box-sizing:border-box}"
                 + "body{font-family:'Noto Sans',Arial,sans-serif;font-size:10px;color:#111;margin:0}"
-                + "table{width:100%;border-collapse:collapse}td,th{border:1px solid " + BORDER + ";padding:6px 5px}"
+                + "table{width:100%;border-collapse:collapse}td,th{border:" + BORDER_WIDTH + " solid " + BORDER + ";padding:6px 5px}"
                 + "th{background:" + LIGHT + ";font-weight:700;text-align:center}"
                 + ".no-border td{border:0}.header{font-size:25px;font-weight:800}.subhead{font-size:14px}"
                 + ".small{font-size:9px}.bold{font-weight:700}.right{text-align:right}.center{text-align:center}"
-                + ".invoice{border:1px solid " + BORDER + ";padding:16px}.section{margin-top:10px}.label{font-weight:700}.terms{line-height:1.7}"
+                + ".invoice{border:" + BORDER_WIDTH + " solid " + BORDER + ";padding:16px}.section{margin-top:10px}.label{font-weight:700}.terms{line-height:1.7}"
                 + "</style></head><body>"
                 + "<div class=\"invoice\">"
                 + "<table class=\"no-border\"><tr><td style=\"width:65%;vertical-align:top\">"
