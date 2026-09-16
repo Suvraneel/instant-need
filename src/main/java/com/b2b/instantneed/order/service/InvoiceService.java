@@ -31,7 +31,7 @@ public class InvoiceService {
     private static final ZoneId INDIA = ZoneId.of("Asia/Kolkata");
     private static final Locale IN = new Locale("en", "IN");
     private static final String BORDER = "#333333";
-    private static final String BORDER_WIDTH = "1.25px";
+    private static final String BORDER_WIDTH = "1px";
     private static final String LIGHT = "#f2f2f2";
 
     private final StorageService storageService;
@@ -167,9 +167,9 @@ public class InvoiceService {
                 + "th{background:" + LIGHT + ";font-weight:700;text-align:center}"
                 + ".no-border td{border:0}.header{font-size:25px;font-weight:800}.subhead{font-size:14px}"
                 + ".small{font-size:9px}.bold{font-weight:700}.right{text-align:right}.center{text-align:center}"
-                + ".invoice{width:100%;border-collapse:collapse}.invoice>tbody>tr>td{border:" + BORDER_WIDTH + " solid " + BORDER + ";padding:16px}.section{margin-top:10px}.label{font-weight:700}.terms{line-height:1.7}"
+                + ".invoice{width:100%;box-sizing:border-box;border:" + BORDER_WIDTH + " solid " + BORDER + ";padding:16px}.section{margin-top:10px}.label{font-weight:700}.terms{line-height:1.7}"
                 + "</style></head><body>"
-                + "<table class=\"invoice\"><tr><td>"
+                + "<div class=\"invoice\">"
                 + "<table class=\"no-border\"><tr><td style=\"width:65%;vertical-align:top\">"
                 + "<div class=\"header\">INSTANTNEED</div><div class=\"subhead\">B2B Wholesale</div>"
                 + "<div>Shop No. 5959, 12 Cross Road, Ambala-133001, Haryana</div>"
@@ -206,7 +206,7 @@ public class InvoiceService {
                 + "3. Interest @ 18% p.a. will be charged if payment is not made within the stipulated time.<br/>"
                 + "4. Subject to Ambala Jurisdiction only.</td><td style=\"vertical-align:bottom;text-align:right\">"
                 + "Receiver's Signature :<br/><br/><br/><span class=\"bold\">for INSTANTNEED</span><br/>Authorised Signatory</td></tr></table>"
-                + "</td></tr></table>"
+                + "</div>"
                 + "</body></html>";
     }
 
