@@ -45,7 +45,7 @@ public class InvoiceService {
                         ? order.getPlacedAt() : java.time.Instant.now()));
             }
             byte[] pdf = buildPdf(order);
-            String filename = order.getInvoiceNumber() + ".pdf";
+            String filename = pdfFilename(order);
             String url = storageService.storeBytes(pdf, "invoices", filename);
             log.info("[INVOICE] Generated invoice {} for order {}", order.getInvoiceNumber(), order.getOrderNumber());
             return url;
@@ -68,6 +68,10 @@ public class InvoiceService {
             orderRepository.save(order);
         }
         return url;
+    }
+
+    public static String pdfFilename(Order order) {
+        return "InstantNeed-" + first(order.getInvoiceNumber(), order.getOrderNumber()) + ".pdf";
     }
 
     private byte[] buildPdf(Order order) throws Exception {

@@ -279,7 +279,7 @@ public class OrderService {
         }
         try {
             byte[] bytes = storageService.retrieve(order.getInvoicePath());
-            return new InvoiceFile(bytes, order.getOrderNumber() + ".pdf");
+            return new InvoiceFile(bytes, InvoiceService.pdfFilename(order));
         } catch (java.io.IOException e) {
             throw ApiException.notFound("INVOICE_NOT_FOUND", "Invoice file could not be read: " + e.getMessage());
         }

@@ -31,12 +31,13 @@ public record AdminCustomerDetail(
             BigDecimal totalAmount,
             String currencyCode,
             Instant placedAt,
+            String invoiceNumber,
             String invoiceUrl
     ) {
         public static OrderSummary from(Order o) {
             return new OrderSummary(
                     o.getId(), o.getOrderNumber(), o.getStatus().name(),
-                    o.getTotalAmount(), o.getCurrencyCode(), o.getPlacedAt(),
+                    o.getTotalAmount(), o.getCurrencyCode(), o.getPlacedAt(), o.getInvoiceNumber(),
                     o.getInvoicePath()
             );
         }
