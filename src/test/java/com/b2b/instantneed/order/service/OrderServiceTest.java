@@ -134,7 +134,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void placeOrder_extractsGstInclusiveTaxAndSnapshotsCustomerGstin() {
+    void placeOrder_calculatesTaxFromGrossAmountAndSnapshotsCustomerGstin() {
         product.setCgstRate(new BigDecimal("2.5"));
         product.setSgstRate(new BigDecimal("2.5"));
         product.setMrp(new BigDecimal("110.00"));
@@ -159,9 +159,9 @@ class OrderServiceTest {
         OrderItem item = saved.getItems().get(0);
         assertThat(item.getMrpSnapshot()).isEqualByComparingTo("110.00");
         assertThat(item.getHsnCodeSnapshot()).isEqualTo("33061020");
-        assertThat(item.getTaxableAmount()).isEqualByComparingTo("190.48");
-        assertThat(item.getCgstAmount()).isEqualByComparingTo("4.76");
-        assertThat(item.getSgstAmount()).isEqualByComparingTo("4.76");
+        assertThat(item.getTaxableAmount()).isEqualByComparingTo("200.00");
+        assertThat(item.getCgstAmount()).isEqualByComparingTo("5.00");
+        assertThat(item.getSgstAmount()).isEqualByComparingTo("5.00");
         assertThat(saved.getCustomerSnapshot()).containsEntry("gstinUin", "06AAMFI3712M1Z6");
     }
 

@@ -414,28 +414,12 @@ public class OrderService {
     private void applyTaxSnapshot(OrderItem item, Product product, BigDecimal grossAmount) {
         BigDecimal cgstRate = nonNegative(product.getCgstRate());
         BigDecimal sgstRate = nonNegative(product.getSgstRate());
-        BigDecimal totalRate = cgstRate.add(sgstRate);
-
-        BigDecimal taxableAmount;
-        BigDecimal cgstAmount;
-        BigDecimal sgstAmount;
-        if (totalRate.signum() == 0) {
-            taxableAmount = grossAmount.setScale(2, RoundingMode.HALF_UP);
-            cgstAmount = BigDecimal.ZERO.setScale(2);
-            sgstAmount = BigDecimal.ZERO.setScale(2);
-        } else {
-            taxableAmount = grossAmount
-                    .divide(BigDecimal.ONE.add(totalRate.movePointLeft(2)), 2, RoundingMode.HALF_UP);
-            cgstAmount = taxableAmount.multiply(cgstRate)
-                    .movePointLeft(2).setScale(2, RoundingMode.HALF_UP);
-            sgstAmount = taxableAmount.multiply(sgstRate)
-                    .movePointLeft(2).setScale(2, RoundingMode.HALF_UP);
-
-            // Keep the invoice mathematically balanced after two-decimal rounding.
-            BigDecimal roundingAdjustment = grossAmount.setScale(2, RoundingMode.HALF_UP)
-                    .subtract(taxableAmount).subtract(cgstAmount).subtract(sgstAmount);
-            sgstAmount = sgstAmount.add(roundingAdjustment).setScale(2, RoundingMode.HALF_UP);
-        }
+        BigDecimal gross = grossAmount.setScale(2, RoundingMode.HALF_UP);
+        BigDecimal cgstAmount = gross.multiply(cgstRate)
+                .movePointLeft(2).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal sgstAmount = gross.multiply(sgstRate)
+                .movePointLeft(2).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal taxableAmount = gross;
 
         item.setCgstRate(cgstRate);
         item.setSgstRate(sgstRate);
