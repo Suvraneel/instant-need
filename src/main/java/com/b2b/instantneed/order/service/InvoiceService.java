@@ -167,7 +167,7 @@ public class InvoiceService {
                 + "th{background:" + LIGHT + ";font-weight:700;text-align:center}"
                 + ".no-border td{border:0}.header{font-size:25px;font-weight:800}.subhead{font-size:14px}"
                 + ".small{font-size:9px}.bold{font-weight:700}.right{text-align:right}.center{text-align:center}"
-                + ".invoice{width:100%;box-sizing:border-box;border:" + BORDER_WIDTH + " solid " + BORDER + ";padding:16px}.section{margin-top:10px}.label{font-weight:700}.terms{line-height:1.7}"
+                + ".invoice{width:100%;box-sizing:border-box;border:" + BORDER_WIDTH + " solid " + BORDER + ";border-right:2px solid " + BORDER + ";padding:16px}.section{margin-top:10px}.label{font-weight:700}.terms{line-height:1.7}"
                 + "</style></head><body>"
                 + "<div class=\"invoice\">"
                 + "<table class=\"no-border\"><tr><td style=\"width:65%;vertical-align:top\">"
