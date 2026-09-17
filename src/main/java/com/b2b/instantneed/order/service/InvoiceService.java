@@ -97,6 +97,7 @@ public class InvoiceService {
         String customerName = first(s(customer, "businessName"), s(customer, "fullName"), "Retail Customer");
         String customerGstin = first(s(customer, "gstinUin"), "—");
         String customerAddress = addressLine(address);
+        String customerPhone = first(s(address, "phoneNumber"), "—");
 
         StringBuilder rows = new StringBuilder();
         Map<String, TaxGroup> groups = new LinkedHashMap<>();
@@ -184,9 +185,9 @@ public class InvoiceService {
                 + info("E-Way Bill No.", eway) + "</td></tr></table>"
                 + "<table class=\"section\"><tr><td style=\"width:50%;vertical-align:top\">"
                 + "<div class=\"label\">Billed To:</div><div>" + e(customerName) + "</div><div>" + customerAddress + "</div>"
-                + "<div class=\"bold\">GSTIN/UIN : " + e(customerGstin) + "</div></td>"
+                + "<div>Mobile No : " + e(customerPhone) + "</div><div class=\"bold\">GSTIN/UIN : " + e(customerGstin) + "</div></td>"
                 + "<td style=\"width:50%;vertical-align:top\"><div class=\"label\">Shipped To:</div><div>" + e(customerName) + "</div>"
-                + "<div>" + customerAddress + "</div><div class=\"bold\">GSTIN/UIN : " + e(customerGstin) + "</div></td></tr></table>"
+                + "<div>" + customerAddress + "</div><div>Mobile No : " + e(customerPhone) + "</div><div class=\"bold\">GSTIN/UIN : " + e(customerGstin) + "</div></td></tr></table>"
                 + "<table class=\"section\"><thead><tr>"
                 + header("S.N.") + header("Description of Goods", "width:24%") + header("HSN Code")
                 + header("Qty") + header("Unit") + header("MRP (₹)") + header("Price (₹)", "width:8%")

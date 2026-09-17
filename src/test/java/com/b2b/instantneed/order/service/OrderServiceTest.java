@@ -139,6 +139,8 @@ class OrderServiceTest {
         product.setSgstRate(new BigDecimal("2.5"));
         product.setMrp(new BigDecimal("110.00"));
         product.setHsnCode("33061020");
+        product.setUnitOfMeasurement("Pcs");
+        address.setPhoneNumber("9876543210");
 
         given(addressRepository.findById(address.getId())).willReturn(Optional.of(address));
         given(pincodeMinOrderRepository.findByPincodeAndActiveTrue(address.getPostalCode()))
@@ -159,9 +161,11 @@ class OrderServiceTest {
         OrderItem item = saved.getItems().get(0);
         assertThat(item.getMrpSnapshot()).isEqualByComparingTo("110.00");
         assertThat(item.getHsnCodeSnapshot()).isEqualTo("33061020");
+        assertThat(item.getUnitOfMeasurementSnapshot()).isEqualTo("Pcs");
         assertThat(item.getTaxableAmount()).isEqualByComparingTo("200.00");
         assertThat(item.getCgstAmount()).isEqualByComparingTo("5.00");
         assertThat(item.getSgstAmount()).isEqualByComparingTo("5.00");
+        assertThat(saved.getShippingAddressSnapshot()).containsEntry("phoneNumber", "9876543210");
         assertThat(saved.getCustomerSnapshot()).containsEntry("gstinUin", "06AAMFI3712M1Z6");
     }
 
