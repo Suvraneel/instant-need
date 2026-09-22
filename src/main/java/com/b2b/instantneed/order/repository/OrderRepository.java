@@ -19,6 +19,8 @@ public interface OrderRepository extends JpaRepository<Order, UUID>, JpaSpecific
 
     Page<Order> findByCustomerIdOrderByPlacedAtDesc(UUID customerId, Pageable pageable);
 
+    List<Order> findAllByCustomerId(UUID customerId);
+
     @Query("SELECT o FROM Order o LEFT JOIN FETCH o.items i LEFT JOIN FETCH i.product WHERE o.id = :id")
     Optional<Order> findWithItemsById(@Param("id") UUID id);
 

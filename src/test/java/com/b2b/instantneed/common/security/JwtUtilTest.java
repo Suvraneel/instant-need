@@ -52,6 +52,13 @@ class JwtUtilTest {
     }
 
     @Test
+    void disabledUser_cannotUseExistingAccessToken() {
+        String token = jwtUtil.generateAccessToken(user);
+        user.setActive(false);
+        assertThat(jwtUtil.isTokenValid(token, user)).isFalse();
+    }
+
+    @Test
     void isTokenValid_wrongUser_returnsFalse() {
         String token = jwtUtil.generateAccessToken(user);
         User other = User.builder()
@@ -71,6 +78,13 @@ class JwtUtilTest {
     void generateRefreshToken_isRefreshTokenValid_returnsTrue() {
         String token = jwtUtil.generateRefreshToken(user);
         assertThat(jwtUtil.isRefreshTokenValid(token, user)).isTrue();
+    }
+
+    @Test
+    void disabledUser_cannotUseExistingRefreshToken() {
+        String token = jwtUtil.generateRefreshToken(user);
+        user.setActive(false);
+        assertThat(jwtUtil.isRefreshTokenValid(token, user)).isFalse();
     }
 
     @Test

@@ -7,12 +7,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 public interface CartRepository extends JpaRepository<Cart, UUID> {
 
     // Two-step: first find cart, then items are loaded via the items collection
     Optional<Cart> findByCustomerIdAndStatus(UUID customerId, CartStatus status);
+
+    List<Cart> findAllByCustomerId(UUID customerId);
 
     @Query("SELECT c FROM Cart c LEFT JOIN FETCH c.items i LEFT JOIN FETCH i.product WHERE c.id = :cartId")
     Optional<Cart> findWithItemsById(@Param("cartId") UUID cartId);

@@ -1,6 +1,7 @@
 package com.b2b.instantneed.customer.controller;
 
 import com.b2b.instantneed.customer.dto.*;
+import com.b2b.instantneed.customer.service.AccountDeletionService;
 import com.b2b.instantneed.customer.service.CustomerProfileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,6 +21,7 @@ import java.util.UUID;
 public class CustomerProfileController {
 
     private final CustomerProfileService profileService;
+    private final AccountDeletionService accountDeletionService;
 
     @Operation(summary = "Get the current customer's profile")
     @GetMapping
@@ -31,6 +33,13 @@ public class CustomerProfileController {
     @PatchMapping
     public ResponseEntity<ProfileResponse> updateProfile(@Valid @RequestBody UpdateProfileRequest request) {
         return ResponseEntity.ok(profileService.updateProfile(request));
+    }
+
+    @Operation(summary = "Delete the current customer's account and associated personal data")
+    @DeleteMapping
+    public ResponseEntity<Void> deleteAccount() {
+        accountDeletionService.deleteCurrentAccount();
+        return ResponseEntity.noContent().build();
     }
 
     @Operation(summary = "List all shipping addresses")
