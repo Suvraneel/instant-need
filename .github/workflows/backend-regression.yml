@@ -1,0 +1,37 @@
+name: Backend regression contracts
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: instant_need_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d instant_need_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+      - name: Security, order, catalog, and storage contracts
+        env:
+          DB_URL: jdbc:postgresql://localhost:5432/instant_need_test
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+        run: ./mvnw test -Dtest=JwtUtilTest,SecurityConfigTest,OrderServiceTest,OrderPersistenceTest,PricingTierPersistenceTest,AdminProductServiceTest,PincodeContractTest,LocalStorageServiceTest,S3StorageServiceTest
