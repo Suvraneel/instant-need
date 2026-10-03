@@ -5,6 +5,7 @@ import com.b2b.instantneed.admin.dto.UpdateOrderStatusRequest;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.exception.ApiException;
 import com.b2b.instantneed.common.service.EmailService;
+import com.b2b.instantneed.common.storage.StorageService;
 import com.b2b.instantneed.customer.entity.Customer;
 import com.b2b.instantneed.order.dto.OrderResponse;
 import com.b2b.instantneed.order.entity.Order;
@@ -17,6 +18,7 @@ import com.b2b.instantneed.user.entity.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
@@ -43,6 +45,7 @@ class AdminOrderServiceTest {
     @Mock AuditLogService auditLog;
     @Mock EmailService    emailService;
     @Mock InvoiceService invoiceService;
+    @Mock StorageService storageService;
 
     @InjectMocks AdminOrderService service;
 
@@ -95,12 +98,16 @@ class AdminOrderServiceTest {
     @Test
     void getOrder_found_returnsFullDetail() {
         Order o = order(OrderStatus.CONFIRMED);
+        o.setInvoiceNumber("INV-2026-0001");
+        o.setInvoicePath("https://cdn.example/invoices/private.pdf");
         given(orderRepository.findWithItemsById(o.getId())).willReturn(Optional.of(o));
 
         OrderResponse res = service.getOrder(o.getId());
 
         assertThat(res.orderNumber()).isEqualTo("WB-20260523-0001");
         assertThat(res.status()).isEqualTo("CONFIRMED");
+        assertThat(res.invoiceNumber()).isEqualTo("INV-2026-0001");
+        assertThat(res.invoiceUrl()).isEqualTo("/api/v1/admin/orders/" + o.getId() + "/invoice");
     }
 
     @Test
@@ -112,6 +119,20 @@ class AdminOrderServiceTest {
                 .isInstanceOf(ApiException.class)
                 .extracting(e -> ((ApiException) e).getHttpStatus())
                 .isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void getInvoicePdf_readsStoredFileForAdmin() throws Exception {
+        Order o = order(OrderStatus.CONFIRMED);
+        String storageUrl = "https://cdn.example/invoices/private.pdf";
+        o.setInvoicePath(storageUrl);
+        given(orderRepository.findWithItemsById(o.getId())).willReturn(Optional.of(o));
+        given(storageService.retrieve(storageUrl)).willReturn("%PDF-1.4".getBytes());
+
+        AdminOrderService.InvoiceFile file = service.getInvoicePdf(o.getId());
+
+        assertThat(file.bytes()).isEqualTo("%PDF-1.4".getBytes());
+        assertThat(file.filename()).isEqualTo(o.getOrderNumber() + ".pdf");
     }
 
     // ── updateStatus ──────────────────────────────────────────────────────────
@@ -133,17 +154,23 @@ class AdminOrderServiceTest {
     @Test
     void updateStatus_withDispatchDetails_regeneratesInvoiceAndPersistsFields() {
         Order o = order(OrderStatus.SHIPPED);
+        o.setInvoiceNumber("INV-2026-0001");
         given(orderRepository.findWithItemsById(o.getId())).willReturn(Optional.of(o));
         given(orderRepository.save(any())).willReturn(o);
         given(invoiceService.generateAndStore(o)).willReturn("https://cdn.example/invoices/INV-2026-09-0001.pdf");
 
-        service.updateStatus(o.getId(), new UpdateOrderStatusRequest(
+        OrderResponse adminResponse = service.updateStatus(o.getId(), new UpdateOrderStatusRequest(
                 "SHIPPED", "EWB-123", "Self", "HR01AB1234"));
 
         assertThat(o.getEwayBillNumber()).isEqualTo("EWB-123");
         assertThat(o.getTransport()).isEqualTo("Self");
         assertThat(o.getVehicleNumber()).isEqualTo("HR01AB1234");
         assertThat(o.getInvoicePath()).isEqualTo("https://cdn.example/invoices/INV-2026-09-0001.pdf");
+        assertThat(adminResponse.invoiceUrl()).isEqualTo("/api/v1/admin/orders/" + o.getId() + "/invoice");
+        ArgumentCaptor<OrderResponse> customerResponse = ArgumentCaptor.forClass(OrderResponse.class);
+        verify(emailService).sendOrderStatusUpdate(eq("buyer@test.com"), customerResponse.capture());
+        assertThat(customerResponse.getValue().invoiceUrl()).isNull();
+        assertThat(customerResponse.getValue().invoiceNumber()).isNull();
         verify(invoiceService).generateAndStore(o);
     }
 

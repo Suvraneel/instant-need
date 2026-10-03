@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 /**
  * Exposes only public catalog images from local storage. Invoices are served
- * through authenticated API endpoints after an ownership check.
+ * through the admin API.
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {

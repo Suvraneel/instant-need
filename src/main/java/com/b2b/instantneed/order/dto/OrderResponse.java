@@ -57,7 +57,15 @@ public record OrderResponse(
             String phoneNumber
     ) {}
 
-    public static OrderResponse from(Order order) {
+    public static OrderResponse forAdmin(Order order) {
+        return from(order, true);
+    }
+
+    public static OrderResponse forCustomer(Order order) {
+        return from(order, false);
+    }
+
+    private static OrderResponse from(Order order, boolean includeInvoice) {
         Map<String, Object> addrMap = order.getShippingAddressSnapshot();
         AddressSnapshot addr = addrMap == null ? null : new AddressSnapshot(
                 strOf(addrMap, "fullName"),
@@ -93,11 +101,12 @@ public record OrderResponse(
                 customerName,
                 businessName,
                 gstinUin,
-                order.getInvoiceNumber(),
+                includeInvoice ? order.getInvoiceNumber() : null,
                 order.getEwayBillNumber(),
                 order.getTransport(),
                 order.getVehicleNumber(),
-                order.getInvoicePath() == null ? null : "/api/v1/orders/" + order.getId() + "/invoice"
+                includeInvoice && order.getInvoicePath() != null
+                        ? "/api/v1/admin/orders/" + order.getId() + "/invoice" : null
         );
     }
 

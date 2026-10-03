@@ -74,7 +74,7 @@ public class AdminOrderController {
     @Operation(summary = "Download the PDF invoice for any order")
     @GetMapping("/{orderId}/invoice")
     public ResponseEntity<byte[]> getInvoice(@PathVariable UUID orderId) {
-        com.b2b.instantneed.order.service.OrderService.InvoiceFile file = orderService.getInvoicePdf(orderId);
+        AdminOrderService.InvoiceFile file = orderService.getInvoicePdf(orderId);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.filename() + "\"")
                 .contentType(MediaType.APPLICATION_PDF)

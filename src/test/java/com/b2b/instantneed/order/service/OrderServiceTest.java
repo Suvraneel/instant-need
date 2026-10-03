@@ -11,7 +11,6 @@ import com.b2b.instantneed.catalog.repository.ProductRepository;
 import com.b2b.instantneed.catalog.repository.PincodeMinOrderRepository;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.service.EmailService;
-import com.b2b.instantneed.common.storage.StorageService;
 import com.b2b.instantneed.order.service.InvoiceService;
 import com.b2b.instantneed.pricing.service.PricingService;
 import com.b2b.instantneed.common.exception.ApiException;
@@ -65,7 +64,6 @@ class OrderServiceTest {
     @Mock PincodeMinOrderRepository    pincodeMinOrderRepository;
     @Mock InvoiceService               invoiceService;
     @Mock OrderNumberService           orderNumberService;
-    @Mock StorageService               storageService;
 
     @InjectMocks OrderService orderService;
 
@@ -309,13 +307,16 @@ class OrderServiceTest {
     void getOrder_belongsToCustomer_returnsDetail() {
         Order order = minimalOrder();
         order.setInvoicePath("https://cdn.example.test/invoices/private.pdf");
+        order.setInvoiceNumber("INV-2026-0001");
         given(orderRepository.findWithItemsByIdAndCustomerId(order.getId(), customer.getId()))
                 .willReturn(Optional.of(order));
 
         OrderResponse res = orderService.getOrder(order.getId());
 
         assertThat(res.orderNumber()).isEqualTo("WB-20260523-0001");
-        assertThat(res.invoiceUrl()).isEqualTo("/api/v1/orders/" + order.getId() + "/invoice");
+        assertThat(res.invoiceUrl()).isNull();
+        assertThat(res.invoiceNumber()).isNull();
+        assertThat(res.totalAmount()).isEqualByComparingTo("1250.00");
     }
 
     @Test
@@ -328,19 +329,6 @@ class OrderServiceTest {
                 .isInstanceOf(ApiException.class)
                 .extracting(e -> ((ApiException) e).getHttpStatus())
                 .isEqualTo(HttpStatus.NOT_FOUND);
-    }
-
-    @Test
-    void invoiceDownloadRequiresCustomerOwnership() {
-        UUID anotherCustomersOrder = UUID.randomUUID();
-        given(orderRepository.findWithItemsByIdAndCustomerId(anotherCustomersOrder, customer.getId()))
-                .willReturn(Optional.empty());
-
-        assertThatThrownBy(() -> orderService.getInvoicePdf(anotherCustomersOrder))
-                .isInstanceOf(ApiException.class)
-                .extracting(error -> ((ApiException) error).getHttpStatus())
-                .isEqualTo(HttpStatus.NOT_FOUND);
-        then(storageService).shouldHaveNoInteractions();
     }
 
     // ── reorder ───────────────────────────────────────────────────────────────

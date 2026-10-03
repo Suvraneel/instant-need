@@ -78,7 +78,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/pricing/**").permitAll()
                         .requestMatchers("/api/v1/catalog/pincode-min-order").permitAll()
                         // Public catalog images served from local storage (STORAGE_TYPE=local).
-                        // Invoices carry customer PII and are only served by ownership-checked API endpoints.
+                        // Invoices carry customer PII and are only served by the admin API.
                         .requestMatchers("/uploads/products/**").permitAll()
                         .requestMatchers("/uploads/categories/**").permitAll()
                         .requestMatchers("/uploads/invoices/**").denyAll()

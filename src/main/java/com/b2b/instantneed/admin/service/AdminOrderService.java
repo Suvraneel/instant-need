@@ -13,7 +13,6 @@ import com.b2b.instantneed.order.dto.OrderResponse;
 import com.b2b.instantneed.order.entity.Order;
 import com.b2b.instantneed.order.entity.OrderStatus;
 import com.b2b.instantneed.order.repository.OrderRepository;
-import com.b2b.instantneed.order.service.OrderService;
 import com.b2b.instantneed.order.service.InvoiceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -68,12 +67,12 @@ public class AdminOrderService {
     public OrderResponse getOrder(UUID orderId) {
         Order order = orderRepository.findWithItemsById(orderId)
                 .orElseThrow(() -> ApiException.notFound("ORDER_NOT_FOUND", "Order not found: " + orderId));
-        return OrderResponse.from(order);
+        return OrderResponse.forAdmin(order);
     }
 
     /** Streams the invoice PDF for any order — admin access is not scoped to a customer. */
     @Transactional(readOnly = true)
-    public OrderService.InvoiceFile getInvoicePdf(UUID orderId) {
+    public InvoiceFile getInvoicePdf(UUID orderId) {
         Order order = orderRepository.findWithItemsById(orderId)
                 .orElseThrow(() -> ApiException.notFound("ORDER_NOT_FOUND", "Order not found: " + orderId));
         if (order.getInvoicePath() == null) {
@@ -81,11 +80,13 @@ public class AdminOrderService {
         }
         try {
             byte[] bytes = storageService.retrieve(order.getInvoicePath());
-            return new OrderService.InvoiceFile(bytes, order.getOrderNumber() + ".pdf");
+            return new InvoiceFile(bytes, order.getOrderNumber() + ".pdf");
         } catch (java.io.IOException e) {
             throw ApiException.notFound("INVOICE_NOT_FOUND", "Invoice file could not be read: " + e.getMessage());
         }
     }
+
+    public record InvoiceFile(byte[] bytes, String filename) {}
 
     @Transactional
     public OrderResponse updateStatus(UUID orderId, UpdateOrderStatusRequest request) {
@@ -122,20 +123,21 @@ public class AdminOrderService {
             if (invoiceUrl != null) order.setInvoicePath(invoiceUrl);
         }
         orderRepository.save(order);
-        OrderResponse response = OrderResponse.from(order);
+        OrderResponse response = OrderResponse.forAdmin(order);
         auditLog.log(AuditLogService.UPDATE, AuditLogService.ORDER, orderId,
                 "Status changed from " + oldStatus + " to " + newStatus + " on order " + order.getOrderNumber(),
                 java.util.Map.of("status", oldStatus.name()),
                 java.util.Map.of("status", newStatus.name()));
 
-        // Notify customer asynchronously
+        // Notify the customer with the customer-safe order representation.
+        OrderResponse customerResponse = OrderResponse.forCustomer(order);
         Customer customer = order.getCustomer();
         if (customer != null && customer.getUser() != null
                 && customer.getUser().getEmail() != null) {
-            emailService.sendOrderStatusUpdate(customer.getUser().getEmail(), response);
+            emailService.sendOrderStatusUpdate(customer.getUser().getEmail(), customerResponse);
         }
         if (customer != null && customer.getPushToken() != null) {
-            pushService.sendOrderStatusUpdate(customer.getPushToken(), response);
+            pushService.sendOrderStatusUpdate(customer.getPushToken(), customerResponse);
         }
 
         return response;
