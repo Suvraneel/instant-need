@@ -27,8 +27,9 @@ public class OrderController {
 
     @Operation(summary = "Place an order from the active cart (COD / offline payment)")
     @PostMapping
-    public ResponseEntity<PlaceOrderResponse> placeOrder(@Valid @RequestBody PlaceOrderRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.placeOrder(request));
+    public ResponseEntity<PlaceOrderResponse> placeOrder(@Valid @RequestBody PlaceOrderRequest request,
+                                                         @RequestHeader(value = "Idempotency-Key", required = false) String idempotencyKey) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.placeOrder(request, idempotencyKey));
     }
 
     @Operation(summary = "List the current customer's order history")

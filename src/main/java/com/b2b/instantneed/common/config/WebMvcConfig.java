@@ -8,8 +8,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.nio.file.Paths;
 
 /**
- * Exposes the local uploads directory as a static resource under {@code /uploads/**}.
- * In production this path is replaced by a CDN — the Spring handler is never reached.
+ * Exposes only public catalog images from local storage. Invoices are served
+ * through authenticated API endpoints after an ownership check.
  */
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -20,7 +20,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String absoluteDir = Paths.get(uploadDir).toAbsolutePath().normalize().toString();
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:" + absoluteDir + "/");
+        registry.addResourceHandler("/uploads/products/**")
+                .addResourceLocations("file:" + absoluteDir + "/products/");
+        registry.addResourceHandler("/uploads/categories/**")
+                .addResourceLocations("file:" + absoluteDir + "/categories/");
     }
 }

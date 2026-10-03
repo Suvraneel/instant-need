@@ -33,6 +33,12 @@ public class Order {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
+    @Column(name = "idempotency_key", length = 100)
+    private String idempotencyKey;
+
+    @Column(name = "idempotency_request_hash", length = 64)
+    private String idempotencyRequestHash;
+
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "shipping_address_snapshot", nullable = false, columnDefinition = "jsonb")
     private Map<String, Object> shippingAddressSnapshot;

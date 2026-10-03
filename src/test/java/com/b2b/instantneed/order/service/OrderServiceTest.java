@@ -11,6 +11,7 @@ import com.b2b.instantneed.catalog.repository.ProductRepository;
 import com.b2b.instantneed.catalog.repository.PincodeMinOrderRepository;
 import com.b2b.instantneed.common.dto.PagedResponse;
 import com.b2b.instantneed.common.service.EmailService;
+import com.b2b.instantneed.common.storage.StorageService;
 import com.b2b.instantneed.order.service.InvoiceService;
 import com.b2b.instantneed.pricing.service.PricingService;
 import com.b2b.instantneed.common.exception.ApiException;
@@ -48,6 +49,7 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.*;
+import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
@@ -62,6 +64,8 @@ class OrderServiceTest {
     @Mock EmailService                 emailService;
     @Mock PincodeMinOrderRepository    pincodeMinOrderRepository;
     @Mock InvoiceService               invoiceService;
+    @Mock OrderNumberService           orderNumberService;
+    @Mock StorageService               storageService;
 
     @InjectMocks OrderService orderService;
 
@@ -94,6 +98,12 @@ class OrderServiceTest {
                 .stock(100).build();
 
         given(securityUtils.currentCustomer()).willReturn(customer);
+        lenient().when(customerRepository.findByIdForUpdate(customer.getId())).thenReturn(Optional.of(customer));
+        lenient().when(productRepository.findByIdForUpdate(product.getId())).thenReturn(Optional.of(product));
+        lenient().when(orderNumberService.next()).thenReturn("WB-20261003-0001");
+        lenient().when(pricingService.calculate(product.getId(), 5)).thenReturn(
+                new com.b2b.instantneed.pricing.dto.PriceCalculateResponse(product.getId(), 5,
+                        new BigDecimal("250.00"), new BigDecimal("1250.00"), "INR", null));
     }
 
     // ── placeOrder ────────────────────────────────────────────────────────────
@@ -107,7 +117,6 @@ class OrderServiceTest {
         given(addressRepository.findById(address.getId())).willReturn(Optional.of(address));
         given(pincodeMinOrderRepository.findByPincodeAndActiveTrue(address.getPostalCode()))
                 .willReturn(Optional.of(activeRule(BigDecimal.ZERO)));
-        given(orderRepository.findMaxSequenceForPrefix(anyString())).willReturn(0);
         given(orderRepository.save(any())).willAnswer(inv -> {
             Order o = inv.getArgument(0);
             o = Order.builder()
@@ -145,10 +154,8 @@ class OrderServiceTest {
         given(addressRepository.findById(address.getId())).willReturn(Optional.of(address));
         given(pincodeMinOrderRepository.findByPincodeAndActiveTrue(address.getPostalCode()))
                 .willReturn(Optional.of(activeRule(BigDecimal.ZERO)));
-        given(productRepository.findById(product.getId())).willReturn(Optional.of(product));
         given(pricingService.calculate(product.getId(), 2)).willReturn(new com.b2b.instantneed.pricing.dto.PriceCalculateResponse(
                 product.getId(), 2, new BigDecimal("100.00"), new BigDecimal("200.00"), "INR", null));
-        given(orderRepository.findMaxSequenceForPrefix(anyString())).willReturn(0);
         given(orderRepository.save(any())).willAnswer(invocation -> invocation.getArgument(0));
 
         orderService.placeOrder(new PlaceOrderRequest(
@@ -222,7 +229,6 @@ class OrderServiceTest {
         given(addressRepository.findById(address.getId())).willReturn(Optional.of(address));
         given(pincodeMinOrderRepository.findByPincodeAndActiveTrue(address.getPostalCode()))
                 .willReturn(Optional.of(activeRule(BigDecimal.ZERO)));
-        given(orderRepository.findMaxSequenceForPrefix(anyString())).willReturn(0);
 
         assertThatThrownBy(() -> orderService.placeOrder(
                 new PlaceOrderRequest(null, address.getId(), null, null, null)))
@@ -302,12 +308,14 @@ class OrderServiceTest {
     @Test
     void getOrder_belongsToCustomer_returnsDetail() {
         Order order = minimalOrder();
+        order.setInvoicePath("https://cdn.example.test/invoices/private.pdf");
         given(orderRepository.findWithItemsByIdAndCustomerId(order.getId(), customer.getId()))
                 .willReturn(Optional.of(order));
 
         OrderResponse res = orderService.getOrder(order.getId());
 
         assertThat(res.orderNumber()).isEqualTo("WB-20260523-0001");
+        assertThat(res.invoiceUrl()).isEqualTo("/api/v1/orders/" + order.getId() + "/invoice");
     }
 
     @Test
@@ -320,6 +328,19 @@ class OrderServiceTest {
                 .isInstanceOf(ApiException.class)
                 .extracting(e -> ((ApiException) e).getHttpStatus())
                 .isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void invoiceDownloadRequiresCustomerOwnership() {
+        UUID anotherCustomersOrder = UUID.randomUUID();
+        given(orderRepository.findWithItemsByIdAndCustomerId(anotherCustomersOrder, customer.getId()))
+                .willReturn(Optional.empty());
+
+        assertThatThrownBy(() -> orderService.getInvoicePdf(anotherCustomersOrder))
+                .isInstanceOf(ApiException.class)
+                .extracting(error -> ((ApiException) error).getHttpStatus())
+                .isEqualTo(HttpStatus.NOT_FOUND);
+        then(storageService).shouldHaveNoInteractions();
     }
 
     // ── reorder ───────────────────────────────────────────────────────────────

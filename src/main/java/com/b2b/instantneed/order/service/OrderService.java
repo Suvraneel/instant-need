@@ -6,6 +6,7 @@ import com.b2b.instantneed.cart.entity.CartStatus;
 import com.b2b.instantneed.cart.repository.CartRepository;
 import com.b2b.instantneed.catalog.entity.PincodeMinOrder;
 import com.b2b.instantneed.catalog.entity.Product;
+import com.b2b.instantneed.catalog.entity.AvailabilityStatus;
 import com.b2b.instantneed.catalog.repository.PincodeMinOrderRepository;
 import com.b2b.instantneed.catalog.repository.ProductRepository;
 import com.b2b.instantneed.common.dto.PagedResponse;
@@ -31,14 +32,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,6 +54,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderService {
 
     private final OrderRepository orderRepository;
@@ -59,15 +68,48 @@ public class OrderService {
     private final PincodeMinOrderRepository pincodeMinOrderRepository;
     private final InvoiceService invoiceService;
     private final StorageService storageService;
+    private final OrderNumberService orderNumberService;
 
     @Transactional
     public PlaceOrderResponse placeOrder(PlaceOrderRequest request) {
+        return placeOrder(request, null);
+    }
+
+    @Transactional
+    public PlaceOrderResponse placeOrder(PlaceOrderRequest request, String idempotencyKey) {
         Customer customer = securityUtils.currentCustomer();
+        String key = idempotencyKey == null ? null : idempotencyKey.trim();
+        if (key != null && (key.isEmpty() || key.length() > 100)) {
+            throw ApiException.badRequest("INVALID_IDEMPOTENCY_KEY", "Idempotency-Key must be 1 to 100 characters");
+        }
+        String requestHash = key == null ? null : hashRequest(request);
+        // Serializes retries and cart checkouts by this customer before reading either state.
+        customer = customerRepository.findByIdForUpdate(customer.getId())
+                .orElseThrow(() -> ApiException.notFound("CUSTOMER_NOT_FOUND", "Customer not found"));
+        if (key != null) {
+            var previous = orderRepository.findByCustomerIdAndIdempotencyKey(customer.getId(), key);
+            if (previous.isPresent()) {
+                Order existing = previous.get();
+                if (!requestHash.equals(existing.getIdempotencyRequestHash())) {
+                    throw ApiException.conflict("IDEMPOTENCY_KEY_REUSED", "Idempotency-Key was used for another order request");
+                }
+                return new PlaceOrderResponse(existing.getId(), existing.getOrderNumber(),
+                        existing.getStatus().name(), "Order placed successfully.");
+            }
+        }
 
         // --- Resolve items ---
         List<CartItem> cartItemsToUse = null;
         List<PlaceOrderRequest.OrderItemRequest> directItems = request.items();
         boolean itemsProvided = directItems != null && !directItems.isEmpty();
+        if (itemsProvided) {
+            HashSet<UUID> seen = new HashSet<>();
+            for (PlaceOrderRequest.OrderItemRequest item : directItems) {
+                if (item.productId() == null || item.quantity() < 1 || !seen.add(item.productId())) {
+                    throw ApiException.badRequest("INVALID_ORDER_ITEMS", "Each product must appear once with a positive quantity");
+                }
+            }
+        }
 
         if (!itemsProvided) {
             // Fall back to active cart
@@ -114,7 +156,17 @@ public class OrderService {
                         "We don't currently deliver to pincode " + postalCode + ". Please check back soon or contact support."));
 
         // --- Build order items + compute totals ---
-        String orderNumber = generateOrderNumber();
+        List<UUID> productIds = itemsProvided
+                ? directItems.stream().map(PlaceOrderRequest.OrderItemRequest::productId).toList()
+                : cartItemsToUse.stream().filter(ci -> ci.getProduct() != null)
+                        .map(ci -> ci.getProduct().getId()).toList();
+        Map<UUID, Product> lockedProducts = new HashMap<>();
+        productIds.stream().distinct().sorted(Comparator.naturalOrder()).forEach(id -> {
+            Product product = productRepository.findByIdForUpdate(id)
+                    .orElseThrow(() -> ApiException.notFound("PRODUCT_NOT_FOUND", "Product not found: " + id));
+            lockedProducts.put(id, product);
+        });
+        String orderNumber = orderNumberService.next();
         Map<String, Object> customerSnapshot = buildCustomerSnapshot(customer, request.gstinUin());
         String paymentMethod = (request.paymentMethod() != null && !request.paymentMethod().isBlank())
                 ? request.paymentMethod() : "cod";
@@ -122,6 +174,8 @@ public class OrderService {
         Order order = Order.builder()
                 .orderNumber(orderNumber)
                 .customer(customer)
+                .idempotencyKey(key)
+                .idempotencyRequestHash(requestHash)
                 .shippingAddressSnapshot(addressSnapshot)
                 .customerSnapshot(customerSnapshot)
                 .status(OrderStatus.PENDING)
@@ -138,9 +192,8 @@ public class OrderService {
 
         if (itemsProvided) {
             for (PlaceOrderRequest.OrderItemRequest req : directItems) {
-                Product product = productRepository.findById(req.productId())
-                        .orElseThrow(() -> ApiException.notFound("PRODUCT_NOT_FOUND",
-                                "Product not found: " + req.productId()));
+                Product product = lockedProducts.get(req.productId());
+                ensureOrderable(product);
                 if (product.getStock() < req.quantity()) {
                     throw ApiException.badRequest("INSUFFICIENT_STOCK",
                             "Only " + product.getStock() + " units available for " + product.getName());
@@ -172,11 +225,16 @@ public class OrderService {
                     // Product was deleted after being added to cart — skip it
                     continue;
                 }
-                Product product = ci.getProduct();
+                Product product = lockedProducts.get(ci.getProduct().getId());
+                ensureOrderable(product);
+                if (ci.getQuantity() < 1) {
+                    throw ApiException.badRequest("INVALID_ORDER_ITEMS", "Cart quantities must be positive");
+                }
                 if (product.getStock() < ci.getQuantity()) {
                     throw ApiException.badRequest("INSUFFICIENT_STOCK",
                             "Only " + product.getStock() + " units available for " + product.getName());
                 }
+                PriceCalculateResponse price = pricingService.calculate(product.getId(), ci.getQuantity());
                 OrderItem item = OrderItem.builder()
                         .order(order)
                         .product(product)
@@ -184,16 +242,16 @@ public class OrderService {
                         .skuSnapshot(product.getSku())
                         .unitOfMeasurementSnapshot(product.getUnitOfMeasurement() != null ? product.getUnitOfMeasurement() : "unit")
                         .quantity(ci.getQuantity())
-                        .unitPrice(ci.getAppliedUnitPrice())
-                        .lineTotal(ci.getLineTotal())
+                        .unitPrice(price.appliedUnitPrice())
+                        .lineTotal(price.lineTotal())
                         .mrpSnapshot(product.getMrp())
                         .hsnCodeSnapshot(product.getHsnCode())
-                        .currencyCode(ci.getCurrencyCode())
+                        .currencyCode(price.currencyCode())
                         .build();
-                applyTaxSnapshot(item, product, ci.getLineTotal());
+                applyTaxSnapshot(item, product, price.lineTotal());
                 order.getItems().add(item);
-                subtotal = subtotal.add(ci.getLineTotal());
-                currencyCode = ci.getCurrencyCode();
+                subtotal = subtotal.add(price.lineTotal());
+                currencyCode = price.currencyCode();
                 product.setStock(product.getStock() - ci.getQuantity());
                 productRepository.save(product);
             }
@@ -223,17 +281,28 @@ public class OrderService {
             order.setPlacedAt(Instant.now());
         }
 
-        // Generate invoice while order.getItems() is still a plain ArrayList (before Hibernate intercepts it)
-        String invoiceUrl = invoiceService.generateAndStore(order);
-        if (invoiceUrl != null) {
-            order.setInvoicePath(invoiceUrl);
-        }
-
         orderRepository.save(order);
-
-        // Send confirmation email asynchronously — never blocks the HTTP response
-        if (customer.getUser() != null && customer.getUser().getEmail() != null) {
-            emailService.sendOrderConfirmation(customer.getUser().getEmail(), OrderResponse.from(order));
+        Customer orderCustomer = customer;
+        Runnable postCommit = () -> {
+            try {
+                invoiceService.generateAndStoreById(order.getId());
+            } catch (Exception e) {
+                log.error("Invoice generation failed after placing order {}", order.getId(), e);
+            }
+            try {
+                if (orderCustomer.getUser() != null && orderCustomer.getUser().getEmail() != null) {
+                    emailService.sendOrderConfirmation(orderCustomer.getUser().getEmail(), OrderResponse.from(order));
+                }
+            } catch (Exception e) {
+                log.error("Confirmation email failed after placing order {}", order.getId(), e);
+            }
+        };
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override public void afterCommit() { postCommit.run(); }
+            });
+        } else {
+            postCommit.run();
         }
 
         return new PlaceOrderResponse(order.getId(), orderNumber, order.getStatus().name(),
@@ -270,6 +339,9 @@ public class OrderService {
         Customer customer = securityUtils.currentCustomer();
         Order order = orderRepository.findWithItemsByIdAndCustomerId(orderId, customer.getId())
                 .orElseThrow(() -> ApiException.notFound("ORDER_NOT_FOUND", "Order not found: " + orderId));
+        if (order.getInvoicePath() == null) {
+            order.setInvoicePath(invoiceService.generateAndStoreById(orderId));
+        }
         return loadInvoiceFile(order);
     }
 
@@ -395,11 +467,20 @@ public class OrderService {
         customerRepository.save(customer);
     }
 
-    private String generateOrderNumber() {
-        String dateStr = LocalDate.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        String prefix = "WB-" + dateStr + "-";
-        int next = orderRepository.findMaxSequenceForPrefix(prefix) + 1;
-        return prefix + String.format("%04d", next);
+    private void ensureOrderable(Product product) {
+        if (!product.isActive() || product.getAvailabilityStatus() == AvailabilityStatus.DISCONTINUED) {
+            throw ApiException.badRequest("PRODUCT_UNAVAILABLE", "Product is no longer available: " + product.getName());
+        }
+    }
+
+    private String hashRequest(PlaceOrderRequest request) {
+        try {
+            byte[] digest = MessageDigest.getInstance("SHA-256")
+                    .digest(request.toString().getBytes(StandardCharsets.UTF_8));
+            return HexFormat.of().formatHex(digest);
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 unavailable", e);
+        }
     }
 
     private Map<String, Object> buildCustomerSnapshot(Customer customer, String gstinUin) {

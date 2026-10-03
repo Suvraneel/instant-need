@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
@@ -45,8 +46,8 @@ public class InvoiceService {
                         ? order.getPlacedAt() : java.time.Instant.now()));
             }
             byte[] pdf = buildPdf(order);
-            String filename = pdfFilename(order);
-            String url = storageService.storeBytes(pdf, "invoices", filename);
+            // An opaque storage key prevents invoice numbers from becoming guessable object keys.
+            String url = storageService.storeBytes(pdf, "invoices", UUID.randomUUID() + ".pdf");
             log.info("[INVOICE] Generated invoice {} for order {}", order.getInvoiceNumber(), order.getOrderNumber());
             return url;
         } catch (Exception e) {
@@ -55,7 +56,7 @@ public class InvoiceService {
         }
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public String generateAndStoreById(UUID orderId) {
         Order order = orderRepository.findWithItemsById(orderId).orElse(null);
         if (order == null) {

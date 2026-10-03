@@ -68,7 +68,7 @@ public class AdminOrderController {
             return ResponseEntity.internalServerError()
                     .body(Map.of("error", "Invoice generation failed. Check server logs."));
         }
-        return ResponseEntity.ok(Map.of("invoiceUrl", url));
+        return ResponseEntity.ok(Map.of("invoiceUrl", "/api/v1/admin/orders/" + orderId + "/invoice"));
     }
 
     @Operation(summary = "Download the PDF invoice for any order")

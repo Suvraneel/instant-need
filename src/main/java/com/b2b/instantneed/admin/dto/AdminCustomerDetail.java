@@ -38,7 +38,7 @@ public record AdminCustomerDetail(
             return new OrderSummary(
                     o.getId(), o.getOrderNumber(), o.getStatus().name(),
                     o.getTotalAmount(), o.getCurrencyCode(), o.getPlacedAt(), o.getInvoiceNumber(),
-                    o.getInvoicePath()
+                    o.getInvoicePath() == null ? null : "/api/v1/admin/orders/" + o.getId() + "/invoice"
             );
         }
     }

@@ -42,8 +42,10 @@ public class JwtUtil {
     public boolean isTokenValid(String token, UserDetails userDetails) {
         try {
             String username = extractUsername(token);
+            String type = extractClaim(token, claims -> claims.get("type", String.class));
             return userDetails.isEnabled()
                     && username.equals(userDetails.getUsername())
+                    && "access".equals(type)
                     && !isTokenExpired(token);
         } catch (JwtException e) {
             return false;

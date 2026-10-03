@@ -17,6 +17,8 @@ import java.util.UUID;
 
 public interface OrderRepository extends JpaRepository<Order, UUID>, JpaSpecificationExecutor<Order> {
 
+    Optional<Order> findByCustomerIdAndIdempotencyKey(UUID customerId, String idempotencyKey);
+
     Page<Order> findByCustomerIdOrderByPlacedAtDesc(UUID customerId, Pageable pageable);
 
     List<Order> findAllByCustomerId(UUID customerId);
@@ -27,7 +29,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID>, JpaSpecific
     @Query("SELECT o FROM Order o LEFT JOIN FETCH o.items i LEFT JOIN FETCH i.product WHERE o.id = :id AND o.customer.id = :customerId")
     Optional<Order> findWithItemsByIdAndCustomerId(@Param("id") UUID id, @Param("customerId") UUID customerId);
 
-    @Query("SELECT COALESCE(MAX(CAST(SUBSTRING(o.orderNumber, 14) AS int)), 0) FROM Order o WHERE o.orderNumber LIKE :prefix%")
+    @Query("SELECT COALESCE(MAX(CAST(SUBSTRING(o.orderNumber, 13) AS int)), 0) FROM Order o WHERE o.orderNumber LIKE :prefix%")
     int findMaxSequenceForPrefix(@Param("prefix") String prefix);
 
     // ── Per-customer aggregates ───────────────────────────────────────────────

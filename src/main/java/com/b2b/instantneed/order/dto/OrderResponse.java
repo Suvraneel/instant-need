@@ -97,7 +97,7 @@ public record OrderResponse(
                 order.getEwayBillNumber(),
                 order.getTransport(),
                 order.getVehicleNumber(),
-                order.getInvoicePath()
+                order.getInvoicePath() == null ? null : "/api/v1/orders/" + order.getId() + "/invoice"
         );
     }
 

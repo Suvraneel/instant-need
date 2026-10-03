@@ -95,11 +95,9 @@ class JwtUtilTest {
     }
 
     @Test
-    void refreshToken_failsIsTokenValid_false() {
-        // isTokenValid doesn't check the type claim at all, just username + expiry
-        // But the refresh token is still structurally valid, so this should be true
+    void refreshToken_cannotAuthenticateApiRequest() {
         String refreshToken = jwtUtil.generateRefreshToken(user);
-        assertThat(jwtUtil.isTokenValid(refreshToken, user)).isTrue();
+        assertThat(jwtUtil.isTokenValid(refreshToken, user)).isFalse();
     }
 
     // ── Expired token ─────────────────────────────────────────────────────────

@@ -1,7 +1,8 @@
 package com.b2b.instantneed.order.dto;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,7 +30,7 @@ public record PlaceOrderRequest(
         this(items, shippingAddressId, shippingAddress, paymentMethod, notes, null);
     }
 
-    public record OrderItemRequest(UUID productId, int quantity) {}
+    public record OrderItemRequest(@NotNull UUID productId, @Min(1) int quantity) {}
 
     public record InlineAddressRequest(
             String fullName,

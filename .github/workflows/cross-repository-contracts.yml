@@ -1,0 +1,81 @@
+name: Cross-repository contracts
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      shared_ref:
+        description: Shared repository ref to test
+        required: false
+      web_ref:
+        description: Web repository ref to test
+        required: false
+      mobile_ref:
+        description: Mobile repository ref to test
+        required: false
+
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: instant_need_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d instant_need_test"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: instant-need
+      - uses: actions/checkout@v4
+        with:
+          repository: AAYUSH-GUPTA-coder/instant-need-shared
+          ref: ${{ inputs.shared_ref || 'main' }}
+          token: ${{ secrets.INSTANT_NEED_CROSS_REPO_TOKEN || github.token }}
+          path: instant-need-shared
+      - uses: actions/checkout@v4
+        with:
+          repository: AAYUSH-GUPTA-coder/instant-need-web
+          ref: ${{ inputs.web_ref || 'main' }}
+          token: ${{ secrets.INSTANT_NEED_CROSS_REPO_TOKEN || github.token }}
+          path: instant-need-web
+      - uses: actions/checkout@v4
+        with:
+          repository: AAYUSH-GUPTA-coder/instant-need-mobile
+          ref: ${{ inputs.mobile_ref || 'main' }}
+          token: ${{ secrets.INSTANT_NEED_CROSS_REPO_TOKEN || github.token }}
+          path: instant-need-mobile
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+          cache-dependency-path: instant-need/pom.xml
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Backend security and persisted contracts
+        working-directory: instant-need
+        env:
+          DB_URL: jdbc:postgresql://localhost:5432/instant_need_test
+          DB_USERNAME: postgres
+          DB_PASSWORD: postgres
+        run: ./mvnw test -Dtest=JwtUtilTest,SecurityConfigTest,OrderServiceTest,OrderPersistenceTest,PricingTierPersistenceTest,AdminProductServiceTest,PincodeContractTest
+      - name: Shared client types
+        working-directory: instant-need-shared
+        run: npm ci && npx tsc --noEmit
+      - name: Web contracts and types
+        working-directory: instant-need-web
+        run: npm ci && npm test && npx tsc --noEmit
+      - name: Mobile package freshness
+        run: cd instant-need-shared && npm pack --pack-destination ../instant-need-mobile && cd .. && bash instant-need/scripts/check-mobile-shared-package.sh
+      - name: Mobile types
+        working-directory: instant-need-mobile
+        run: npm ci && npx tsc --noEmit
