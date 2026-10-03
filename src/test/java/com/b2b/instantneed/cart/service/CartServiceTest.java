@@ -64,7 +64,7 @@ class CartServiceTest {
         product = Product.builder()
                 .id(UUID.randomUUID()).name("A4 Paper").sku("SKU-001")
                 .slug("a4-paper").basePrice(new BigDecimal("250.00"))
-                .availabilityStatus(AvailabilityStatus.IN_STOCK).active(true).build();
+                .availabilityStatus(AvailabilityStatus.IN_STOCK).active(true).stock(100).build();
 
         given(securityUtils.currentCustomer()).willReturn(customer);
     }

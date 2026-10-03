@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
@@ -31,7 +32,7 @@ class PricingServiceTest {
 
     @Test
     void calculate_matchesExactTier() {
-        given(productRepository.existsById(productId)).willReturn(true);
+        given(productRepository.findById(productId)).willReturn(Optional.of(product()));
         given(tierRepository.findByProductIdOrderByMinQuantityAsc(productId))
                 .willReturn(List.of(
                         tier(1, 49,  "250.00"),
@@ -49,7 +50,7 @@ class PricingServiceTest {
 
     @Test
     void calculate_openEndedLastTier_matchesBulk() {
-        given(productRepository.existsById(productId)).willReturn(true);
+        given(productRepository.findById(productId)).willReturn(Optional.of(product()));
         given(tierRepository.findByProductIdOrderByMinQuantityAsc(productId))
                 .willReturn(List.of(tier(1, 99, "300.00"), tier(100, null, "250.00")));
 
@@ -61,7 +62,7 @@ class PricingServiceTest {
 
     @Test
     void calculate_exactBoundary_usesCorrectTier() {
-        given(productRepository.existsById(productId)).willReturn(true);
+        given(productRepository.findById(productId)).willReturn(Optional.of(product()));
         given(tierRepository.findByProductIdOrderByMinQuantityAsc(productId))
                 .willReturn(List.of(tier(1, 49, "300.00"), tier(50, null, "250.00")));
 
@@ -74,7 +75,7 @@ class PricingServiceTest {
 
     @Test
     void calculate_productNotFound_throwsNotFound() {
-        given(productRepository.existsById(productId)).willReturn(false);
+        given(productRepository.findById(productId)).willReturn(Optional.empty());
 
         assertThatThrownBy(() -> pricingService.calculate(productId, 10))
                 .isInstanceOf(ApiException.class)
@@ -82,28 +83,33 @@ class PricingServiceTest {
     }
 
     @Test
-    void calculate_noTiersConfigured_throwsBadRequest() {
-        given(productRepository.existsById(productId)).willReturn(true);
+    void calculate_noTiersConfigured_usesBasePrice() {
+        given(productRepository.findById(productId)).willReturn(Optional.of(product()));
         given(tierRepository.findByProductIdOrderByMinQuantityAsc(productId))
                 .willReturn(List.of());
 
-        assertThatThrownBy(() -> pricingService.calculate(productId, 10))
-                .isInstanceOf(ApiException.class)
-                .hasMessageContaining("no pricing tiers");
+        PriceCalculateResponse res = pricingService.calculate(productId, 10);
+        assertThat(res.appliedUnitPrice()).isEqualByComparingTo("300.00");
+        assertThat(res.lineTotal()).isEqualByComparingTo("3000.00");
+        assertThat(res.matchedTier()).isNull();
     }
 
     @Test
-    void calculate_quantityBelowMinimum_throwsBadRequest() {
-        given(productRepository.existsById(productId)).willReturn(true);
+    void calculate_quantityBelowMinimum_usesFirstTier() {
+        given(productRepository.findById(productId)).willReturn(Optional.of(product()));
         given(tierRepository.findByProductIdOrderByMinQuantityAsc(productId))
                 .willReturn(List.of(tier(10, null, "200.00"))); // min = 10
 
-        assertThatThrownBy(() -> pricingService.calculate(productId, 5))
-                .isInstanceOf(ApiException.class)
-                .hasMessageContaining("No pricing tier covers quantity 5");
+        PriceCalculateResponse res = pricingService.calculate(productId, 5);
+        assertThat(res.appliedUnitPrice()).isEqualByComparingTo("200.00");
+        assertThat(res.lineTotal()).isEqualByComparingTo("1000.00");
     }
 
     // ── Helpers ────────────────────────────────────────────────────────────────
+
+    private Product product() {
+        return Product.builder().id(productId).basePrice(new BigDecimal("300.00")).build();
+    }
 
     private PricingTier tier(int min, Integer max, String price) {
         return PricingTier.builder()

@@ -34,7 +34,7 @@ class AdminCategoryServiceTest {
 
     @Test
     void listCategories_returnsSortedList() {
-        given(categoryRepository.findAllByOrderBySortOrderAsc())
+        given(categoryRepository.findAllByActiveTrueOrderBySortOrderAsc())
                 .willReturn(List.of(
                         category("Office Supplies", "office-supplies"),
                         category("Cleaning Products", "cleaning-products")

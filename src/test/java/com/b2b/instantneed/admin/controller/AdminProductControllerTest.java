@@ -108,7 +108,7 @@ class AdminProductControllerTest {
         String body = """
                 {
                   "sku": "PAPER-A4",
-                  "pricingTiers": [{"minQuantity": 1, "unitPrice": 250.00, "currencyCode": "INR"}]
+                  "pricingTiers": [{"minQty": 1, "unitPrice": 250.00, "currencyCode": "INR"}]
                 }
                 """;
         mockMvc.perform(post("/api/v1/admin/products")
@@ -122,13 +122,25 @@ class AdminProductControllerTest {
         String body = """
                 {
                   "name": "A4 Paper",
-                  "pricingTiers": [{"minQuantity": 1, "unitPrice": 250.00, "currencyCode": "INR"}]
+                  "pricingTiers": [{"minQty": 1, "unitPrice": 250.00, "currencyCode": "INR"}]
                 }
                 """;
         mockMvc.perform(post("/api/v1/admin/products")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void createProduct_nullTierMinimum_returns400() throws Exception {
+        mockMvc.perform(post("/api/v1/admin/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"name":"A4 Paper","sku":"PAPER-A4",
+                                 "pricingTiers":[{"minQty":null,"unitPrice":250.00}]}
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error.code").value("INVALID_REQUEST_BODY"));
     }
 
     // ── PATCH /admin/products/{id} ────────────────────────────────────────────
@@ -186,7 +198,7 @@ class AdminProductControllerTest {
         mockMvc.perform(put("/api/v1/admin/products/{id}/pricing-tiers", id)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
-                                [{"minQuantity": 1, "unitPrice": 200.00, "currencyCode": "INR"}]
+                                [{"minQty": 1, "unitPrice": 200.00, "currencyCode": "INR"}]
                                 """))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].unitPrice").value(200.0));
@@ -223,7 +235,7 @@ class AdminProductControllerTest {
                   "unitOfMeasurement": "ream",
                   "basePrice": 250.00,
                   "pricingTiers": [
-                    { "minQuantity": 1, "unitPrice": 250.00, "currencyCode": "INR" }
+                    { "minQty": 1, "unitPrice": 250.00, "currencyCode": "INR" }
                   ]
                 }
                 """;

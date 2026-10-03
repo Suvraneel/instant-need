@@ -4,7 +4,9 @@ import com.b2b.instantneed.auth.dto.*;
 import com.b2b.instantneed.auth.service.AuthService;
 import com.b2b.instantneed.common.config.SecurityConfig;
 import com.b2b.instantneed.common.security.JwtAuthFilter;
+import com.b2b.instantneed.common.security.JwtUtil;
 import com.b2b.instantneed.common.security.RateLimitFilter;
+import com.b2b.instantneed.common.security.TokenBlacklistService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.security.autoconfigure.SecurityAutoConfiguration;
@@ -46,6 +48,8 @@ class AuthControllerTest {
     @Autowired MockMvc mockMvc;
 
     @MockitoBean AuthService authService;
+    @MockitoBean JwtUtil jwtUtil;
+    @MockitoBean TokenBlacklistService tokenBlacklistService;
 
     // ── POST /register ────────────────────────────────────────────────────────
 
