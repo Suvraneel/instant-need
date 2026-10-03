@@ -1,15 +1,19 @@
+# syntax=docker/dockerfile:1
+
 # ── Stage 1: Build ───────────────────────────────────────────────────────────
 FROM eclipse-temurin:25-jdk-noble AS build
 WORKDIR /app
 
-# Copy Maven wrapper and pom first — Docker caches this layer until pom changes
+# Copy Maven wrapper and pom first so dependency downloads stay cached across source changes
 COPY mvnw pom.xml ./
 COPY .mvn .mvn
-RUN chmod +x mvnw && ./mvnw dependency:go-offline -q
+RUN --mount=type=cache,target=/root/.m2 \
+    chmod +x mvnw && ./mvnw dependency:go-offline -q
 
 # Copy source and build the fat jar
 COPY src ./src
-RUN ./mvnw package -DskipTests -q
+RUN --mount=type=cache,target=/root/.m2 \
+    ./mvnw package -Dmaven.test.skip=true -q
 
 # ── Stage 2: Runtime ─────────────────────────────────────────────────────────
 FROM eclipse-temurin:25-jre-noble AS runtime
