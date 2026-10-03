@@ -259,7 +259,7 @@ public class AdminProductService {
     }
 
     private void applyTiers(Product product, List<PricingTierRequest> tierRequests) {
-        if (tierRequests == null || tierRequests.isEmpty()) return;
+        if (tierRequests == null) return;
         pricingTierRepository.deleteAll(
                 pricingTierRepository.findByProductIdOrderByMinQuantityAsc(product.getId()));
         List<PricingTier> tiers = tierRequests.stream().map(t -> PricingTier.builder()

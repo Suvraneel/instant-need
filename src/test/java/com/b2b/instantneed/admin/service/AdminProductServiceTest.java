@@ -160,6 +160,26 @@ class AdminProductServiceTest {
         verify(auditLog).log(eq(AuditLogService.UPDATE), eq(AuditLogService.PRODUCT), any(), any(), any(), any());
     }
 
+    @Test
+    void updateProduct_emptyPricingTiers_removesExistingTiers() {
+        Product p = product("Paper", "P-001");
+        PricingTier existing = tier(p, 11, 20, "98.00");
+        p.getPricingTiers().add(existing);
+        given(productRepository.findWithCategoryById(p.getId())).willReturn(Optional.of(p));
+        given(pricingTierRepository.findByProductIdOrderByMinQuantityAsc(p.getId()))
+                .willReturn(List.of(existing));
+
+        UpdateProductRequest req = new UpdateProductRequest(
+                null, null, null, null, null, null, null,
+                null, null, null, null, null, List.of(), null);
+
+        AdminProductResponse response = service.updateProduct(p.getId(), req);
+
+        verify(pricingTierRepository).deleteAll(List.of(existing));
+        assertThat(response.pricingTiers()).isEmpty();
+        assertThat(p.getPricingTiers()).isEmpty();
+    }
+
     // ── deleteProduct ─────────────────────────────────────────────────────────
 
     @Test
@@ -202,6 +222,23 @@ class AdminProductServiceTest {
         assertThat(tiers).hasSize(2);
         assertThat(tiers.get(0).minQty()).isEqualTo(1);
         assertThat(tiers.get(1).minQty()).isEqualTo(50);
+    }
+
+    @Test
+    void replacePricingTiers_emptyList_removesExistingTiers() {
+        Product p = product("Paper", "P-001");
+        PricingTier existing = tier(p, 11, 20, "98.00");
+        p.getPricingTiers().add(existing);
+        given(productRepository.findWithCategoryById(p.getId())).willReturn(Optional.of(p));
+        given(pricingTierRepository.findByProductIdOrderByMinQuantityAsc(p.getId()))
+                .willReturn(List.of(existing), List.of());
+
+        List<com.b2b.instantneed.catalog.dto.PricingTierResponse> response =
+                service.replacePricingTiers(p.getId(), List.of());
+
+        verify(pricingTierRepository).deleteAll(List.of(existing));
+        assertThat(response).isEmpty();
+        assertThat(p.getPricingTiers()).isEmpty();
     }
 
     // ── slug deduplication ────────────────────────────────────────────────────
