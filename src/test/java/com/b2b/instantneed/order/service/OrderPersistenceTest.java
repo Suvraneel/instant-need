@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@SpringBootTest(properties = "app.jwt.secret=aW5zdGFudC1uZWVkLXRlc3Qtb25seS1qd3Qtc2lnbmluZy1rZXktMzItYnl0ZXMtbWluaW11bQ==")
 @EnabledIfEnvironmentVariable(named = "DB_URL", matches = ".+")
 class OrderPersistenceTest {
     @Autowired OrderService orders;

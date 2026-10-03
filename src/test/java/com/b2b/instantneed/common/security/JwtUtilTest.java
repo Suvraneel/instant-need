@@ -5,17 +5,22 @@ import com.b2b.instantneed.user.entity.Role;
 import com.b2b.instantneed.user.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.core.io.support.ResourcePropertySource;
+import org.springframework.mock.env.MockEnvironment;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class JwtUtilTest {
 
-    // A ≥32-byte Base64-encoded secret (same default as application.properties)
+    // Test-only Base64 key; production reads JWT_SECRET from the environment.
     private static final String TEST_SECRET =
-            "dGhpcy1pcy1hLXZlcnktc2VjcmV0LWtleS10aGF0LXNob3VsZC1iZS1jaGFuZ2VkLWluLXByb2R1Y3Rpb24=";
+            "aW5zdGFudC1uZWVkLXRlc3Qtb25seS1qd3Qtc2lnbmluZy1rZXktMzItYnl0ZXMtbWluaW11bQ==";
 
     private JwtUtil jwtUtil;
     private User user;
@@ -35,6 +40,19 @@ class JwtUtilTest {
                 .role(Role.CUSTOMER)
                 .active(true)
                 .build();
+    }
+
+    @Test
+    void missingJwtSecret_preventsJwtBeanFromStarting() throws Exception {
+        MockEnvironment environment = new MockEnvironment();
+        environment.getPropertySources().addLast(new ResourcePropertySource("classpath:application.properties"));
+
+        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+            context.setEnvironment(environment);
+            context.registerBean(PropertySourcesPlaceholderConfigurer.class);
+            context.register(JwtUtil.class);
+            assertThatThrownBy(context::refresh).hasStackTraceContaining("Could not resolve placeholder 'JWT_SECRET'");
+        }
     }
 
     // ── Access token ──────────────────────────────────────────────────────────

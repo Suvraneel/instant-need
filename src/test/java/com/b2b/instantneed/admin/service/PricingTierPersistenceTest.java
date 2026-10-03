@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.springframework.http.MediaType;
 
-@SpringBootTest
+@SpringBootTest(properties = "app.jwt.secret=aW5zdGFudC1uZWVkLXRlc3Qtb25seS1qd3Qtc2lnbmluZy1rZXktMzItYnl0ZXMtbWluaW11bQ==")
 @EnabledIfEnvironmentVariable(named = "DB_URL", matches = ".+")
 class PricingTierPersistenceTest {
     @Autowired AdminProductService adminProducts;
