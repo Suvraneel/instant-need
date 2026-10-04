@@ -3,16 +3,17 @@
 # ── Stage 1: Build ───────────────────────────────────────────────────────────
 FROM eclipse-temurin:25-jdk-noble AS build
 WORKDIR /app
+ENV MAVEN_USER_HOME=/opt/maven-wrapper
 
-# Copy Maven wrapper and pom first so dependency downloads stay cached across source changes
+# Keep the Maven installation in the image layer; cache only downloaded dependencies.
 COPY mvnw pom.xml ./
 COPY .mvn .mvn
-RUN --mount=type=cache,target=/root/.m2 \
-    chmod +x mvnw && ./mvnw dependency:go-offline -q
+RUN --mount=type=cache,target=/root/.m2/repository \
+    chmod +x mvnw && ./mvnw dependency:go-offline -B -ntp
 
 # Copy source and build the fat jar
 COPY src ./src
-RUN --mount=type=cache,target=/root/.m2 \
+RUN --mount=type=cache,target=/root/.m2/repository \
     ./mvnw package -Dmaven.test.skip=true -q
 
 # ── Stage 2: Runtime ─────────────────────────────────────────────────────────
